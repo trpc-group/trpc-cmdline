@@ -27,6 +27,7 @@ type MediaStruct struct {
 // SchemaStruct defines the structure of schema used by data model in api docs json.
 type SchemaStruct struct {
 	Ref        string            `json:"$ref,omitempty"`
+	Type       string            `json:"type,omitempty"`
 	Properties []*PropertyStruct `json:"properties,omitempty"`
 }
 

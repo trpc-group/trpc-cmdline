@@ -271,8 +271,13 @@ func (defs *Definitions) getBodyParameters(name string) []*ParametersStruct {
 // It takes the name and field of the struct as input parameters and returns a body parameter.
 func (defs *Definitions) getBodyParameter(name, field string) *ParametersStruct {
 	def := defs.getModel(name)
+	p := def.Properties.Elements[field]
 	param := def.Properties.Elements[field].GetQueryParameter(field)
 	param.In = "body"
+	param.Schema = &SchemaStruct{
+		Ref:  p.Ref,
+		Type: p.Type,
+	}
 	return param
 }
 

@@ -234,7 +234,7 @@ func (p PropertyStruct) GetQueryParameter(name string) *ParametersStruct {
 		Required:    false, // Set to non-required field by default.
 		Name:        name,
 		In:          "query",
-		Schema:      nil,
+		Schema:      nil, // Query parameter should not have schema.
 		Type:        p.Type,
 		Format:      p.Format,
 		Description: p.Description,
