@@ -28,7 +28,10 @@ func NewOpenAPIJSON(fd *descriptor.FileDescriptor, option *params.Option) (*Open
 	defs := NewDefinitions(option, append(fd.FD.GetDependencies(), fd.FD)...)
 
 	// Assemble the information of each method.
-	paths := NewPaths(fd, option, defs)
+	paths, err := NewPaths(fd, option, defs)
+	if err != nil {
+		return nil, fmt.Errorf("generate openapi error: %w", err)
+	}
 	pathsX := paths.GetPathsX()
 
 	// Get file's information for assemble header information of Swagger JSON doc.

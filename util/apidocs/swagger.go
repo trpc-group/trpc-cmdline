@@ -21,7 +21,7 @@ type SwaggerJSON struct {
 	Definitions map[string]ModelStruct `json:"definitions"`
 }
 
-// NewSwagger swagger init
+// NewSwagger generates swagger documents.
 func NewSwagger(fd *descriptor.FileDescriptor, option *params.Option) (*SwaggerJSON, error) {
 	refPrefix = "#/definitions/"
 	if fd.FD == nil {
@@ -32,7 +32,10 @@ func NewSwagger(fd *descriptor.FileDescriptor, option *params.Option) (*SwaggerJ
 	defs := NewDefinitions(option, append(allDependenciesFds(fd.FD), fd.FD)...)
 
 	// Assemble the information of each method.
-	paths := NewPaths(fd, option, defs)
+	paths, err := NewPaths(fd, option, defs)
+	if err != nil {
+		return nil, fmt.Errorf("generate swagger error: %w", err)
+	}
 
 	// Get file information to assemble Swagger JSON document header information.
 	infoMap, err := NewInfo(fd)

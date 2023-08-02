@@ -69,10 +69,10 @@ func TestNewSwagger(t *testing.T) {
 				Consumes: []string{"application/json"},
 				Produces: []string{"application/json"},
 				Paths: Paths{
-					Elements: map[string]Methods{},
-					Rank:     map[string]int{},
+					Elements: make(map[string]Methods),
+					Rank:     make(map[string]int),
 				},
-				Definitions: map[string]ModelStruct{},
+				Definitions: make(map[string]ModelStruct),
 			},
 			wantErr: false,
 		},
@@ -90,18 +90,18 @@ func TestNewSwagger(t *testing.T) {
 				NewDefinitions,
 				func(options *params.Option, fds ...descriptor.Desc) *Definitions {
 					return &Definitions{
-						models: map[string]ModelStruct{},
+						models: make(map[string]ModelStruct),
 					}
 				},
 			)
 
 			p.ApplyFunc(
 				NewPaths,
-				func(fd *descriptor.FileDescriptor, option *params.Option, defs *Definitions) Paths {
+				func(fd *descriptor.FileDescriptor, option *params.Option, defs *Definitions) (Paths, error) {
 					return Paths{
-						Elements: map[string]Methods{},
-						Rank:     map[string]int{},
-					}
+						Elements: make(map[string]Methods),
+						Rank:     make(map[string]int),
+					}, nil
 				},
 			)
 

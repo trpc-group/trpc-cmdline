@@ -22,15 +22,15 @@ import (
 )
 
 const (
-	Trpc = "trpc"
+	trpcName = "trpc"
 )
 
 func fillDependencies(fd descriptor.Desc, nfd *descriptor.FileDescriptor) error {
 	// package name, such as "trpc.group/trpcprotocol/testapp/testserver
-	pb2ValidGoPkg := map[string]string{}  // k=pb file name，v=package name processed by protoc
-	pkg2ValidGoPkg := map[string]string{} // k=pb file package directive, v=package name processed by protoc
-	pkg2ImportPath := map[string]string{} // k=pb file package directive, v=importpath in go code
-	pb2ImportPath := map[string]string{}  // k=pb file name，v=importpath in go code
+	pb2ValidGoPkg := make(map[string]string)  // k=pb file name，v=package name processed by protoc
+	pkg2ValidGoPkg := make(map[string]string) // k=pb file package directive, v=package name processed by protoc
+	pkg2ImportPath := make(map[string]string) // k=pb file package directive, v=importpath in go code
+	pb2ImportPath := make(map[string]string)  // k=pb file name，v=importpath in go code
 	pb2DepsPbs := make(map[string][]string)
 	var err error
 	func() {
@@ -110,7 +110,7 @@ func fillPackageName(fd descriptor.Desc, nfd *descriptor.FileDescriptor) error {
 func fillAppServerName(fd descriptor.Desc, nfd *descriptor.FileDescriptor) error {
 	strs := strings.Split(fd.GetPackage(), ".")
 	// Needs to meet the package format, i.e. trpc.{appName}.{ServerName}.
-	if len(strs) == 3 && strs[0] == Trpc {
+	if len(strs) == 3 && strs[0] == trpcName {
 		nfd.AppName = strs[1]
 		nfd.ServerName = strs[2]
 	}
@@ -477,7 +477,7 @@ func parseAliasComment(leading, trailing string) (string, bool, error) {
 // mapping relationships between RPC request/response type names and their corresponding Protobuf definitions
 // need to be established.
 func fillRPCMessageTypes(fd descriptor.Desc, nfd *descriptor.FileDescriptor) error {
-	def := map[string]string{}
+	def := make(map[string]string)
 
 	for _, sd := range fd.GetServices() {
 		for _, m := range sd.GetMethods() {
@@ -548,8 +548,8 @@ func getImports(fd descriptor.Desc, nfd *descriptor.FileDescriptor) ([]string, [
 	// Avoid importing the same package multiple times.
 	// Goimports can solve the issue of "import but unused",
 	// but it cannot solve problems like "redeclared as imported package name".
-	existed := map[string]struct{}{}
-	importName2Path := map[string]string{}
+	existed := make(map[string]struct{})
+	importName2Path := make(map[string]string)
 
 	// Use placeholders to avoid special cases:
 	// if the suffix of the "go_package" field defined in the proto file is "proto",
@@ -564,7 +564,7 @@ func getImports(fd descriptor.Desc, nfd *descriptor.FileDescriptor) ([]string, [
 	existed[path] = struct{}{}
 	// The "trpc" name has already been occupied by the trpc-go main library,
 	// so it also needs to be skipped.
-	importName2Path[Trpc] = ""
+	importName2Path[trpcName] = ""
 	for _, dep := range fd.GetDependencies() {
 		pb := dep.GetName()
 		pbImport, ok := nfd.Pb2ImportPath[pb]
@@ -591,7 +591,7 @@ func getImports(fd descriptor.Desc, nfd *descriptor.FileDescriptor) ([]string, [
 		// If there is a duplication and the importpath is different, automatic numbering is required.
 		// `importName == "proto" && v == ""` indicates the placeholder proto set above.
 		var seqno int
-		if !((importName == "proto" || importName == Trpc) && v == "") {
+		if !((importName == "proto" || importName == trpcName) && v == "") {
 			importName2Path[importName+"1"] = v
 			delete(importName2Path, importName)
 			seqno = 2
@@ -609,7 +609,7 @@ func getImports(fd descriptor.Desc, nfd *descriptor.FileDescriptor) ([]string, [
 
 	importsX := []descriptor.ImportDesc{}
 	for k, v := range importName2Path {
-		if (k == "proto" || k == Trpc) && v == "" {
+		if (k == "proto" || k == trpcName) && v == "" {
 			continue
 		}
 		desc := descriptor.ImportDesc{

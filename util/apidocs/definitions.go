@@ -44,7 +44,7 @@ var RefName = func(name string) string {
 // NewDefinitions returns a Definition instance.
 func NewDefinitions(option *params.Option, fds ...descriptor.Desc) *Definitions {
 	defs := &Definitions{
-		models: map[string]ModelStruct{},
+		models: make(map[string]ModelStruct),
 	}
 
 	defs.addModelsByFDs(option, fds...)
@@ -59,7 +59,7 @@ func (m ModelStruct) props() []*PropertyStruct {
 		return props
 	}
 
-	m.Properties.orderedEach(func(k string, v PropertyStruct) {
+	m.Properties.orderedEach(func(_ string, v PropertyStruct) {
 		prop := v
 		props = append(props, &prop)
 		if prop.Items != nil {
@@ -78,11 +78,11 @@ func (m ModelStruct) props() []*PropertyStruct {
 
 // getUsedModels retrieves used models from paths.
 func (defs *Definitions) getUsedModels(paths Paths) map[string]ModelStruct {
-	models := map[string]ModelStruct{}
+	models := make(map[string]ModelStruct)
 
 	var usedRefs []string
-	paths.orderedEach(func(path string, pathsMethod Methods) {
-		pathsMethod.orderedEach(func(k string, method *MethodStruct) {
+	paths.orderedEach(func(_ string, pathsMethod Methods) {
+		pathsMethod.orderedEach(func(_ string, method *MethodStruct) {
 			usedRefs = append(usedRefs, method.refs()...)
 		})
 	})
@@ -177,7 +177,7 @@ func (defs *Definitions) addModelsByFDs(option *params.Option, fds ...descriptor
 // It takes the name of the struct as an input parameter and returns a map of media struct.
 func (defs *Definitions) getMediaStruct(name string) map[string]MediaStruct {
 	if !defs.exist(name) {
-		return map[string]MediaStruct{}
+		return make(map[string]MediaStruct)
 	}
 	def := defs.getModel(name)
 	return map[string]MediaStruct{
@@ -198,7 +198,7 @@ func (defs *Definitions) filterFields(name, suffix string, fields []string) {
 	}
 
 	def := defs.getModel(name)
-	filters := map[string][]string{}
+	filters := make(map[string][]string)
 	for _, f := range fields {
 		index := strings.Index(f, ".")
 		if index == -1 {
@@ -217,10 +217,10 @@ func (defs *Definitions) filterFields(name, suffix string, fields []string) {
 
 	if len(def.Properties.Elements) != 0 {
 		newDef.Properties = &Properties{
-			Elements: map[string]PropertyStruct{},
+			Elements: make(map[string]PropertyStruct),
 		}
 		if def.Properties.Rank != nil {
-			newDef.Properties.Rank = map[string]int{}
+			newDef.Properties.Rank = make(map[string]int)
 		}
 	}
 
@@ -269,16 +269,28 @@ func (defs *Definitions) getBodyParameters(name string) []*ParametersStruct {
 
 // getBodyParameter returns the body parameter for the given name and field.
 // It takes the name and field of the struct as input parameters and returns a body parameter.
-func (defs *Definitions) getBodyParameter(name, field string) *ParametersStruct {
+func (defs *Definitions) getBodyParameter(name, field string) (*ParametersStruct, error) {
 	def := defs.getModel(name)
-	p := def.Properties.Elements[field]
-	param := def.Properties.Elements[field].GetQueryParameter(field)
+	property, ok := def.Properties.Elements[field]
+	if !ok {
+		fields := make([]string, 0, len(def.Properties.Elements))
+		for k := range def.Properties.Elements {
+			fields = append(fields, k)
+		}
+		return nil, fmt.Errorf(
+			"field name %s cannot be found in type %s "+
+				"(perhaps what you wrote is type name rather than field name "+
+				"or the field has been used by path template), "+
+				"the field names available are %+v",
+			field, name, fields)
+	}
+	param := property.GetQueryParameter(field)
 	param.In = "body"
 	param.Schema = &SchemaStruct{
-		Ref:  p.Ref,
-		Type: p.Type,
+		Ref:  property.Ref,
+		Type: property.Type,
 	}
-	return param
+	return param, nil
 }
 
 // getQueryParameters returns the query parameters for the given name.
@@ -291,7 +303,7 @@ func (defs *Definitions) getQueryParameters(name string) []*ParametersStruct {
 	}
 
 	def := defs.getModel(name)
-	def.Properties.orderedEach(func(k string, prop PropertyStruct) {
+	def.Properties.orderedEach(func(_ string, prop PropertyStruct) {
 		params = append(params, prop.GetQueryParameters(prop.Title, defs, map[string]bool{name: true})...)
 	})
 

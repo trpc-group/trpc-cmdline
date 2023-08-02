@@ -64,7 +64,7 @@ func TestOrderedMarshalJSON(t *testing.T) {
 					"1": "value-1",
 					"3": "value-3",
 				},
-				rank: map[string]int{},
+				rank: make(map[string]int),
 			},
 			want: []byte(`{"1":"value-1","2":"value-2","3":"value-3"}`),
 			wantErr: func(t require.TestingT, err error, i ...interface{}) {

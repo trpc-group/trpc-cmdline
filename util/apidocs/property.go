@@ -107,7 +107,7 @@ func NewProperties(option *params.Option, msg *desc.MessageDescriptor, defs *Def
 
 	// Get message's field information and fill in properties.
 	propertiesMap := &Properties{
-		Elements: map[string]PropertyStruct{},
+		Elements: make(map[string]PropertyStruct),
 	}
 
 	if option.OrderByPBName {

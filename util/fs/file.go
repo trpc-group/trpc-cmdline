@@ -79,7 +79,7 @@ func getPbFilePathList(protofile string, dirs []string) ([]string, error) {
 
 // UniqFilePath is used to deduplicate file paths in a slice.
 func UniqFilePath(dirs []string) []string {
-	set := map[string]struct{}{}
+	set := make(map[string]struct{})
 	for _, p := range dirs {
 		abs, _ := filepath.Abs(p)
 		set[abs] = struct{}{}

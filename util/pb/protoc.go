@@ -83,8 +83,8 @@ func IsInternalProto(fname string) bool {
 // files.
 func Protoc(protodirs []string, protofile, lang, outputdir string, opts ...Option) error {
 	options := options{
-		pb2ImportPath:  map[string]string{},
-		pkg2ImportPath: map[string]string{},
+		pb2ImportPath:  make(map[string]string),
+		pkg2ImportPath: make(map[string]string),
 	}
 	for _, o := range opts {
 		o(&options)

@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -25,6 +26,7 @@ func Execute() {
 	%+v
 Please run "trpc -h" or "trpc create -h" (or "trpc {some-other-subcommand} -h") for help messages.
 `, err)
+		os.Exit(1) // Exist with non-zero errcode to indicate failure.
 	}
 }
 
