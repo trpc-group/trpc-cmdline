@@ -230,6 +230,8 @@ func newRPCDescriptor(
 		return rpc, rpcxs, nil
 	}
 
+	rpc.SwaggerInfo = *parseSwaggerInfo(pmd.MD, rpc.LeadingComments)
+
 	if alias, ok := parseAliasExtension(pmd.MD.GetMethodOptions()); ok {
 		rpc := *rpc
 		rpc.FullyQualifiedCmd = alias
@@ -247,8 +249,6 @@ func newRPCDescriptor(
 			rpcxs = append(rpcxs, &rpc)
 		}
 	}
-
-	rpc.SwaggerInfo = *parseSwaggerInfo(pmd.MD, rpc.LeadingComments)
 
 	contents, err := parseRestAPIContents(pmd.MD)
 	if err != nil {
