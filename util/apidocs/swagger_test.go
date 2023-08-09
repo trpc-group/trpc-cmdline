@@ -129,6 +129,7 @@ func TestNewSwagger_with_file(t *testing.T) {
 		Protofile:           "testcase/hello.proto",
 		ProtofileAbs:        "testcase/hello.proto",
 		SwaggerOptJSONParam: true,
+		KeepOrigRPCName:     true,
 	}
 
 	fd, err := parser.ParseProtoFile(
@@ -166,6 +167,7 @@ func TestNewSwagger_OrderByPBName_with_file(t *testing.T) {
 		ProtofileAbs:        "testcase/hello.proto",
 		SwaggerOptJSONParam: true,
 		OrderByPBName:       true,
+		KeepOrigRPCName:     true,
 	}
 
 	fd, err := parser.ParseProtoFile(
@@ -203,6 +205,7 @@ func TestNewSwagger_Unmarshal_file(t *testing.T) {
 		ProtofileAbs:        "testcase/hello.proto",
 		SwaggerOptJSONParam: true,
 		OrderByPBName:       true,
+		KeepOrigRPCName:     true,
 	}
 
 	fd, err := parser.ParseProtoFile(

@@ -177,7 +177,9 @@ func newServiceDescriptor(
 	aliasMode bool,
 ) (*descriptor.ServiceDescriptor, error) {
 	nsd := &descriptor.ServiceDescriptor{
-		Name: sd.GetName(),
+		Name:       sd.GetName(),
+		MethodRPC:  make(map[string]*descriptor.RPCDescriptor),
+		MethodRPCx: make(map[string][]*descriptor.RPCDescriptor),
 	}
 	for _, m := range sd.GetMethods() {
 		rpc, rpcxs, err := newRPCDescriptor(fd, sd, m, aliasMode)
@@ -186,6 +188,8 @@ func newServiceDescriptor(
 		}
 		nsd.RPC = append(nsd.RPC, rpc)
 		nsd.RPCx = append(nsd.RPCx, rpcxs...)
+		nsd.MethodRPC[m.GetName()] = rpc
+		nsd.MethodRPCx[m.GetName()] = rpcxs
 	}
 	if err := checkRESTfulAPIInfo(nsd); err != nil {
 		return nil, err

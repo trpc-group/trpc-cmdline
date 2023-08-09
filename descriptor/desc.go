@@ -168,9 +168,11 @@ func (fd *FileDescriptor) ValidateEnabled() bool {
 
 // ServiceDescriptor provides the description information at the service level.
 type ServiceDescriptor struct {
-	Name string           // Service name.
-	RPC  []*RPCDescriptor // RPC interface definition.
-	RPCx []*RPCDescriptor // RPC interface definition, including the RPC alias and original name.
+	Name       string                      // Service name.
+	RPC        []*RPCDescriptor            // RPC interface definition.
+	RPCx       []*RPCDescriptor            // RPC interface definition, including the RPC alias and original name.
+	MethodRPC  map[string]*RPCDescriptor   // MethodRPC maps method name to RPC definition.
+	MethodRPCx map[string][]*RPCDescriptor // MethodRPCx maps method name to RPCx definition which is actually aliases.
 }
 
 // RPCDescriptor provides the description information at the RPC level.

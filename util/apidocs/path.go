@@ -51,7 +51,27 @@ func NewPaths(fd *descriptor.FileDescriptor, option *params.Option, defs *Defini
 
 	var err error
 	for _, service := range fd.Services {
-		for _, rpc := range append(service.RPC, service.RPCx...) {
+		// service.RPC contains the original RPC method and its restful bindings.
+		for _, rpc := range service.RPC {
+			args := methodArgs{
+				RPC:  rpc,
+				Defs: defs,
+				Opt:  option,
+			}
+			if !option.AliasOn || option.KeepOrigRPCName ||
+				// If alias is set to true and keep-orig-rpcname is set to false, but the RPC method
+				// does not have an alias, the original RPC information should still be displayed.
+				len(service.MethodRPCx[rpc.Name]) == 0 {
+				args.Tags = []string{strings.ToLower(service.Name) + "." + "trpc"}
+				paths.addRPCMethod(args)
+			}
+			args.Tags = []string{strings.ToLower(service.Name) + "." + "restful"}
+			if e := paths.addRestfulMethod(args); e != nil {
+				err = multierror.Append(err, e).ErrorOrNil()
+			}
+		}
+		// service.RPCx only contains the alias RPC method which excludes any restful bindings.
+		for _, rpc := range service.RPCx {
 			args := methodArgs{
 				RPC:  rpc,
 				Defs: defs,
@@ -59,11 +79,6 @@ func NewPaths(fd *descriptor.FileDescriptor, option *params.Option, defs *Defini
 			}
 			args.Tags = []string{strings.ToLower(service.Name) + "." + "trpc"}
 			paths.addRPCMethod(args)
-
-			args.Tags = []string{strings.ToLower(service.Name) + "." + "restful"}
-			if e := paths.addRestfulMethod(args); e != nil {
-				err = multierror.Append(err, e).ErrorOrNil()
-			}
 		}
 	}
 
