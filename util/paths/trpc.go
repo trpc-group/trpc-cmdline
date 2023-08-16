@@ -13,7 +13,6 @@ import (
 // Locate locates the directory of file name. It first searches in dirs and then in the template installation directory.
 // name can be a regular file or directory.
 func Locate(name string, search ...string) (string, error) {
-	// append user homedir
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
@@ -24,21 +23,20 @@ func Locate(name string, search ...string) (string, error) {
 	)
 
 	for _, p := range search {
-		ap, e := filepath.Abs(p)
+		absolutePath, e := filepath.Abs(p)
 		if e != nil {
 			err = multierror.Append(err, e).ErrorOrNil()
 			continue
 		}
 
-		fp := filepath.Join(ap, name)
-		_, e = os.Lstat(fp)
-		if e != nil {
+		filePath := filepath.Join(absolutePath, name)
+		if _, e := os.Lstat(filePath); e != nil {
 			err = multierror.Append(err, e).ErrorOrNil()
 			continue
 		}
-		return ap, nil
+		return absolutePath, nil
 	}
-	return "", fmt.Errorf("%s not found in %s, errs: %w", name, strings.Join(search, ","), err)
+	return "", fmt.Errorf("%s not found in %s, err: %w", name, strings.Join(search, ","), err)
 }
 
 // ExpandTRPCSearch expands search path around installation path (typically ~/.trpc-cmdline-assets).

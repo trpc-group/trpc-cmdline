@@ -140,7 +140,7 @@ func (c *Create) fixProtoDirs() error {
 
 	p, err := paths.Locate(pb.ProtoTRPC)
 	if err != nil {
-		return fmt.Errorf("paths local trpc failed err: %w", err)
+		return fmt.Errorf("paths locate %s failed err: %w", pb.ProtoTRPC, err)
 	}
 
 	c.options.Protodirs = fs.UniqFilePath(append(append(c.options.Protodirs, p),
