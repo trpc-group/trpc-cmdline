@@ -30,6 +30,7 @@ type Option struct {
 	// Whether to generate dependent stub code, defaults to false. Only effective when RPCOnly is true.
 	DependencyStub bool
 	NoGoMod        bool // Do not generate go.mod in the stub code, defaults to false.
+	SecvEnabled    bool // SecvEnabled decides whether to enable generation of validation files, default true.
 
 	// gomod option
 	GoMod         string // go.mod specified in the current project.

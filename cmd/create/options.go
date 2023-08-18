@@ -291,6 +291,10 @@ func (c *Create) parseOutputOptions(flags *pflag.FlagSet) error {
 		return fmt.Errorf("flags parse nogomod bool err: %w", err)
 	}
 	c.options.KeepOrigRPCName = true // Always true.
+	c.options.SecvEnabled, err = flags.GetBool("secvenabled")
+	if err != nil {
+		return fmt.Errorf("flags parse secvenabled bool err: %w", err)
+	}
 	c.options.Force, err = flags.GetBool("force")
 	if err != nil {
 		return fmt.Errorf("flags parse force bool err: %w", err)

@@ -30,6 +30,8 @@ func AddCreateFlags(createCmd *cobra.Command) {
 		"Whether to generate stub code for dependencies, only effective when --rpconly=true, defaults to false")
 	createCmd.Flags().Bool("nogomod", false,
 		"Do not generate go.mod file in the stub code, only effective when --rpconly=true, defaults to false")
+	createCmd.Flags().Bool("secvenabled", true,
+		"Enable generation of validate.go file using protoc-gen-secv, defaults to true")
 
 	// Add functionality similar to "protoc --go_out=. testdesc.proto --descriptor_set_in=testdesc.pb".
 	createCmd.Flags().StringP("descriptor_set_in", "", "",
