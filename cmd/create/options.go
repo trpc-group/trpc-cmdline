@@ -251,6 +251,10 @@ func (c *Create) parseInputOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags parse alias bool err: %w", err)
 	}
+	c.options.AliasAsClientRPCName, err = flags.GetBool("alias-as-client-rpcname")
+	if err != nil {
+		return fmt.Errorf("flags parse alias-as-client-rpcname bool err: %w", err)
+	}
 	c.options.GoMod, err = flags.GetString("mod")
 	if err != nil {
 		return fmt.Errorf("flags parse mod string err: %w", err)

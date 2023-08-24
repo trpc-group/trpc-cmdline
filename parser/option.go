@@ -1,10 +1,11 @@
 package parser
 
 type options struct {
-	aliasOn      bool
-	language     string
-	rpcOnly      bool
-	multiVersion bool
+	aliasOn              bool
+	aliasAsClientRPCName bool
+	language             string
+	rpcOnly              bool
+	multiVersion         bool
 }
 
 // Option parse option
@@ -15,6 +16,15 @@ func WithAliasOn(enabled bool) Option {
 	return func(opts *options) {
 		if opts != nil {
 			opts.aliasOn = enabled
+		}
+	}
+}
+
+// WithAliasAsClientRPCName sets alias as client rpc name.
+func WithAliasAsClientRPCName(enabled bool) Option {
+	return func(opts *options) {
+		if opts != nil {
+			opts.aliasAsClientRPCName = enabled
 		}
 	}
 }

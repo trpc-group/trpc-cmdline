@@ -14,10 +14,13 @@ type Option struct {
 
 	UseBaseName bool // Whether to pass protoc/flatc by the basename of "--protofile/--fbs" (default as true)
 
-	AliasOn   bool   // Parses the MethodOption or the "//@alias=" alias in comments to replace the RPC in the .proto file.
-	PerMethod bool   // Whether to support splitting files by method.
-	OutputDir string // Project output path.
-	Force     bool   // Force write.
+	// Parses the MethodOption or the "//@alias=" alias in comments to replace the RPC in the .proto file.
+	AliasOn bool
+	// If enabled, client rpc name in stub will be replaced as alias name, default true.
+	AliasAsClientRPCName bool
+	PerMethod            bool   // Whether to support splitting files by method.
+	OutputDir            string // Project output path.
+	Force                bool   // Force write.
 
 	DescriptorSetIn string // Descriptor file specified by "--descriptor_set_in".
 

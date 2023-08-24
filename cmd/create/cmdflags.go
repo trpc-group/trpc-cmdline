@@ -72,6 +72,7 @@ func addOutputFlags(createCmd *cobra.Command) {
 
 	// Enable rpcname aliases.
 	createCmd.Flags().Bool("alias", false, "Use rpcname aliases")
+	createCmd.Flags().Bool("alias-as-client-rpcname", true, "Use alias name as client rpcname in stub code")
 
 	// Customize pb message struct tag.
 	createCmd.Flags().Bool("gotag", true, "Generate custom pb struct tag")

@@ -159,10 +159,10 @@ func buildFileOptions(opts descriptor.FileOpt) (map[string]interface{}, error) {
 	return m, nil
 }
 
-func fillServices(fd descriptor.Desc, nfd *descriptor.FileDescriptor, aliasMode bool) error {
+func fillServices(fd descriptor.Desc, nfd *descriptor.FileDescriptor, aliasMode, aliasAsClientRPCName bool) error {
 	// Traverse all RPC services to fill them into "nfd".
 	for _, sd := range fd.GetServices() {
-		nsd, err := newServiceDescriptor(fd, sd, aliasMode)
+		nsd, err := newServiceDescriptor(fd, sd, aliasMode, aliasAsClientRPCName)
 		if err != nil {
 			return err
 		}
@@ -174,7 +174,7 @@ func fillServices(fd descriptor.Desc, nfd *descriptor.FileDescriptor, aliasMode 
 func newServiceDescriptor(
 	fd descriptor.Desc,
 	sd descriptor.ServiceDesc,
-	aliasMode bool,
+	aliasMode, aliasAsClientRPCName bool,
 ) (*descriptor.ServiceDescriptor, error) {
 	nsd := &descriptor.ServiceDescriptor{
 		Name:       sd.GetName(),
@@ -182,7 +182,7 @@ func newServiceDescriptor(
 		MethodRPCx: make(map[string][]*descriptor.RPCDescriptor),
 	}
 	for _, m := range sd.GetMethods() {
-		rpc, rpcxs, err := newRPCDescriptor(fd, sd, m, aliasMode)
+		rpc, rpcxs, err := newRPCDescriptor(fd, sd, m, aliasMode, aliasAsClientRPCName)
 		if err != nil {
 			return nil, err
 		}
@@ -201,7 +201,7 @@ func newRPCDescriptor(
 	fd descriptor.Desc,
 	sd descriptor.ServiceDesc,
 	m descriptor.MethodDesc,
-	aliasMode bool,
+	aliasMode, aliasAsClientRPCName bool,
 ) (rpc *descriptor.RPCDescriptor, rpcxs []*descriptor.RPCDescriptor, err error) {
 	reqOpts, err := buildFileOptions(m.GetInputType().GetFile().GetFileOptions())
 	if err != nil {
@@ -237,6 +237,7 @@ func newRPCDescriptor(
 	rpc.SwaggerInfo = *parseSwaggerInfo(pmd.MD, rpc.LeadingComments)
 
 	if alias, ok := parseAliasExtension(pmd.MD.GetMethodOptions()); ok {
+		setAliasClientRPCName(rpc, alias, aliasAsClientRPCName)
 		rpc := *rpc
 		rpc.FullyQualifiedCmd = alias
 		rpcxs = append(rpcxs, &rpc)
@@ -248,6 +249,7 @@ func newRPCDescriptor(
 			return nil, nil, err
 		}
 		if ok {
+			setAliasClientRPCName(rpc, alias, aliasAsClientRPCName)
 			rpc := *rpc
 			rpc.FullyQualifiedCmd = alias
 			rpcxs = append(rpcxs, &rpc)
@@ -261,6 +263,12 @@ func newRPCDescriptor(
 	rpc.RESTfulAPIInfo.ContentList = append(rpc.RESTfulAPIInfo.ContentList, contents...)
 
 	return rpc, rpcxs, nil
+}
+
+func setAliasClientRPCName(rpc *descriptor.RPCDescriptor, alias string, aliasAsClientRPCName bool) {
+	if aliasAsClientRPCName {
+		rpc.FullyQualifiedCmd = alias
+	}
 }
 
 func parseSwaggerInfo(md *desc.MethodDescriptor, leadingComments string) *descriptor.SwaggerDescriptor {

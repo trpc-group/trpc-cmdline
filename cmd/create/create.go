@@ -72,6 +72,7 @@ func (c *Create) PreRunE(cmd *cobra.Command, args []string) error {
 	var err error
 	opts := []parser.Option{
 		parser.WithAliasOn(c.options.AliasOn),
+		parser.WithAliasAsClientRPCName(c.options.AliasAsClientRPCName),
 		parser.WithLanguage(c.options.Language),
 		parser.WithRPCOnly(c.options.RPCOnly),
 		parser.WithMultiVersion(c.options.MultiVersion),
