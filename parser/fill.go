@@ -236,6 +236,18 @@ func newRPCDescriptor(
 
 	rpc.SwaggerInfo = *parseSwaggerInfo(pmd.MD, rpc.LeadingComments)
 
+	// First, store the original rpc in rpcxs. Because the alias may change
+	// the FullyQualifiedCmd of the rpc, but the service descriptor still requires
+	// the original form of the rpc.
+	// At the end of this function, rpcxs will be deduplicated by rpc to avoid multiple occurrences
+	// of the same FullyQualifiedCmd name.
+	// Historical note: A better solution might be to move the logic of aliasAsClientRPCName
+	// to *.tpl files. However, there are cases where users have already made modifications
+	// to additional copies of these *.tpl files. Moving the logic could potentially cause
+	// complications in the future, leading to headaches.
+	originalRPC := *rpc
+	rpcxs = append(rpcxs, &originalRPC)
+
 	if alias, ok := parseAliasExtension(pmd.MD.GetMethodOptions()); ok {
 		setAliasClientRPCName(rpc, alias, aliasAsClientRPCName)
 		rpc := *rpc
@@ -262,13 +274,26 @@ func newRPCDescriptor(
 	}
 	rpc.RESTfulAPIInfo.ContentList = append(rpc.RESTfulAPIInfo.ContentList, contents...)
 
-	return rpc, rpcxs, nil
+	return rpc, deduplicate(rpcxs, rpc), nil
 }
 
 func setAliasClientRPCName(rpc *descriptor.RPCDescriptor, alias string, aliasAsClientRPCName bool) {
 	if aliasAsClientRPCName {
 		rpc.FullyQualifiedCmd = alias
 	}
+}
+
+func deduplicate(rpcxs []*descriptor.RPCDescriptor, rpc *descriptor.RPCDescriptor) []*descriptor.RPCDescriptor {
+	result := make([]*descriptor.RPCDescriptor, 0, len(rpcxs))
+	exist := make(map[string]struct{}, len(rpcxs))
+	exist[rpc.FullyQualifiedCmd] = struct{}{}
+	for _, rpcx := range rpcxs {
+		if _, ok := exist[rpcx.FullyQualifiedCmd]; !ok {
+			exist[rpcx.FullyQualifiedCmd] = struct{}{}
+			result = append(result, rpcx)
+		}
+	}
+	return result
 }
 
 func parseSwaggerInfo(md *desc.MethodDescriptor, leadingComments string) *descriptor.SwaggerDescriptor {
