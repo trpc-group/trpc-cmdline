@@ -372,7 +372,12 @@ func getCamelcaseSeq(wordList []string, i int, cur string) string {
 	if i != len(wordList)-1 && len(wordList[i+1]) != 0 {
 		curIsAllUpper := isAllUpper(cur)
 		nextIsAllUpper := isAllUpper(wordList[i+1])
-		if curIsAllUpper || nextIsAllUpper {
+		if curIsAllUpper || nextIsAllUpper ||
+			// Only skip '_' when there is a lower case letter behind.
+			// That is to say:
+			// If the '_' is followed by an upper case letter, the '_' should be preserved.
+			// https://github.com/protocolbuffers/protobuf-go/blob/v1.26.0/internal/strs/strings.go#L30
+			unicode.IsUpper(rune(wordList[i+1][0])) {
 			seq = "_"
 		}
 	}
