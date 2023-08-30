@@ -115,9 +115,11 @@ func {{$svrNameCamelCase}}{{$serviceSuffix}}_{{$rpcName}}_Handler(svr interface{
 		return svr.({{$svrNameCamelCase}}{{$serviceSuffix}}).{{$rpcName}}(ctx, reqbody.(*{{$rpcReqType}}))
 	}
     {{ if eq $protocol "grpc" }}
-    // get req from ctx
-    grpcData := ctx.Value(grpc.ContextKeyHeader).(*grpc.Header)
-    req = grpcData.Req.(*{{$rpcReqType}})
+    // Try to get req from ctx.
+    grpcData, grpcEnabled := ctx.Value(grpc.ContextKeyHeader).(*grpc.Header)
+    if grpcEnabled {
+        req = grpcData.Req.(*{{$rpcReqType}})
+    }
     {{ end }}
     var rsp interface{}
     rsp, err = filters.Filter(ctx, req, handleFunc)
@@ -126,8 +128,10 @@ func {{$svrNameCamelCase}}{{$serviceSuffix}}_{{$rpcName}}_Handler(svr interface{
 	}
     {{- if eq $protocol "grpc" }}
     // Set rsp to ctx, and set rsp empty.
-    grpcData.Rsp = rsp
-    rsp = &{{$rpcRspType}}{}
+    if grpcEnabled {
+        grpcData.Rsp = rsp
+        rsp = &{{$rpcRspType}}{}
+    }
     {{- end }}
 	return rsp, nil
 }
