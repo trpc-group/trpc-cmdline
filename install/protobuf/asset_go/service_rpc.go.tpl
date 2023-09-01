@@ -69,7 +69,9 @@ type {{$svrName}}Impl struct {
 
 {{ with .LeadingComments }}// {{$rpcName}} {{.}}{{ end }}
 {{- if and $method.ClientStreaming $method.ServerStreaming }}
-func (s *{{$svrName}}Impl) {{$rpcName}}(stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server) error {
+func (s *{{$svrName}}Impl) {{$rpcName}}(
+	stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server,
+) error {
 	// Bidirectional streaming scenario processing logic (for reference only, please modify as needed).
 	for {
 		_, err := stream.Recv()
@@ -87,7 +89,9 @@ func (s *{{$svrName}}Impl) {{$rpcName}}(stream {{index (splitList "." $rpcReqTyp
 }
 {{- else }}
 {{- if $method.ClientStreaming }}
-func (s *{{$svrName}}Impl) {{$rpcName}}(stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server) error {
+func (s *{{$svrName}}Impl) {{$rpcName}}(
+	stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server,
+) error {
 	// Client streaming scenario processing logic (for reference only, please modify as needed).
 	for {
 		_, err := stream.Recv()
@@ -101,7 +105,9 @@ func (s *{{$svrName}}Impl) {{$rpcName}}(stream {{index (splitList "." $rpcReqTyp
 }
 {{- else }}
 {{- if $method.ServerStreaming }}
-func (s *{{$svrName}}Impl) {{$rpcName}}(req *{{$rpcReqType}}, stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server) error {
+func (s *{{$svrName}}Impl) {{$rpcName}}(
+	req *{{$rpcReqType}}, stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server,
+) error {
 	// Server streaming scenario processing logic (for reference only, please modify as needed).
 	for i := 0; i < 5; i++ {
 		err := stream.Send(&{{$rpcRspType}}{})
@@ -112,7 +118,10 @@ func (s *{{$svrName}}Impl) {{$rpcName}}(req *{{$rpcReqType}}, stream {{index (sp
 	return nil
 }
 {{- else }}
-func (s *{{$svrName}}Impl) {{$rpcName}}(ctx context.Context, req *{{$rpcReqType}}) (*{{$rpcRspType}}, error) {
+func (s *{{$svrName}}Impl) {{$rpcName}}(
+	ctx context.Context, 
+	req *{{$rpcReqType}},
+) (*{{$rpcRspType}}, error) {
     rsp := &{{$rpcRspType}}{}
 	return rsp, nil
 }
