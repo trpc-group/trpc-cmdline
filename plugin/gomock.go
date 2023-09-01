@@ -76,7 +76,10 @@ func (p *GoMock) Run(fd *descriptor.FileDescriptor, opt *params.Option) error {
 	source := fmt.Sprintf("--source=%s.trpc.go", fname)
 
 	if err := runCmd(fmt.Sprintf("mockgen %s %s %s %s", dest, pkgv, source, selfpkgv)); err != nil {
-		return fmt.Errorf("go mock mockgen err: %w", err)
+		return fmt.Errorf("go mock mockgen err: %w, "+
+			"if the error is caused by go mod tidy, "+
+			"you may try adding --nogomod flag to use the outer go.mod of your project, "+
+			"or you can use --mock=false to disable go mod tidy and mockgen completely", err)
 	}
 	return nil
 }
