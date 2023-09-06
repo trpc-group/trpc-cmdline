@@ -123,6 +123,8 @@ func loadAPIDocsOptions(flagSet *pflag.FlagSet) (*params.Option, error) {
 		return nil, err
 	}
 	option.Protodirs, _ = flagSet.GetStringArray("protodir")
+	// Always append the current working directory.
+	option.Protodirs = append(option.Protodirs, ".")
 	option.AliasOn, _ = flagSet.GetBool("alias")
 	option.KeepOrigRPCName, _ = flagSet.GetBool("keep-orig-rpcname")
 

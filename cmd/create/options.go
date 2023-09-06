@@ -367,7 +367,8 @@ func (c *Create) parsePBIDLOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags get protodir string array failed err: %w", err)
 	}
-	c.options.Protodirs = fs.UniqFilePath(dirs)
+	// Always append the current working directory.
+	c.options.Protodirs = fs.UniqFilePath(append(dirs, "."))
 	c.options.Protofile, err = flags.GetString("protofile")
 	if err != nil {
 		return fmt.Errorf("flags get protofile string failed err: %w", err)
@@ -387,7 +388,8 @@ func (c *Create) parseFBIDLOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags get fbsdir string array failed err: %w", err)
 	}
-	c.options.Protodirs = fs.UniqFilePath(dirs)
+	// Always append the current working directory.
+	c.options.Protodirs = fs.UniqFilePath(append(dirs, "."))
 	c.options.Protofile, err = flags.GetString("fbs")
 	if err != nil {
 		return fmt.Errorf("flags get fbs string failed err: %w", err)
