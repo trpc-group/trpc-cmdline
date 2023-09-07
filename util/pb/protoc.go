@@ -213,12 +213,12 @@ func makePb3Labels(args []string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	if CheckVersion(v, "v3.15.0") {
+	if CheckVersionGreaterThanOrEqualTo(v, "v3.15.0") {
 		// enabled by default, and no longer require --experimental_allow_proto3_optional flag
-	} else if CheckVersion(v, "v3.12.0") {
+	} else if CheckVersionGreaterThanOrEqualTo(v, "v3.12.0") {
 		// [experimental] adding the "optional" field label, need passing --experimental_allow_proto3_optional flag
 		args = append(args, "--experimental_allow_proto3_optional")
-	} else if CheckVersion(v, "v3.6.0") {
+	} else if CheckVersionGreaterThanOrEqualTo(v, "v3.6.0") {
 		// Not supported, no need for special settings.
 	} else {
 		// Not supported and version is below the recommended version of trpc.

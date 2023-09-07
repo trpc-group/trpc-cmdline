@@ -28,6 +28,7 @@ func Test_oldVersion(t *testing.T) {
 		{"protoc-3.7.0", args{version: "3.7.0"}, false},
 		{"protoc-3.7.1", args{version: "3.7.1"}, false},
 		{"protoc-3.10.1", args{version: "3.10.1"}, false},
+		{"protoc-24.2", args{version: "24.2"}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -38,22 +38,24 @@ func isOldProtocVersion() (old bool, err error) {
 }
 
 func oldVersion(version string) (old bool, err error) {
-	return !CheckVersion(version, requireProtoVersion), nil
+	return !CheckVersionGreaterThanOrEqualTo(version, requireProtoVersion), nil
 }
 
-// CheckVersion check if version meet the requirement
-func CheckVersion(version, required string) bool {
-
+// CheckVersionGreaterThanOrEqualTo check if version meet the requirement
+func CheckVersionGreaterThanOrEqualTo(version, required string) bool {
 	version = getVersion(version)
 	required = getVersion(required)
 
 	m1, n1, r1 := semanticVersion(version)
 	m2, n2, r2 := semanticVersion(required)
 
-	if !(m1 >= m2 && n1 >= n2 && r1 >= r2) {
-		return false
+	if m1 != m2 {
+		return m1 > m2
 	}
-	return true
+	if n1 != n2 {
+		return n1 > n2
+	}
+	return r1 >= r2
 }
 
 func getVersion(version string) string {
