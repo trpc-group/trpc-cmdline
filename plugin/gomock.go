@@ -77,9 +77,16 @@ func (p *GoMock) Run(fd *descriptor.FileDescriptor, opt *params.Option) error {
 
 	if err := runCmd(fmt.Sprintf("mockgen %s %s %s %s", dest, pkgv, source, selfpkgv)); err != nil {
 		return fmt.Errorf("go mock mockgen err: %w, "+
-			"if the error is caused by go mod tidy, "+
-			"you may try adding --nogomod flag to use the outer go.mod of your project, "+
-			"or you can use --mock=false to disable go mod tidy and mockgen completely", err)
+			"if the error is caused by 'go mod tidy' or 'mockgen', "+
+			"you may try adding '--nogomod' flag to use the outer go.mod of your project, "+
+			"or you can use '--mock=false' to disable go mod tidy and mockgen completely, "+
+			"if you are very curious, here's the explanation: Most of the errors are basically "+
+			"caused by the mockgen tool. Before executing mockgen, it requires running go mod tidy, "+
+			"which in turn needs a valid go.mod file. However, this go.mod file can have various issues, "+
+			"especially when your project already has an existing go.mod file. "+
+			"Therefore, using the '--nogomod' flag to disable the generation of "+
+			"a new go.mod file can solve the problem, or using the '--mock=false' flag "+
+			"can resolve the issue even more effectively (but there won't be any mock files generated :( ).", err)
 	}
 	return nil
 }
