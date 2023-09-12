@@ -34,6 +34,10 @@ type Option struct {
 	DependencyStub bool
 	NoGoMod        bool // Do not generate go.mod in the stub code, defaults to false.
 	SecvEnabled    bool // SecvEnabled decides whether to enable generation of validation files, default true.
+	// KVs is the user provided kv map extracted from a json file.
+	// User's custom template files can read this kvs.
+	KVs  map[string]interface{}
+	Envs map[string]string
 
 	// gomod option
 	GoMod         string // go.mod specified in the current project.

@@ -1,7 +1,9 @@
 package create
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
@@ -298,6 +300,28 @@ func (c *Create) parseOutputOptions(flags *pflag.FlagSet) error {
 	c.options.SecvEnabled, err = flags.GetBool("secvenabled")
 	if err != nil {
 		return fmt.Errorf("flags parse secvenabled bool err: %w", err)
+	}
+	kvFile, err := flags.GetString("kvfile")
+	if err != nil {
+		return fmt.Errorf("flags parse kvfile string err: %w", err)
+	}
+	if kvFile != "" {
+		bs, err := os.ReadFile(kvFile)
+		if err != nil {
+			return fmt.Errorf("read kv file %s err: %w", kvFile, err)
+		}
+		if err := json.Unmarshal(bs, &c.options.KVs); err != nil {
+			return fmt.Errorf("json unmarshal kv file %s into %T err: %w", kvFile, c.options.KVs, err)
+		}
+	}
+	kvRawJSON, err := flags.GetString("kvrawjson")
+	if err != nil {
+		return fmt.Errorf("flags parse kvrawjson string err: %w", err)
+	}
+	if kvRawJSON != "" {
+		if err := json.Unmarshal([]byte(kvRawJSON), &c.options.KVs); err != nil {
+			return fmt.Errorf("json unmarshal kv raw json %s into %T err: %w", kvRawJSON, c.options.KVs, err)
+		}
 	}
 	c.options.Force, err = flags.GetBool("force")
 	if err != nil {
