@@ -557,7 +557,8 @@ func findMessageDefLocation(typ string, fd descriptor.Desc) (string, error) {
 		return s, nil
 	}
 
-	return "", errors.New("not found")
+	return "", fmt.Errorf("definition of message %s is not found in %s and its dependencies",
+		typ, fd.GetFullyQualifiedName())
 }
 
 func findMessageDefLocationFromMessageType(typ string, fd descriptor.Desc) (string, bool) {

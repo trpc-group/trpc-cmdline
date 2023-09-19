@@ -77,7 +77,7 @@ func initConfig() error {
 
 	d, err := config.Init()
 	if err != nil {
-		return err
+		return fmt.Errorf("config init err: %w", err)
 	}
 
 	if cfgFile == defaultConfigFile {
@@ -93,7 +93,7 @@ func initConfig() error {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
-		return err
+		return fmt.Errorf("viper read in config: %w", err)
 	}
 
 	return nil
