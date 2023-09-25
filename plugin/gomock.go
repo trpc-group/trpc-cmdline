@@ -113,7 +113,7 @@ func (p *GoMock) runGoGenerateAllAround(opt *params.Option) error {
 		if !info.IsDir() {
 			return nil
 		}
-		matches, err := filepath.Glob(opt.OutputDir + "/*.go")
+		matches, err := filepath.Glob(path + "/*.go")
 		if err != nil {
 			return err
 		}
