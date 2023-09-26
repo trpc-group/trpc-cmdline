@@ -51,6 +51,9 @@ func (p *ProtoFileDescriptor) GetMessageTypes() []MessageDesc {
 	var descs []MessageDesc
 	for _, md := range p.FD.GetMessageTypes() {
 		descs = append(descs, &ProtoMessageDescriptor{MD: md})
+		for _, nmd := range md.GetNestedMessageTypes() {
+			descs = append(descs, &ProtoMessageDescriptor{MD: nmd})
+		}
 	}
 	return descs
 }
