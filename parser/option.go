@@ -6,6 +6,8 @@ type options struct {
 	language             string
 	rpcOnly              bool
 	multiVersion         bool
+	appName              string
+	serverName           string
 }
 
 // Option parse option
@@ -54,5 +56,18 @@ func WithMultiVersion(enabled bool) Option {
 			opts.multiVersion = enabled
 		}
 	}
+}
 
+// WithAPPName specifies app name to use in stub code.
+func WithAPPName(name string) Option {
+	return func(opts *options) {
+		opts.appName = name
+	}
+}
+
+// WithServerName specifies server name to use in stub code.
+func WithServerName(name string) Option {
+	return func(opts *options) {
+		opts.serverName = name
+	}
 }

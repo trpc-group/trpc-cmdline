@@ -22,6 +22,9 @@ type Option struct {
 	OutputDir            string // Project output path.
 	Force                bool   // Force write.
 
+	CustomAPPName    string // APPName is the custom app name provided by user.
+	CustomServerName string // ServerName is the custom server name provided by user.
+
 	DescriptorSetIn string // Descriptor file specified by "--descriptor_set_in".
 
 	// template option

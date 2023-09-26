@@ -107,12 +107,23 @@ func fillPackageName(fd descriptor.Desc, nfd *descriptor.FileDescriptor) error {
 	return nil
 }
 
-func fillAppServerName(fd descriptor.Desc, nfd *descriptor.FileDescriptor) error {
+func fillAppServerName(
+	fd descriptor.Desc,
+	nfd *descriptor.FileDescriptor,
+	option *options,
+) error {
 	strs := strings.Split(fd.GetPackage(), ".")
 	// Needs to meet the package format, i.e. trpc.{appName}.{ServerName}.
 	if len(strs) == 3 && strs[0] == trpcName {
 		nfd.AppName = strs[1]
 		nfd.ServerName = strs[2]
+	}
+	// The user provided app and server name have higher priority.
+	if option.appName != "" {
+		nfd.AppName = option.appName
+	}
+	if option.serverName != "" {
+		nfd.ServerName = option.serverName
 	}
 	return nil
 }

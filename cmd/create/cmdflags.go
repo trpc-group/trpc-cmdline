@@ -36,6 +36,10 @@ func AddCreateFlags(createCmd *cobra.Command) {
 		"Provide a json file path to unmarshal into key-value pairs (KVs) for usage in template files")
 	createCmd.Flags().String("kvrawjson", "",
 		"Provide raw json content to unmarshal into key-value pairs (KVs) for usage in template files")
+	createCmd.Flags().String("app", "",
+		"Provide custom app name to use in stub code")
+	createCmd.Flags().String("server", "",
+		"Provide custom server name to use in stub code")
 
 	// Add functionality similar to "protoc --go_out=. testdesc.proto --descriptor_set_in=testdesc.pb".
 	createCmd.Flags().StringP("descriptor_set_in", "", "",

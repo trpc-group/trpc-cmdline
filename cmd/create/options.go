@@ -269,6 +269,14 @@ func (c *Create) parseInputOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags parse trpcgoversion string err: %w", err)
 	}
+	c.options.CustomAPPName, err = flags.GetString("app")
+	if err != nil {
+		return fmt.Errorf("flags parse app string err: %w", err)
+	}
+	c.options.CustomServerName, err = flags.GetString("server")
+	if err != nil {
+		return fmt.Errorf("flags parse server string err: %w", err)
+	}
 	c.options.DescriptorSetIn, err = flags.GetString("descriptor_set_in")
 	if err != nil {
 		return fmt.Errorf("flags parse descriptor_set_in string err: %w", err)
