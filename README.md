@@ -18,6 +18,15 @@ It supports the latest three major releases of [Go](https://go.dev/doc/devel/rel
 
 #### Install using go command
 
+First, add the following into your `~/.gitconfig`:
+
+```bash
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
+```
+
+Then run the following to install `trpc-cmdline`:
+
 ```bash
 go install trpc.group/trpc-go/trpc-cmdline/trpc@latest
 ```
