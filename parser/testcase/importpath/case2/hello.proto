@@ -1,0 +1,21 @@
+syntax = "proto3";
+package hello;
+
+option go_package="trpc.group/hello";
+
+import "dep1.proto";
+import "dep2.proto";
+
+service HelloService {
+    rpc Hello(dep1.Msg1) returns(dep2.Msg2);
+}
+
+message HelloRequest {
+    //dep1.Msg1 msg = 1;
+}
+
+message HelloResponse {
+    //dep2.Msg2 msg = 2;
+}
+
+

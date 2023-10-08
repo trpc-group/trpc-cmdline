@@ -1,0 +1,15 @@
+syntax = "proto3";
+package helloworld.common;
+
+option go_package = "trpc.group/examples/helloworld/common";
+option java_package = "com.trpc.examples.helloworld";
+
+// HelloReq is the hello request.
+message HelloReq{
+  string msg = 1;
+}
+
+// HelloRsp is the hello response.
+message HelloRsp{
+  string msg = 1;
+}

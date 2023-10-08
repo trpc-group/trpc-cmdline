@@ -1,0 +1,315 @@
+include "circlesearch/common/feedcloud/common.fbs";
+
+namespace trpc.circlesearch.common_feedcloud_fbsmeta;
+
+attribute "go_package=trpc.group/trpcprotocol/circlesearch/common_feedcloud_fbsmeta";
+
+enum SyncStatus : int {
+  SYNC_TO_QZONE = 1, // 同步到空间
+  SYNC_FROM_QZONE = 2, // 来自空间
+}
+
+enum FeedType : int {
+  TYPE_ACTIVE_FEED = 1, // 主动 feed 
+  TYPE_NOTICE_FEED = 2, // 通知 feed 
+  TYPE_RECOM_FEED = 3, // 推荐 feed 
+  TYPE_ADV_FEED = 4, // 广告 feed 
+}
+
+// 关系链类型
+enum RelationType : int {
+  NO_RELATION = 0, // 没关系
+  FOLLOW = 1, // 关注
+  MUTUAL_FOLLOW = 2, // 相互关注
+  UNCARE = 3, // 拉黑
+  FOLLOWED = 4, // 被关注
+}
+
+// 写操作类型
+enum OperationType : int {
+  OPERATION_LIKE = 0, // 赞
+  OPERATION_COMMENT = 1, // 评论
+  OPERATION_REPLY = 2, // 回复
+  OPERATION_SYSTEM = 3, // 系统
+  OPERATION_FOLLOW = 4, // 关注
+}
+
+enum NoticeType : int {
+  TYPE_LIKE = 0, // 赞
+  TYPE_COMMENT = 1, // 评论
+  TYPE_REPLY = 2, // 回复
+  TYPE_SYSTEM = 3, // 系统消息
+  TYPE_FOLLOW = 4, // 关注
+  // 后续业务可自行扩展
+}
+
+// StModifyFeedReq.mBitmap 值定义
+enum ModifyFeedBit : int {
+  MODIFY_FEED_STATUS = 1, // 修改视频状态 第一位
+  MODIFY_FEED_CONTENT = 2, // 修改图文内容 第二位
+}
+
+table StIconInfo {
+  iconUrl40:string;
+  iconUrl100:string;
+  iconUrl140:string;
+  iconUrl640:string;
+  iconUrl:string; // 原图
+}
+
+// 用户信息 
+table StUser {
+  id:string; // QQ 号
+  nick:string;
+  icon:circlesearch.common_feedcloud_fbsmeta.StIconInfo;
+  desc:string; // 如果有账号描述，则显示账号描述；如果没有，则显示第一个作品标题
+  followState:uint; // 登陆者对该用户的关注状态，0:未关注；1:已关注；
+  type:uint; // 用户类型，业务自己定义
+  sex:uint; // 0 表示未知  1 表示男  2 表示女
+  birthday:ulong; // 生日
+  school:string; // 学校
+  location:string; // 所在地
+  busiData:[ubyte]; // 业务自行定义
+}
+
+// 图片挡位信息
+table StImageUrl {
+  levelType:uint; // 档位，0:原图, 1:小图, 2:中图, 3:大图
+  url:string;
+  width:uint;
+  height:uint;
+  busiData:[ubyte]; // 业务自行定义
+}
+
+// 图片信息 
+table StImage {
+  width:uint;
+  height:uint;
+  picUrl:string;
+  vecImageUrl:[circlesearch.common_feedcloud_fbsmeta.StImageUrl]; // 备选档位
+  picId:string; // 图片 id
+  busiData:[ubyte]; // 业务自行定义
+}
+
+// 视频档位信息
+table StVideoUrl {
+  levelType:uint; // 档位，0:原档
+  playUrl:string; // 播放地址
+  videoPrior:uint; // 视频编码，0:未知；1:H264；2:H265软解；3:H265硬解；
+  videoRate:uint; // 视频码率kbps
+  transStatus:uint; // 转码状态，0:默认值；1:转码中；2:转码完成；3:转码失败；
+  busiData:[ubyte]; // 业务自行定义
+}
+
+// 视频信息
+table StVideo {
+  fileId:string; //* 流媒体平台的文件ID
+  fileSize:uint; //* 文件大小，单位字节
+  duration:uint; //* 视频时长，单位毫秒
+  width:uint;
+  height:uint;
+  playUrl:string;
+  transStatus:uint; // 转码状态，0:默认值；1:转码中；2:转码完成；3:转码失败；
+  videoPrior:uint; // 视频编码，0:未知；1:H264；2:H265软解；3:H265硬解；
+  videoRate:uint; // 视频码率kbps
+  vecVideoUrl:[circlesearch.common_feedcloud_fbsmeta.StVideoUrl]; // 备选档位
+  busiData:[ubyte]; //业务自行定义
+}
+
+// 赞
+table StLike {
+  id:string; // 赞 ID
+  count:uint; // 点赞总数
+  status:uint; // 是否点赞：0:否 1:是
+  vecUser:[circlesearch.common_feedcloud_fbsmeta.StUser]; // 赞列表
+  busiData:[ubyte]; // 业务自行定义
+  postUser:circlesearch.common_feedcloud_fbsmeta.StUser; // 操作人
+}
+
+// 回复
+table StReply {
+  id:string;
+  postUser:circlesearch.common_feedcloud_fbsmeta.StUser;
+  createTime:ulong; // 发表必填，秒级时间戳
+  content:string;
+  targetUser:circlesearch.common_feedcloud_fbsmeta.StUser; // 被回复人
+  busiData:[ubyte]; // 业务自行定义
+}
+
+// 评论
+table StComment {
+  id:string;
+  postUser:circlesearch.common_feedcloud_fbsmeta.StUser; // 发表必填，秒级时间戳
+  createTime:ulong;
+  content:string;
+  replyCount:uint;
+  vecReply:[circlesearch.common_feedcloud_fbsmeta.StReply];
+  busiData:[ubyte]; // 业务自行定义
+}
+
+// 空间分享
+table StShareQzoneInfo {
+  entries:[circlesearch.common_feedcloud_common.Entry];
+}
+
+// 分享
+table StShare {
+  title:string; // 标题
+  desc:string; // 描述
+  type:uint; // 类型，业务自行定义
+  url:string; // 详情 url 
+  author:circlesearch.common_feedcloud_fbsmeta.StUser; // 作者信息
+  poster:circlesearch.common_feedcloud_fbsmeta.StUser; // 分享者信息
+  cover:circlesearch.common_feedcloud_fbsmeta.StImage; // 封面
+  video:circlesearch.common_feedcloud_fbsmeta.StVideo; // 视频
+  shorturl:string; // 分享短链接
+  shareCardInfo:string; // json, 包含 AIO 分享卡片样式的必要信息
+  shareQzoneInfo:circlesearch.common_feedcloud_fbsmeta.StShareQzoneInfo; // 分享空间内容
+  busiData:[ubyte]; // 业务自行定义
+}
+
+// 浏览信息
+table StVisitor {
+  viewCount:uint; // 浏览量
+  busiData:[ubyte]; // 业务自行定义
+  recomCount:uint; // 被推荐的次数
+}
+
+// 转发区
+table StRecomForward {
+  id:string;
+  title:string; // 标题
+  subtitle:string; // 副标题
+  poster:circlesearch.common_feedcloud_fbsmeta.StUser; // 发表者
+  createTime:ulong; // 发表时间，秒级时间戳
+  type:uint; // 业务自行定义
+  busiData:[ubyte]; // 业务自行定义
+}
+
+// feed 摘要
+table StFeedAbstract {
+  id:string;
+  title:string; // 标题
+  poster:circlesearch.common_feedcloud_fbsmeta.StUser; // 发表者
+  pic:circlesearch.common_feedcloud_fbsmeta.StImage; // 封面
+  type:uint; // 业务自行定义
+  createTime:ulong; // 发表时间，秒级时间戳
+}
+
+// 标签信息
+table StTagInfo {
+  tagId:string; // 标签 id
+  tagName:string; // 标签名
+  tagDec:string; // 描述信息
+  userList:[circlesearch.common_feedcloud_fbsmeta.StUser]; // 用户预览列表
+  feedList:[circlesearch.common_feedcloud_fbsmeta.StFeedAbstract]; // feed 预览列表
+  tagTotalUser:uint; // 标签总成员数
+  tagTotalFeed:uint; // 标签总 feed 数 
+}
+
+// 推荐人信息 
+table StUserRecomInfo {
+  user:circlesearch.common_feedcloud_fbsmeta.StUser; // 用户信息
+  feedList:[circlesearch.common_feedcloud_fbsmeta.StFeedAbstract]; // feed 预览列表
+}
+
+// 异形feed，针对推荐、广告或者其他不能用StFeed标识的feed，使用StDittoFeed
+table StDittoFeed {
+  dittoId:uint; // 异形feedId，唯一标识一种Feed，业务自定义
+  dittoPatternId:uint; // 异形feed样式Id，业务自定义
+  dittoData:[ubyte]; // 异形feed样式数据，业务自定义
+}
+
+// 用户的 GPS，默认值为非法值，用来表示没有 GPS
+table StGPSV2 {
+  lat:long; // 纬度，实际值 * 1000000
+  lon:long; // 经度，实际值 * 1000000
+  eType:long; // GPS_WGS84; // 如果是从手机硬件读出来的，要设置此gps为WGS84 // 如果是SDK返回使用GPS_MARS
+  alt:long; // 海拨
+}
+
+// POI属性信息
+table StPoiInfoV2 {
+  poiId:string; // poiID
+  name:string; // poi名称
+  poiType:int; // POI 类型
+  typeName:string; // 类型名称
+  address:string; // poi地址
+  districtCode:int; // 行政区划编码，与身份证号前6位意义相同
+  gps:circlesearch.common_feedcloud_fbsmeta.StGPSV2; // 定位的gps坐标
+  distance:int; // 离输入点距离,单位:米
+  hotValue:int; // 热度值
+  phone:string; // 电话
+  country:string; // 国家
+  province:string; // 省、直辖市、自治区、特别行政区
+  city:string; // 地区、地级市、自治州、盟
+  poiNum:int; // poi排序位置
+  poiOrderType:int; // poi优化类别
+  defaultName:string; // 后台推荐的显示标题
+  district:string; // 区
+  dianPingId:string; // 点评POI ID
+}
+
+// 动态内容
+table StFeed {
+  id:string;
+  title:string; // 标题
+  subtitle:string; // 副标题
+  poster:circlesearch.common_feedcloud_fbsmeta.StUser; // 发表者
+  cover:circlesearch.common_feedcloud_fbsmeta.StImage; // 封面
+  video:circlesearch.common_feedcloud_fbsmeta.StVideo; // 视频
+  content:string; // 图文内容
+  type:uint; // feed 媒体类型，业务自行定义
+  createTime:ulong; // 发表时间，秒级时间戳
+  likeInfo:circlesearch.common_feedcloud_fbsmeta.StLike; // 赞信息
+  commentCount:uint; // 评论总数
+  vecComment:[circlesearch.common_feedcloud_fbsmeta.StComment]; // 评论列表
+  share:circlesearch.common_feedcloud_fbsmeta.StShare; // 分享信息
+  visitorInfo:circlesearch.common_feedcloud_fbsmeta.StVisitor; // 浏览信息
+  images:[circlesearch.common_feedcloud_fbsmeta.StImage]; // 多图
+  status:uint; // 业务自己定义
+  poiInfo:circlesearch.common_feedcloud_fbsmeta.StPoiInfoV2; // POI 属性信息
+  adBuffer:[ubyte]; // 广告 feed
+  busiData:[ubyte]; // 业务自行定义
+  isRecomFd:bool; // 是否用户推荐转发 feed
+  recomForward:circlesearch.common_feedcloud_fbsmeta.StRecomForward; // 推荐转发区域
+  tagInfos:[circlesearch.common_feedcloud_fbsmeta.StTagInfo]; // 标签信息
+  syncStatus:uint; // 同步状态
+  busiReport:[ubyte]; // 上报透传字段，读下发，上报带上
+  dittoFeed:circlesearch.common_feedcloud_fbsmeta.StDittoFeed; // 异形 feed
+  feedType:uint; // feed 类型，见 FEED_TYPE 
+  busiTransparent:[circlesearch.common_feedcloud_common.BytesEntry]; // feed 层面的透传字段，key 业务自行定义
+}
+
+// 关系链信息
+table StRelationInfo {
+  id:string; // 对方账号信息
+  relation:uint; // 关系类型，见 RELATION_TYPE 
+  busiData:[ubyte]; // 业务特有信息，结构体自行定义
+}
+
+// 写操作类型
+table StOperation {
+  opType:uint; // 操作类型，见 OPERATION_TYPE 
+  opUser:circlesearch.common_feedcloud_fbsmeta.StUser; // 操作人信息
+  opTime:ulong; // 操作时间
+  comment:circlesearch.common_feedcloud_fbsmeta.StComment; // 如果是评论或者回复，当前评论或者回复详情放这里
+  like:circlesearch.common_feedcloud_fbsmeta.StLike; // 点赞信息
+  busiData:[ubyte]; // 业务自行定义
+}
+
+// 被动通知
+table StNotice {
+  feedId:string;
+  noticeType:uint; // 通知类型，见 NOTICE_TYPE 
+  createTime:ulong; // 通知时间，秒级时间戳
+  operation:circlesearch.common_feedcloud_fbsmeta.StOperation; // 操作信息
+  feed:circlesearch.common_feedcloud_fbsmeta.StFeed; // feed 信息
+  busiData:[ubyte]; // 业务自行定义
+}
+
+table StReportInfo {
+  id:string; // feed id
+  busiReport:[ubyte];  // 上报透传字段，对应StFeed busiReport
+}
+

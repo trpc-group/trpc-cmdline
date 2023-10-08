@@ -1,0 +1,32 @@
+include "circlesearch/common/feedcloud/fbsmeta.fbs";
+include "circlesearch/common/feedcloud/common.fbs";
+
+namespace trpc.circlesearch.common_feedcloud_fbsread;
+
+attribute "go_package=trpc.group/trpcprotocol/circlesearch/common_feedcloud_fbsread";
+
+table StGetFeedDetailReq {
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+}
+
+table StGetFeedDetailRsp {
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  feed:circlesearch.common_feedcloud_fbsmeta.StFeed;
+  vecRcmdFeed:[circlesearch.common_feedcloud_fbsmeta.StFeed];
+  share:circlesearch.common_feedcloud_fbsmeta.StShare;
+}
+
+table StGetFeedListReq {
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  feed:circlesearch.common_feedcloud_fbsmeta.StFeed; 
+}
+
+table StGetFeedListRsp {
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  vecFeed:[circlesearch.common_feedcloud_fbsmeta.StFeed];
+}
+
+rpc_service ComReader {
+  GetFeedList(StGetFeedListReq):StGetFeedListRsp;
+  GetFeedDetail(StGetFeedDetailReq):StGetFeedDetailRsp;
+}

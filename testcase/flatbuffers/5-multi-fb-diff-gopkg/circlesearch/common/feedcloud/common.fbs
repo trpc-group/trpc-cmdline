@@ -1,0 +1,26 @@
+namespace trpc.circlesearch.common_feedcloud_common;
+
+attribute "go_package=trpc.group/trpcprotocol/circlesearch/common_feedcloud_common";
+
+// mapitem
+table Entry {
+  key:string;
+  value:string;
+}
+
+table BytesEntry {
+  key:string;
+  value:[ubyte];
+}
+
+table Result {
+  retCode:int;
+  msg:string;
+}
+
+// 通用扩展字段，可以带mapkv和querystring
+table StCommonExt {
+  mapInfo:[circlesearch.common_feedcloud_common.Entry];
+  attachInfo:string;
+}
+

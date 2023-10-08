@@ -1,0 +1,9 @@
+include "message.fbs";
+namespace hello;
+
+attribute "go_package=trpc.group/examples/hello";
+
+
+rpc_service hello_svr {
+    Hello(HelloReq):HelloRsp;
+}

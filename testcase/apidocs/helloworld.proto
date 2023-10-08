@@ -1,0 +1,105 @@
+syntax = "proto3";
+package helloworld;
+
+import "trpc/proto/trpc_options.proto";
+import "trpc/swagger/swagger.proto";
+
+message HelloReq{
+    // msg消息
+    string msg = 1;
+    map<string, Message1> msg_map = 2;
+    repeated Message1 msg_list = 3;
+    Message3 m3 = 4;
+    Number number = 5;
+    message InnerMsg {
+        repeated string name_list = 1;
+    }
+    InnerMsg inner_msg = 6;
+    int64 int64num = 7;
+    uint64 uint64num = 8;
+    fixed64 fixed64num = 9;
+    bool boolV = 10;
+    int32 int32num = 11;
+    Message3 m3_1 = 12;
+    Message3 m3_2 = 13;
+    HelloReq req = 14;
+    Message4 m4 = 15;
+}
+
+message Message1 {
+    repeated Message2 m2_list = 1;
+}
+
+message Message2 {
+    repeated Message3 m3 = 1;
+}
+
+message Message3 {
+    repeated string f3 = 1;
+}
+
+message Message4 {
+    Message5 m5 = 1;
+}
+message Message5 {
+    Message6 m6 = 1;
+}
+message Message6 {
+    Message4 m4 = 1;
+}
+
+enum Number {
+    zero = 0;
+    one = 1;
+}
+
+message HelloRsp{
+    int32 err_code = 1;
+    string err_msg = 2;
+}
+
+service helloworld_svr {
+    rpc Hello(HelloReq) returns(HelloRsp) {
+        option(trpc.alias) = "/api/v1/helloworld";
+        option(trpc.swagger) = {
+            title : "你好世界"
+            method: "get"
+            description:
+                "入参：msg\n"
+                "作用：用于演示 helloword\n"
+            params: {
+                name: "msg"
+                required: true
+                default: "my_msg"
+            }
+            params: {
+                name: "m3"
+                required: true
+                default: "{\"f3\":[\"1\", \"2\"]}"
+            }
+            params: {
+                name: "int64num"
+                required: true
+                default: "12"
+            }
+            params: {
+                name: "number"
+                default: "1"
+            }
+            params: {
+                name: "msg_list"
+                required: true
+            }
+            params: {
+                name: "boolV"
+                required: true
+                default: "true"
+            }
+            params: {
+                name: "int32num"
+                required: true
+                default: "-123"
+            }
+        };
+    };
+}

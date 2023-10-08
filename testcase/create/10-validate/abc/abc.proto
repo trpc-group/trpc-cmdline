@@ -1,0 +1,9 @@
+syntax = "proto3";
+package abc;
+
+import "trpc/validate/validate.proto";
+option go_package="trpc.group/helloworld/abc";
+
+message AAA{
+    string msg = 1 [(validate.rules).string.email = true];
+}

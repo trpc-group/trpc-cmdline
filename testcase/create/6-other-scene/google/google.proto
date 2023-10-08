@@ -1,0 +1,17 @@
+syntax = "proto3";
+import "google/protobuf/any.proto";
+
+package helloworld;
+
+option go_package = "trpc.group/trpcprotocol/helloworld";
+
+service HelloService {
+  rpc Hello(HelloRequest) returns (HelloResponse);
+}
+
+message HelloRequest {
+}
+
+message HelloResponse {
+  map<int32, google.protobuf.Any> info_map = 1;
+}

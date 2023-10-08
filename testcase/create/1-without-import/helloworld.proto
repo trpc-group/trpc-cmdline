@@ -1,0 +1,39 @@
+syntax = "proto3";
+package helloworld;
+
+option go_package = "trpc.group/examples/helloworld";
+option java_package = "com.trpc.examples.helloworld";
+
+// HelloReq is hello request.
+message HelloReq{
+  string msg = 1;
+}
+
+// HelloRsp is hello response.
+message HelloRsp{
+  string msg = 1;
+}
+
+// HelloWorldService handles hello request and echo message.
+service HelloWorldService {
+  // Hello1 says hello.
+  rpc Hello1(HelloReq) returns(HelloRsp);
+  // Hello2 says hello.
+  rpc Hello2(HelloReq) returns(HelloRsp); // @alias=myhello2
+}
+
+// HelloWorldServerStreamService handles hello request and echo message.
+service HelloWorldServerStreamService {
+  // Hello says hello.
+  rpc Hello(HelloReq) returns(stream HelloRsp);
+}
+
+service HelloWorldBidiStreamService {
+  // Hello says hello.
+  rpc Hello(stream HelloReq) returns(stream HelloRsp);
+}
+
+service HelloWroldClientStreamService {
+  // Hello says hello.
+  rpc Hello(stream HelloReq) returns(HelloRsp);
+}

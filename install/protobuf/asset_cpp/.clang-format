@@ -1,0 +1,14 @@
+Language: Cpp
+BasedOnStyle: Google
+ColumnLimit: 100
+
+# Automatically detect pointer alignment in the code.
+# If you want to enforce uniformity, you can change it to false.
+DerivePointerAlignment: true
+
+# By default, the alignment is based on the type name.
+PointerAlignment: Left
+
+# Only sort headers in each include block
+SortIncludes: true
+IncludeBlocks: Preserve

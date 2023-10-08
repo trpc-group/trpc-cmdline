@@ -1,0 +1,14 @@
+syntax = "proto3";
+package helloworld;
+
+import "trpc/proto/trpc_options.proto";
+
+option go_package="trpc.group/examples/helloworld";
+
+// HelloReq request
+message HelloReq{
+    string name = 1 [(trpc.go_tag)='xml:"name"'];
+}
+
+// HelloRsp response
+message HelloRsp{}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package yotta_index.pb;
+option go_package = "trpc.group/YottaIndex/YottaIndexClient/yotta_index_proto";
+
+import "cos/comm.proto";
+ 
+message Param {
+  cobus.AclInfo acl = 1;
+}
+
+service HelloService {
+  rpc Hello1(Param) returns (Param);
+}

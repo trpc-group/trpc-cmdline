@@ -1,0 +1,10 @@
+include "request/request.fbs";
+include "response/response.fbs";
+
+namespace helloworld;
+
+attribute "go_package=trpc.group/examples/helloworld";
+
+rpc_service HelloWorld {
+    Hello(Request):Response;
+}

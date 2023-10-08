@@ -1,0 +1,13 @@
+syntax = "proto3";
+package helloworld.service2;
+
+import "common/common.proto";
+
+option go_package = "trpc.group/examples/helloworld/service2";
+option java_package = "com.trpc.examples.helloworld";
+
+// HelloWorldService handle hello request and echo message.
+service HelloWorldService {
+  // Hello says hello.
+  rpc Hello(helloworld.common.HelloReq) returns(helloworld.common.HelloRsp);
+}

@@ -1,0 +1,21 @@
+syntax = "proto2";
+package   trpc.trpcprotocol.common;
+
+option  java_package = "com.tencent.trpcprotocol.helloworld";
+option  go_package = "trpc.group/trpcprotocol/helloworld";
+
+import "common/a.proto";
+import "common/b.proto";
+
+service HelloService {
+  rpc Hello1(Request) returns (Response) {} // @alias=Hello1
+  rpc Hello2(Request) returns (Response) {} // @alias=Hello2
+}
+
+message Request {
+  optional A a = 1;
+}
+
+message Response {
+  optional B b = 1;
+}

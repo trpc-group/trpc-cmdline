@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package helloworld;
+
+option go_package="trpc.group/examples/helloworld";
+
+import "trpc/api/annotations.proto";
+
+service Hello {
+    // 导入用户
+    rpc ImportMembers(ImportMembersReq) returns (ImportMembersReply) {
+        option (trpc.api.http) = {
+            post: "/v1/members/import"
+            body: "*"
+
+            additional_bindings: {
+                post: "/v1/{domain.type}/members/import"
+                body: "*"
+            }
+        };
+    }
+
+    // 添加成员，支持批量添加
+    rpc SearchMembers(SearchMembersReq) returns (SearchMembersReply) {
+        option (trpc.api.http) = {
+            get: "/v1/members"
+
+            additional_bindings: {
+                get: "/v1/{domain.type=school}/members"
+            }
+        };
+    }
+
+    // 移除成员，支持批量移除
+    rpc RemoveMembers(RemoveMembersReq) returns (RemoveMembersReply) {
+        option (trpc.api.http) = {
+            delete: "/v1/members"
+        };
+    }
+}
+
+
+message Domain {
+    uint32 id = 1;
+    string type = 2;
+}
+
+message ImportMembersReq {
+    Domain domain = 1;
+    string url = 2;
+}
+
+message ImportMembersReply {}
+
+enum TYPE {
+    A = 0;
+    B = 1;
+}
+
+message SearchMembersReq {
+    Domain domain = 1;
+    uint32 page = 2;
+    uint32 page_size = 3;
+    TYPE t =4;
+}
+
+message SearchMembersReply {
+    message Member {
+        uint32 id = 1;
+    }
+
+    uint32 total = 1;
+    repeated Member members = 2;
+}
+
+message RemoveMembersReq {
+    repeated uint32 ids = 1;
+}
+
+message RemoveMembersReply {}

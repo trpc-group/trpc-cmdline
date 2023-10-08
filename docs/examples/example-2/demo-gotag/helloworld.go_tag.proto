@@ -1,0 +1,16 @@
+syntax = "proto3";
+package hello;
+
+import "trpc/proto/trpc_options.proto";
+
+option go_package = "trpc.group/trpc-go/trpc-cmdline/docs/examples/demo-gotag";
+
+message Req {
+    string msg = 1 [(trpc.go_tag) = 'gorm:"any_msg"'];
+}
+message Rsp {
+}
+
+service hello_service {
+    rpc Hello (Req) returns (Rsp);
+}

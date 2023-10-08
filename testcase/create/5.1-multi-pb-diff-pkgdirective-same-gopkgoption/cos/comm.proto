@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package cobus;
+option go_package = "trpc.group/YottaIndex/YottaIndexClient/yotta_index_proto";
+
+message AclInfo {
+  bytes key = 1;
+}

@@ -1,0 +1,223 @@
+include "circlesearch/common/feedcloud/fbsmeta.fbs";
+include "circlesearch/common/feedcloud/common.fbs";
+
+// namespace trpc.circlesearch.common;
+namespace trpc.circlesearch.common_feedcloud_fbsread;
+// namespace trpc.group.trpcprotocol.circlesearch.common_feedcloud_fbsread;
+// namespace circlesearch.common_feedcloud_fbsread;
+
+attribute "go_package=trpc.group/trpcprotocol/circlesearch/common_feedcloud_fbsread";
+
+enum FromType : int {
+  TERMINAL = 0,
+  H5 = 1,
+  ADMIN = 2,
+  SVR = 3,
+}
+
+// 拉取 feed 详情
+table StGetFeedDetailReq {
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  from:int; // 请求来源，0:客户端，1:H5，2:管理端
+  userId:string; // 用户ID
+  feedId:string; // FeedID
+  createTime:ulong; // Feed发表秒级时间戳
+  adrequest:[ubyte]; // 广告请求
+  adAttachInfo:string; // 广告透传 
+  bizReqData:[ubyte]; // 业务异化请求，结构体自行定义
+}
+
+table StGetFeedDetailRsp {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  detailUrl:string;
+  feed:circlesearch.common_feedcloud_fbsmeta.StFeed;  // 当前feed详情
+  vecRcmdFeed:[circlesearch.common_feedcloud_fbsmeta.StFeed]; // 相关推荐feed
+  share:circlesearch.common_feedcloud_fbsmeta.StShare; // 分享信息
+  isFinish:uint; // feed是否拉取完毕，0:否；1:是
+  adAttachInfo:string; // 广告透传
+  busiRspData:[ubyte]; // 业务异化回包，结构体自行定义
+}
+
+// 拉取feed列表
+table StGetFeedListReq {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  listNum:uint; // 一页拉取个数
+  from:int; // 请求来源 参考FROM_TYPE
+  // 当请求与当前feed相关时填写，只需填写feedid,createTime,poster结构和busiTransparent字段不需要整个feed结构
+  feed:circlesearch.common_feedcloud_fbsmeta.StFeed; 
+  adrequest:[ubyte]; // 广告请求
+  adAttachInfo:string; // 广告透传
+  feedAttachInfo:string; // feed列表透传
+  source:int; // 请求源，业务自行定义
+  busiReqData:[ubyte]; // 业务异化请求，结构体自行定义
+}
+
+table StGetFeedListRsp {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  vecFeed:[circlesearch.common_feedcloud_fbsmeta.StFeed];
+  isFinish:uint; // 是否拉取完毕，0:否；1:是
+  user:circlesearch.common_feedcloud_fbsmeta.StUser; // 登录人的个人信息
+  adAttachInfo:string; // 广告透传
+  feedAttachInfo:string; // feed透传
+  busiRspData:[ubyte]; // 业务异化回包，结构体自行定义
+}
+
+// 拉取评论列表
+table StGetCommentListReq {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  userId:string; // 用户ID
+  feedId:string; // FeedID
+  listNum:uint; // 一页拉取个数
+  from:int; // 请求来源，0:客户端，1:H5，2:管理端
+  feedAttachInfo:string; // feed透传
+  busiReqData:[ubyte]; // 业务异化请求，结构体自行定义
+  likeKey:string; // 赞key
+}
+
+table StGetCommentListRsp {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  vecComment:[circlesearch.common_feedcloud_fbsmeta.StComment];
+  totalNum:uint;
+  isFinish:uint;
+  feedAttachInfo:string;
+  busiRspData:[ubyte];
+}
+
+table StGetMainPageReq {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  userId:string;
+  from:int;
+  feedAttachInfo:string;
+  busiReqData:[ubyte];
+}
+
+table StGetMainPageRsp {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  user:circlesearch.common_feedcloud_fbsmeta.StUser;
+  feedCount:uint;
+  fansCount:uint;
+  followCount:uint;
+  vecFeed:[circlesearch.common_feedcloud_fbsmeta.StFeed];
+  isFinish:uint;
+  share:circlesearch.common_feedcloud_fbsmeta.StShare;
+  feedAttachInfo:string;
+  busiRspData:[ubyte];
+}
+
+table StGetNoticeListReq {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  listNum:uint;
+  feedAttachInfo:string;
+  pageType:uint;
+  busiReqData:[ubyte];
+}
+
+table StGetNoticeListRsp {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  vecNotice:[circlesearch.common_feedcloud_fbsmeta.StNotice];
+  totalNum:uint;
+  isFinish:uint;
+  feedAttachInfo:string;
+  busiRspData:[ubyte];
+}
+
+table StGetBusiInfoReq {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  busiReqData:[ubyte];
+}
+
+table StGetBusiInfoRsp {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  busiRspData:[ubyte];
+}
+
+table StGetFollowListReq {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  userId:string;
+  attachInfo:string;
+  count:uint;
+  busiReqData:[ubyte];
+}
+
+table StGetFollowListRsp {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  attachInfo:string;
+  hasNext:uint;
+  relationInfo:[circlesearch.common_feedcloud_fbsmeta.StRelationInfo];
+  busiRspData:[ubyte];
+}
+
+table StGetFansListReq {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  userId:string;
+  attachInfo:string;
+  count:long;
+  busiReqData:[ubyte];
+}
+
+table StGetFansListRsp {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  attachInfo:string;
+  hasNext:uint;
+  relationInfo:[circlesearch.common_feedcloud_fbsmeta.StRelationInfo];
+  busiRspData:[ubyte];
+}
+
+table StGetRecomTagListReq {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  gpsInfo:circlesearch.common_feedcloud_fbsmeta.StGPSV2;
+  busiReqData:[ubyte];
+}
+
+table StGetRecomTagListRsp {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  tagList:[circlesearch.common_feedcloud_fbsmeta.StTagInfo];
+  busiRspData:[ubyte];
+}
+
+table StGetRecomUserListReq {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  needFeeds:bool;
+  attachInfo:string;
+  busiReqData:[ubyte];
+}
+
+table StGetRecomUserListRsp {
+
+  extInfo:circlesearch.common_feedcloud_common.StCommonExt;
+  userRecoms:[circlesearch.common_feedcloud_fbsmeta.StUserRecomInfo];
+  attachInfo:string;
+  isFinish:uint;
+  busiRspData:[ubyte];
+}
+
+rpc_service ComReader {
+  GetFeedList(StGetFeedListReq):StGetFeedListRsp;
+  GetFeedDetail(StGetFeedDetailReq):StGetFeedDetailRsp;
+  GetMainpage(StGetMainPageReq):StGetMainPageRsp;
+  GetCommentList(StGetCommentListReq):StGetCommentListRsp;
+  GetNoticeList(StGetNoticeListReq):StGetNoticeListRsp;
+  GetFollowList(StGetFollowListReq):StGetFollowListRsp;
+  GetFansList(StGetFansListReq):StGetFansListRsp;
+  GetBusiInfo(StGetBusiInfoReq):StGetBusiInfoRsp;
+  GetRecomTagList(StGetRecomTagListReq):StGetRecomTagListRsp;
+  GetRecomUserList(StGetRecomUserListReq):StGetRecomUserListRsp;
+}

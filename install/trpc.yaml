@@ -1,0 +1,82 @@
+---
+domain: trpc.group
+tpl_file_ext: ".tpl"
+
+idl:
+  protobuf:
+    executable: protoc
+    version_min: v3.6.0
+    version_cmd: ""
+    artifact_url: "https://github.com/trpc-group/trpc-cmdline/releases/download/v0.0.1-${os}/protoc"
+    md5: ""
+    repository: ""
+    fallback: "please install protoc first, see: https://github.com/protocolbuffers/protobuf"
+  flatbuffers:
+    executable: flatc
+    version_min: ""
+    version_cmd: ""
+    artifact_url: "https://github.com/trpc-group/trpc-cmdline/releases/download/v0.0.1-${os}/flatc"
+    md5: ""
+    repository: ""
+    fallback: "please install flatc first, see: https://google.github.io/flatbuffers/flatbuffers_guide_building.html"
+
+tools:
+  go:
+    - executable: protoc-gen-go
+      version_min: ""
+      version_cmd: ""
+      artifact_url: "https://github.com/trpc-group/trpc-cmdline/releases/download/v0.0.1-${os}/protoc-gen-go"
+      md5: ""
+      repository: "github.com/golang/protobuf/protoc-gen-go"
+      fallback: ""
+    - executable: goimports
+      version_min: ""
+      version_cmd: ""
+      artifact_url: "https://github.com/trpc-group/trpc-cmdline/releases/download/v0.0.1-${os}/goimports"
+      md5: ""
+      repository: "golang.org/x/tools/cmd/goimports"
+      fallback: ""
+    - executable: mockgen
+      version_min: ""
+      version_cmd: ""
+      artifact_url: "https://github.com/trpc-group/trpc-cmdline/releases/download/v0.0.1-${os}/mockgen"
+      md5: ""
+      repository: "github.com/golang/mock/mockgen@v1.6.0"
+      fallback: ""
+
+plugins:
+  go:
+    - swagger
+    - openapi
+    - validate
+    - goimports
+    - gofmt
+    - mockgen
+    - gotag
+  cpp:
+    - cpp_move
+
+templates:
+  protobuf:
+    go:
+      asset_dir: protobuf/asset_go
+      lang_file_ext: go
+      separator: "."
+      keep_orig_name: true
+      rpc_server_stub: service_rpc.go.tpl
+      rpc_server_test_stub: service_rpc_test.go.tpl
+      rpc_client_stub:
+        - rpc/trpc.go.tpl
+    cpp:
+      asset_dir: protobuf/asset_cpp
+      keep_orig_name: true
+  flatbuffers:
+    go:
+      asset_dir: flatbuffers/asset_go
+      lang_file_ext: go
+      separator: "."
+      keep_orig_name: true
+      rpc_server_stub: service_rpc.go.tpl
+      rpc_server_test_stub: service_rpc_test.go.tpl
+      rpc_client_stub:
+        - rpc/trpc.go.tpl

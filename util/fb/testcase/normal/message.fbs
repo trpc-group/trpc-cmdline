@@ -1,0 +1,11 @@
+namespace hello;
+
+attribute "go_package=trpc.group/examples/hello";
+
+table HelloReq {
+  Message:string;
+}
+
+table HelloRsp {
+  Message:string; 
+}

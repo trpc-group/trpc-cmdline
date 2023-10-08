@@ -1,0 +1,28 @@
+syntax = "proto3";
+package greeter;
+
+option go_package="trpc.group/trpc.app/greeter";
+
+// HelloReq say hello request
+message HelloReq {
+    string msg = 1;
+}
+
+// HelloRsp say hello response
+message HelloRsp {
+    uint32 err_code = 1;
+    string err_msg = 2;
+}
+
+// greeter say hello and say bye
+service greeterxyz {
+
+    // Hello say hello
+    rpc Hello(HelloReq) returns(HelloRsp); // @alias=/greeter.greeter/Hello
+}
+
+service greeterx {
+
+    // Hello say hello
+    rpc Hello(HelloReq) returns(HelloRsp); // @alias=/greeter.greeter/Hello
+}

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package trpc.test.gotag;
+
+option go_package = "trpc.group/trpcprotocol/test/gotag";
+
+import "trpc/proto/trpc_options.proto";
+
+service Greeter {
+  rpc SayHello(HelloRequest) returns(HelloReply) {}
+}
+
+message HelloRequest {
+  string msg = 1 [(trpc.go_tag) = 'xml:"www"'];
+  int32 age = 2 [(trpc.go_tag) = 'json:"jjj"'];
+  int32 gender = 3 [(trpc.go_tag) = 'aaa:"bbb" ccc:"ddd"'];
+  message nestedLowercaseMessage {
+    string name = 1 [(trpc.go_tag) = 'toml:"name"'];
+  }
+  nestedLowercaseMessage others = 4 [(trpc.go_tag) = 'yml:"Others"'];
+  ;
+}
+
+message testLowercaseMessage { string msg = 1 [(trpc.go_tag) = 'db:"msg"']; }
+
+message HelloReply {
+  string msg = 1;
+  message NestedMessageOne {
+    string nested_one = 1 [(trpc.go_tag) = 'yaml:"nested_one"'];
+    message NestedMessageTwo {
+      string nested_two = 1 [(trpc.go_tag) = 'yaml:"nested_two"'];
+    }
+  }
+  NestedMessageOne test = 2 [(trpc.go_tag) = 'yaml:"test"'];
+}

@@ -1,0 +1,20 @@
+syntax = "proto3";
+package helloworld;
+
+option go_package = "github.com/some-repo/examples/helloworld";
+
+// HelloRequest is hello request.
+message HelloRequest {
+  string msg = 1;
+}
+
+// HelloResponse is hello response.
+message HelloResponse {
+  string msg = 1;
+}
+
+// HelloWorldService handles hello request and echo message.
+service HelloWorldService {
+  // Hello says hello.
+  rpc Hello(HelloRequest) returns(HelloResponse);
+}

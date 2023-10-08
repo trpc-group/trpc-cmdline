@@ -1,0 +1,7 @@
+namespace response;
+
+attribute "go_package=trpc.group/examples/response";
+
+table Response{
+  message:string;
+}

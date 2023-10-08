@@ -1,0 +1,20 @@
+// 4.2 和 4.1 的区别在于
+// 4.2 的 include 里面不包含相对路径 
+// 因此在生成 4.2 的桩代码时需要在命令行上加上要 include 的文件的路径
+// 如 
+// trpc create --fbsdir testcase/flatbuffers/4.2-multi-fb-same-namespace-diff-dir/request \
+//             --fbsdir testcase/flatbuffers/4.2-multi-fb-same-namespace-diff-dir/response \
+//             --fbs testcase/flatbuffers/4.2-multi-fb-same-namespace-diff-dir/helloworld.fbs \
+//             -o out-4-2 \
+//             --mod trpc.group/testapp/testserver42
+include "request.fbs";
+include "response.fbs";
+
+namespace helloworld;
+
+attribute "go_package=trpc.group/examples/helloworld";
+
+
+rpc_service HelloWorld {
+    Hello(Request):Response;
+}

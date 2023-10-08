@@ -1,0 +1,38 @@
+syntax = "proto3";
+package helloworld;
+
+import "trpc/proto/trpc_options.proto";
+import "trpc/swagger/swagger.proto";
+
+message HelloReq{
+    string msg = 1;
+    int32 cnt = 2;
+}
+message HelloRsp{
+    int32 err_code = 1;
+    string err_msg = 2;
+}
+
+service helloworld_svr {
+    rpc Hello(HelloReq) returns(HelloRsp) {
+        option(trpc.alias) = "/api/v1/helloworld";
+
+        option(trpc.swagger) = {
+            title : "你好世界"
+            method: "get"
+            description:
+                "入参：msg\n"
+                "作用：用于演示 helloword\n"
+            params: {
+                name: "msg"
+                required: true
+                default: "hello"
+            }
+            params: {
+                name: "cnt"
+                required: true
+                default: "1"
+            }
+        };
+    };
+}

@@ -1,0 +1,7 @@
+namespace request;
+
+attribute "go_package=trpc.group/examples/request";
+
+table Request{
+  message:string;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+package helloworld;
+
+option go_package="trpc.group/examples/helloworld";
+
+import "request/request.proto";
+import "response/response.proto";
+
+service HelloWorld {
+    rpc Hello(Request) returns(Response);
+}

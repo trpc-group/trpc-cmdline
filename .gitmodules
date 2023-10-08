@@ -1,0 +1,4 @@
+[submodule "install/submodules/trpc-protocol"]
+	path = install/submodules/trpc-protocol
+	url = git@github.com:trpc-group/trpc.git
+	branch = main

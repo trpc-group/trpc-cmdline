@@ -1,0 +1,106 @@
+syntax = "proto3";
+package   trpc.ilive.ilive_feeds_like_svr;
+
+//default java package name
+option  java_package="com.tencent.trpcprotocol.ilive.ilivefeedslikesvr.ilivefeedslikesvr";
+option  java_multiple_files = true;
+option  java_outer_classname = "iLiveProtocol";
+//default go package name
+option  go_package ="trpc.group/trpcprotocol/ilive/ilive_feeds_like_svr";
+
+// 不建议使用 google/protobuf/any.proto
+// any强依赖package type.googleapis.com/_packagename_._messagename_.
+// https://developers.google.com/protocol-buffers/docs/proto3#any
+
+// tRPC-Go数据校验模块（**移除注释使用**）
+// 介绍：http://km.oa.com/articles/view/438840
+// import "trpc/common/validate.proto";
+
+
+
+enum ENUM_RET_CODE
+{
+    SUCCESS = 0;
+    SYSTEM_ERROR = 1000;
+    PARAM_ERROR = 2000;
+};
+
+enum ENUM_LS_LIKE_CODE
+{
+    DEFAULT = 0;
+    LIKE = 1;
+    UN_LIKE = 2;
+};
+
+// 点赞
+message FeedsLikeReq
+{
+    uint64 uid = 1;
+    string feed_id = 2;  // feedid
+};
+
+message FeedsLikeRsp
+{
+    uint32 total = 1;   // 点赞总数
+    uint32 retcode = 2;//错误码
+    string retmsg = 3; // 提示
+};
+
+// 取消点赞
+message FeedsUnLikeReq
+{
+    uint64 uid = 1;
+    string feed_id = 2;  // feedid
+};
+
+message FeedsUnLikeRsp
+{
+    uint32 total = 1;   // 点赞总数
+    uint32 retcode = 2;//错误码
+    string retmsg = 3; // 提示
+};
+
+message QureyIsLikeReq{
+    repeated string feed_id = 1;  // feedid集合
+    uint64 uid =2;                //用户uid
+}
+
+message FeedIdIsLikeInfo{
+    string feed_Id = 1;     // 文章Id
+    uint32 is_like = 2;     // 1点赞 2未点赞
+    uint64 total = 3;       // 点赞总数
+    uint64 forward_num = 4; //文章转发数量
+}
+
+message QureyIsLikeRsp{
+    uint32 retcode = 1;//错误码
+    string retmsg = 2; // 提示
+    repeated FeedIdIsLikeInfo like_Info_list = 3;
+}
+
+message AddArticleForwardNumReq {
+    string feed_Id = 1;  // 文章Id
+    uint64 uid = 2;      // 用户uid
+}
+
+message AddArticleForwardNumRsp {
+    uint32 retcode = 1; //错误码
+    string retmsg = 2;  // 提示
+    uint64 forward_num = 4; //文章转发数量
+}
+
+
+
+
+
+service ilive_feeds_like_svr {
+    // 点赞服务
+    rpc FeedsLike(FeedsLikeReq) returns (FeedsLikeRsp);
+    // 取消点赞
+    rpc FeedsUnLike(FeedsUnLikeReq) returns (FeedsUnLikeRsp);
+    // 查询用户是否点赞
+    rpc QureyIsLike(QureyIsLikeReq) returns (QureyIsLikeRsp);
+    // 增加文章转发接口数量
+    rpc AddArticleForwardNum(AddArticleForwardNumReq) returns (AddArticleForwardNumRsp);
+
+}

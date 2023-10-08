@@ -1,0 +1,7 @@
+syntax = "proto3";
+package helloworld;
+
+option go_package = "helloworld2019";
+
+message Love{}
+message Hate{}

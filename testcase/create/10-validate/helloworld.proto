@@ -1,0 +1,22 @@
+syntax = "proto3";
+package helloworld;
+
+option go_package="trpc.group/helloworld";
+
+import "abc/abc.proto";
+import "trpc/validate/validate.proto";
+
+service HelloSvr {
+    rpc Hello(abc.AAA) returns(HelloResponse);
+}
+
+message HelloRequest {
+    string msg = 1 [(validate.rules).string.email=true];
+}
+
+message HelloResponse {
+    int32 err_code = 1; 
+    string err_msg = 2; 
+}
+
+

@@ -1,0 +1,444 @@
+{
+ "swagger": "2.0",
+ "info": {
+  "title": "hello",
+  "description": "The api document of hello.proto",
+  "version": "2.0"
+ },
+ "consumes": [
+  "application/json"
+ ],
+ "produces": [
+  "application/json"
+ ],
+ "paths": {
+  "/helloworld.Hello/ImportMembers": {
+   "post": {
+    "summary": "导入用户",
+    "operationId": "ImportMembers",
+    "responses": {
+     "200": {
+      "description": "ImportMembersReply",
+      "schema": {
+       "$ref": "#/definitions/helloworld.ImportMembersReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "requestBody",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/helloworld.ImportMembersReq"
+      }
+     }
+    ],
+    "tags": [
+     "hello.trpc"
+    ]
+   }
+  },
+  "/helloworld.Hello/RemoveMembers": {
+   "post": {
+    "summary": "移除成员，支持批量移除",
+    "operationId": "RemoveMembers",
+    "responses": {
+     "200": {
+      "description": "RemoveMembersReply",
+      "schema": {
+       "$ref": "#/definitions/helloworld.RemoveMembersReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "requestBody",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/helloworld.RemoveMembersReq"
+      }
+     }
+    ],
+    "tags": [
+     "hello.trpc"
+    ]
+   }
+  },
+  "/helloworld.Hello/SearchMembers": {
+   "post": {
+    "summary": "添加成员，支持批量添加",
+    "operationId": "SearchMembers",
+    "responses": {
+     "200": {
+      "description": "SearchMembersReply",
+      "schema": {
+       "$ref": "#/definitions/helloworld.SearchMembersReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "requestBody",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/helloworld.SearchMembersReq"
+      }
+     }
+    ],
+    "tags": [
+     "hello.trpc"
+    ]
+   }
+  },
+  "/v1/members": {
+   "delete": {
+    "summary": "移除成员，支持批量移除",
+    "operationId": "RemoveMembers2",
+    "responses": {
+     "200": {
+      "description": "RemoveMembersReply",
+      "schema": {
+       "$ref": "#/definitions/helloworld.RemoveMembersReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "ids",
+      "in": "query",
+      "required": false,
+      "type": "array",
+      "format": "uint32",
+      "items": {
+       "type": "integer",
+       "format": "uint32"
+      }
+     }
+    ],
+    "tags": [
+     "hello.restful"
+    ]
+   },
+   "get": {
+    "summary": "添加成员，支持批量添加",
+    "operationId": "SearchMembers2",
+    "responses": {
+     "200": {
+      "description": "SearchMembersReply",
+      "schema": {
+       "$ref": "#/definitions/helloworld.SearchMembersReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "domain.id",
+      "in": "query",
+      "required": false,
+      "type": "integer",
+      "format": "uint32"
+     },
+     {
+      "name": "domain.type",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "type": "integer",
+      "format": "uint32"
+     },
+     {
+      "name": "page_size",
+      "in": "query",
+      "required": false,
+      "type": "integer",
+      "format": "uint32"
+     },
+     {
+      "name": "t",
+      "in": "query",
+      "required": false,
+      "type": "integer",
+      "format": "int32",
+      "description": " * 0 - A - \n * 1 - B - \n",
+      "enum": [
+       0,
+       1
+      ]
+     }
+    ],
+    "tags": [
+     "hello.restful"
+    ]
+   }
+  },
+  "/v1/members/import": {
+   "post": {
+    "summary": "导入用户",
+    "operationId": "ImportMembers2",
+    "responses": {
+     "200": {
+      "description": "ImportMembersReply",
+      "schema": {
+       "$ref": "#/definitions/helloworld.ImportMembersReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "requestBody",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/helloworld.ImportMembersReq"
+      }
+     }
+    ],
+    "tags": [
+     "hello.restful"
+    ]
+   }
+  },
+  "/v1/school/members": {
+   "get": {
+    "summary": "添加成员，支持批量添加",
+    "operationId": "SearchMembers3",
+    "responses": {
+     "200": {
+      "description": "SearchMembersReply",
+      "schema": {
+       "$ref": "#/definitions/helloworld.SearchMembersReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "domain.id",
+      "in": "query",
+      "required": false,
+      "type": "integer",
+      "format": "uint32"
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "type": "integer",
+      "format": "uint32"
+     },
+     {
+      "name": "page_size",
+      "in": "query",
+      "required": false,
+      "type": "integer",
+      "format": "uint32"
+     },
+     {
+      "name": "t",
+      "in": "query",
+      "required": false,
+      "type": "integer",
+      "format": "int32",
+      "description": " * 0 - A - \n * 1 - B - \n",
+      "enum": [
+       0,
+       1
+      ]
+     }
+    ],
+    "tags": [
+     "hello.restful"
+    ]
+   }
+  },
+  "/v1/{domain.type}/members/import": {
+   "post": {
+    "summary": "导入用户",
+    "operationId": "ImportMembers3",
+    "responses": {
+     "200": {
+      "description": "ImportMembersReply",
+      "schema": {
+       "$ref": "#/definitions/helloworld.ImportMembersReply"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "domain.type",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "default": ""
+     },
+     {
+      "name": "requestBody",
+      "in": "body",
+      "required": false,
+      "schema": {
+       "$ref": "#/definitions/helloworld.ImportMembersReq.aa6718f0a7c001e99386d62d6a0da155"
+      }
+     }
+    ],
+    "tags": [
+     "hello.restful"
+    ]
+   }
+  }
+ },
+ "definitions": {
+  "helloworld.Domain": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "title": "id",
+     "type": "integer",
+     "format": "uint32"
+    },
+    "type": {
+     "title": "type",
+     "type": "string"
+    }
+   },
+   "title": "helloworld.Domain",
+   "description": "Domain"
+  },
+  "helloworld.Domain.aa6718f0a7c001e99386d62d6a0da155": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "title": "id",
+     "type": "integer",
+     "format": "uint32"
+    }
+   },
+   "title": "helloworld.Domain.aa6718f0a7c001e99386d62d6a0da155",
+   "description": "Domain"
+  },
+  "helloworld.ImportMembersReply": {
+   "type": "object",
+   "title": "helloworld.ImportMembersReply",
+   "description": "ImportMembersReply"
+  },
+  "helloworld.ImportMembersReq": {
+   "type": "object",
+   "properties": {
+    "domain": {
+     "title": "domain",
+     "$ref": "#/definitions/helloworld.Domain"
+    },
+    "url": {
+     "title": "url",
+     "type": "string"
+    }
+   },
+   "title": "helloworld.ImportMembersReq",
+   "description": "ImportMembersReq"
+  },
+  "helloworld.ImportMembersReq.aa6718f0a7c001e99386d62d6a0da155": {
+   "type": "object",
+   "properties": {
+    "domain": {
+     "title": "domain",
+     "$ref": "#/definitions/helloworld.Domain.aa6718f0a7c001e99386d62d6a0da155"
+    },
+    "url": {
+     "title": "url",
+     "type": "string"
+    }
+   },
+   "title": "helloworld.ImportMembersReq.aa6718f0a7c001e99386d62d6a0da155",
+   "description": "ImportMembersReq"
+  },
+  "helloworld.RemoveMembersReply": {
+   "type": "object",
+   "title": "helloworld.RemoveMembersReply",
+   "description": "RemoveMembersReply"
+  },
+  "helloworld.RemoveMembersReq": {
+   "type": "object",
+   "properties": {
+    "ids": {
+     "title": "ids",
+     "type": "array",
+     "format": "uint32",
+     "items": {
+      "type": "integer",
+      "format": "uint32"
+     }
+    }
+   },
+   "title": "helloworld.RemoveMembersReq",
+   "description": "RemoveMembersReq"
+  },
+  "helloworld.SearchMembersReply": {
+   "type": "object",
+   "properties": {
+    "members": {
+     "title": "members",
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/helloworld.SearchMembersReply.Member"
+     }
+    },
+    "total": {
+     "title": "total",
+     "type": "integer",
+     "format": "uint32"
+    }
+   },
+   "title": "helloworld.SearchMembersReply",
+   "description": "SearchMembersReply"
+  },
+  "helloworld.SearchMembersReply.Member": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "title": "id",
+     "type": "integer",
+     "format": "uint32"
+    }
+   },
+   "title": "helloworld.SearchMembersReply.Member",
+   "description": "Member"
+  },
+  "helloworld.SearchMembersReq": {
+   "type": "object",
+   "properties": {
+    "domain": {
+     "title": "domain",
+     "$ref": "#/definitions/helloworld.Domain"
+    },
+    "page": {
+     "title": "page",
+     "type": "integer",
+     "format": "uint32"
+    },
+    "page_size": {
+     "title": "page_size",
+     "type": "integer",
+     "format": "uint32"
+    },
+    "t": {
+     "title": "t",
+     "type": "integer",
+     "format": "int32",
+     "description": " * 0 - A - \n * 1 - B - \n",
+     "enum": [
+      0,
+      1
+     ]
+    }
+   },
+   "title": "helloworld.SearchMembersReq",
+   "description": "SearchMembersReq"
+  }
+ }
+}

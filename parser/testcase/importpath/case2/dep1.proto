@@ -1,0 +1,8 @@
+syntax = "proto3";
+package dep1;
+
+option go_package = "trpc.group/dep1/proto";
+
+message Msg1 {}
+
+

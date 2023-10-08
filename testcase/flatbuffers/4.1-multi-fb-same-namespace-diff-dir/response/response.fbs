@@ -1,0 +1,7 @@
+namespace helloworld;
+
+attribute "go_package=trpc.group/examples/helloworld";
+
+table Response{
+  Message:string;
+}

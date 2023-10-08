@@ -1,0 +1,65 @@
+syntax = "proto3";
+package helloworld;
+
+option go_package="trpc.group/examples/helloworld";
+
+import "trpc/api/annotations.proto";
+import "trpc/swagger/swagger.proto";
+
+// HelloReq request
+message HelloReq{
+    string name = 1;
+    uint64 id = 2;
+}
+
+// HelloRsp response
+message HelloRsp{
+    int32 errcode = 1;
+}
+
+// helloworld_svr handle hello request and echo message
+service helloworld_svr {
+    // Hello say hello
+    rpc Hello(HelloReq) returns(HelloRsp) {
+        option (trpc.api.http) = {
+            get: "/hello/{name}"
+            additional_bindings: {
+                get: "/hello/id/{id}"
+            }
+        };
+        option(trpc.swagger) = {
+            params: {
+                name: "id"
+                default: "1234"
+            }
+            params: {
+                name: "name"
+                default: "my_name1"
+            }
+        };
+    };
+    // Hello say hello
+    rpc Say(HelloReq) returns(HelloRsp) {
+        option (trpc.api.http) = {
+            post: "/say/{id}"
+            additional_bindings: {
+                post: "/say/body"
+                body: "*"
+            };
+            additional_bindings: {
+                post: "/say/name"
+                body: "name"
+            };
+        };
+        option (trpc.swagger) = {
+            params: {
+                name: "id"
+                default: "1235"
+            }
+            params: {
+                name: "name"
+                default: "my_name2"
+            }
+        };
+    };
+}

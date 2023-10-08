@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package trpc.app.hello;
+option go_package = "trpc.group/examples/helloworld";
+
+import "trpc/validate/validate.proto";
+
+message HelloRequest {
+    bool val = 1 [(validate.rules).bool.const = true];
+}
+
+message HelloResponse {
+    bool val = 1 [(validate.rules).bool.const = false];
+}
+
+service HelloService {
+    rpc Hello (HelloRequest) returns (HelloResponse);
+}

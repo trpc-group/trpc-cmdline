@@ -1,0 +1,11 @@
+syntax = "proto2"; 
+package   trpc.trpcprotocol.common;
+
+option  java_package="com.tencent.trpcprotocol.common.aaa";
+option  go_package ="trpc.group/trpcprotocol/common/aaa";
+
+import "common/b.proto";
+
+message A {
+  optional B b = 1;
+}

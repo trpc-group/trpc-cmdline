@@ -1,0 +1,17 @@
+syntax = "proto3";
+package trpc.test.helloworld;
+option java_package = "test.helloworld";
+option  java_multiple_files = true;
+//option java_outer_classname = "good";
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+// 请求参数
+message HelloRequest {
+  string msg = 1;
+}
+// 响应参数
+message HelloReply {
+  string msg = 1;
+}
+

@@ -1,0 +1,13 @@
+syntax = "proto3";
+package hello;
+
+option go_package="trpc.group/examples/hello";
+
+import "message.proto";
+
+message EmptyMessage {
+}
+
+service hello_svr {
+    rpc Hello (HelloReq) returns (HelloRsp);
+}

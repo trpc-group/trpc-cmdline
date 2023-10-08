@@ -1,0 +1,6 @@
+syntax = "proto3";
+package request;
+
+option go_package="trpc.group/examples/request";
+
+message Request{}

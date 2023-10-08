@@ -1,0 +1,6 @@
+syntax = "proto3";
+package response;
+
+option go_package="trpc.group/examples/response";
+
+message Response{}

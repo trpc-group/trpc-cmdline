@@ -1,0 +1,19 @@
+namespace helloworld;
+
+attribute "go_package=trpc.group/examples/helloworld";
+
+// HelloReq request
+table HelloReq{
+	Message:string;
+}
+
+// HelloRsp response
+table HelloRsp{
+	Message:string;
+}
+
+// helloworld_svr handle hello request and echo message
+rpc_service helloworld_svr {
+    // Hello say hello
+    Hello(HelloReq):HelloRsp;
+}

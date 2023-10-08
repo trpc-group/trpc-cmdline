@@ -1,0 +1,10 @@
+syntax = "proto3";
+package hello;
+
+option go_package="trpc.group/examples/hello";
+
+message HelloReq {
+}
+
+message HelloRsp {
+}

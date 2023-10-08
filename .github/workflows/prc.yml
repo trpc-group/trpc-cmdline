@@ -1,0 +1,75 @@
+name: Pull Request Check
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+  pull-requests: read # Use with `only-new-issues` option.
+jobs:
+  build:
+    name: build
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v3
+      # with:
+        # ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        # submodules: 'recursive'
+    - name: Checkout submodules using a PAT
+      run: |
+        git config --file .gitmodules --get-regexp url | while read url; do
+          git config --file=.gitmodules $(echo "$url" | sed -E "s/git@github.com:|https:\/\/github.com\//https:\/\/${{ secrets.TRPC_PAT }}:${{ secrets.TRPC_PAT }}@github.com\//")
+        done
+        git submodule sync
+        git submodule update --init --recursive
+    - run: ls install/submodules/trpc-protocol
+    - uses: actions/setup-go@v4
+      with:
+        go-version: 1.19
+    - name: Build
+      run: go build -v ./...
+    - name: Set env
+      run: echo "$HOME/go/bin" >> $GITHUB_PATH
+    - name: Install protoc
+      run: PB_REL="https://github.com/protocolbuffers/protobuf/releases" && curl -LO $PB_REL/download/v3.15.8/protoc-3.15.8-linux-x86_64.zip && unzip -o protoc-3.15.8-linux-x86_64.zip -d $HOME/.local && ~/.local/bin/protoc --version
+    - name: Install flatc
+      run: wget https://github.com/google/flatbuffers/releases/download/v23.5.26/Linux.flatc.binary.g++-10.zip && unzip Linux.flatc.binary.g++-10.zip && mv flatc ~/go/bin/ && ~/go/bin/flatc --version
+    - name: Install protoc-gen-go
+      run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+    - name: Install goimports
+      run: go install golang.org/x/tools/cmd/goimports@latest
+    - name: install mockgen
+      run: go install go.uber.org/mock/mockgen@latest
+    - run: echo $PATH
+    - run: export PATH=$HOME/.local/bin:$HOME/go/bin:$PATH && echo $PATH && go run ./trpc setup -f && ls -la /home/ubuntu/go/bin && file $HOME/go/bin/flatc && file $HOME/go/bin/protoc
+    - name: Test
+      run: export PATH=$HOME/.local/bin:$HOME/go/bin:$PATH && echo $PATH && go test -v -coverprofile=coverage.out ./...
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: coverage.out
+        flags: unittests
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  golangci:
+    name: lint
+    runs-on: self-hosted
+    steps:
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 1.19
+      - uses: actions/checkout@v3
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest 
+          only-new-issues: true
+          skip-cache: true
+  typos:
+    name: typos
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v3
+    - name: typos 
+      uses: crate-ci/typos@master
+      with:
+        config: ./.github/typosconfig.toml

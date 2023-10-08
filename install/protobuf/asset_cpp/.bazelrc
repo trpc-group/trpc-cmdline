@@ -1,0 +1,3 @@
+build --cxxopt="--std=c++17"
+# Comment below line and add `build --copt=-g --strip=never` to enable debug
+build --copt=-O2
