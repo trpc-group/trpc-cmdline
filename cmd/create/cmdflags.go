@@ -62,7 +62,7 @@ func addOutputFlags(createCmd *cobra.Command) {
 			"rpconly defaults to the current directory)")
 	createCmd.Flags().BoolP("force", "f", false, "Force overwrite existing code")
 	createCmd.Flags().StringP("mod", "m", "", "Specify the go module, default: trpc.app.${pb.package}")
-	createCmd.Flags().String("goversion", "1.12", "Specify the Go version in the generated go.mod file, default: 1.12")
+	createCmd.Flags().String("goversion", "1.18", "Specify the Go version in the generated go.mod file, default: 1.12")
 	createCmd.Flags().String("trpcgoversion", "",
 		"Specify the trpc-go version in the generated go.mod file")
 	createCmd.Flags().Bool("mock", true,
