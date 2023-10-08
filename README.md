@@ -22,7 +22,7 @@ It supports the latest three major releases of [Go](https://go.dev/doc/devel/rel
 go install trpc.group/trpc-go/trpc-cmdline/trpc@latest
 ```
 
-#### Install from release
+<!-- #### Install from release
 
 <details><summary>Click to show the bash script</summary><br><pre>
 $ TAG="v0.0.1" # Choose tag.
@@ -30,19 +30,20 @@ $ OS=linux # Choose from "linux", "darwin" or "windows".
 $ wget -O trpc https://github.com/trpc-group/trpc-cmdline/releases/download/${TAG}/trpc_${OS}
 $ mkdir -p ~/go/bin && chmod +x trpc && mv trpc ~/go/bin
 $ export PATH=~/go/bin:$PATH # Add this to your `~/.bashrc`.
-</pre></details>
+</pre></details> -->
 
 ### Dependencies
 
 Install Go: [https://go.dev/doc/install](https://go.dev/doc/install)
 
-Install other dependencies by using one of the following methods.
+Install other dependencies:
+ <!-- by using one of the following methods.
 
 #### Using trpc setup
 
-After installation of trpc-cmdline, simply running `trpc setup` will automatically install all the dependencies.
+After installation of trpc-cmdline, simply running `trpc setup` will automatically install all the dependencies. 
 
-#### Install separately
+#### Install separately -->
 
 <details><summary>Install protoc </summary><br><pre>
 $ # Reference: https://grpc.io/docs/protoc-installation/
