@@ -1,6 +1,6 @@
 {{- $pkgName := .PackageName -}}
-{{- $sevriceName := (index .Services 0).Name -}}
-{{- $sevriceProtocol := .Protocol -}}
+{{- $serviceName := (index .Services 0).Name -}}
+{{- $serviceProtocol := .Protocol -}}
 {{- $appName := .AppName -}}
 {{- $serverName := .ServerName -}}
 global:  # Global configuration.
@@ -12,7 +12,7 @@ server:  # Server configuration.
   server: {{ if $serverName -}}
     {{- $serverName -}}
   {{- else -}}
-    {{- $sevriceName -}}
+    {{- $serviceName -}}
   {{- end}}  # Process server name.
   bin_path: /usr/local/trpc/bin/  # Path to binary executable files and framework configuration files.
   conf_path: /usr/local/trpc/conf/  # Path to business configuration files.
@@ -32,7 +32,7 @@ server:  # Server configuration.
       # nic: eth0
       port: {{add 8000 $index}}  # Service listening port, can use placeholder ${port}.
       network: "*/1 * * * * * ?startAtOnce=1"  # Timer cron expression: [second minute hour day month weekday] such as "0 */5 * * * *" every 5 minutes
-      protocol: {{$sevriceProtocol}}  # Application layer protocol: trpc or http.
+      protocol: {{$serviceProtocol}}  # Application layer protocol: trpc or http.
       timeout: 1000  # Maximum processing time for requests in milliseconds.
     {{ end }}
 
@@ -51,7 +51,7 @@ client:  # Backend configuration for client calls.
       {{- end }}  # Service name for the backend.
       namespace: Development  # Environment for the backend.
       network: tcp  # Network type for the backend: tcp or udp (configuration takes priority).
-      protocol: {{$sevriceProtocol}}  # Application layer protocol: trpc or http.
+      protocol: {{$serviceProtocol}}  # Application layer protocol: trpc or http.
       target: ip://127.0.0.1:{{add 8000 $index}}  # Service address for requests.
       timeout: 1000   # Maximum processing time for requests.
     {{ end }}

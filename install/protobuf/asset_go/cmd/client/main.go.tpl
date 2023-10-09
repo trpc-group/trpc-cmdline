@@ -6,7 +6,7 @@ package main
 {{ $domainName := .Domain }}
 {{ $groupName := .GroupName }}
 {{ $versionSuffix := .VersionSuffix }}
-{{- $sevriceProtocol := .Protocol -}}
+{{- $serviceProtocol := .Protocol -}}
 {{- $goPkgName := .PackageName -}}
 {{- with .FileOptions.go_package -}}
   {{- $goPkgName = . -}}
@@ -53,7 +53,7 @@ import (
 func call{{$svrNameCamelCase}}{{$rpcName}}() {
 	proxy := pb.New{{$svrNameCamelCase}}ClientProxy(
 		client.WithTarget("ip://127.0.0.1:{{add 8000 $index}}"),
-		client.WithProtocol("{{$sevriceProtocol}}"),
+		client.WithProtocol("{{$serviceProtocol}}"),
 	)
 	ctx := trpc.BackgroundContext()
 {{- if and $method.ClientStreaming $method.ServerStreaming}}
