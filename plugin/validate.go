@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"trpc.group/trpc-go/trpc-cmdline/config"
 	"trpc.group/trpc-go/trpc-cmdline/descriptor"
 	"trpc.group/trpc-go/trpc-cmdline/params"
 	"trpc.group/trpc-go/trpc-cmdline/parser"
@@ -19,13 +20,13 @@ func (p *Validate) Name() string {
 	return "validate"
 }
 
-var supported = map[string]bool{
-	"go": true,
-}
-
 // Check only run when language is supported.
 func (p *Validate) Check(fd *descriptor.FileDescriptor, opt *params.Option) bool {
-	if _, ok := supported[opt.Language]; !ok {
+	if !opt.SecvEnabled {
+		return false
+	}
+	support, ok := config.SupportValidate[opt.Language]
+	if !ok || !support {
 		return false
 	}
 

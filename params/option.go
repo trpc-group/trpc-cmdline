@@ -14,10 +14,16 @@ type Option struct {
 
 	UseBaseName bool // Whether to pass protoc/flatc by the basename of "--protofile/--fbs" (default as true)
 
-	AliasOn   bool   // Parses the MethodOption or the "//@alias=" alias in comments to replace the RPC in the .proto file.
-	PerMethod bool   // Whether to support splitting files by method.
-	OutputDir string // Project output path.
-	Force     bool   // Force write.
+	// Parses the MethodOption or the "//@alias=" alias in comments to replace the RPC in the .proto file.
+	AliasOn bool
+	// If enabled, client rpc name in stub will be replaced as alias name, default true.
+	AliasAsClientRPCName bool
+	PerMethod            bool   // Whether to support splitting files by method.
+	OutputDir            string // Project output path.
+	Force                bool   // Force write.
+
+	CustomAPPName    string // APPName is the custom app name provided by user.
+	CustomServerName string // ServerName is the custom server name provided by user.
 
 	DescriptorSetIn string // Descriptor file specified by "--descriptor_set_in".
 
@@ -30,6 +36,11 @@ type Option struct {
 	// Whether to generate dependent stub code, defaults to false. Only effective when RPCOnly is true.
 	DependencyStub bool
 	NoGoMod        bool // Do not generate go.mod in the stub code, defaults to false.
+	SecvEnabled    bool // SecvEnabled decides whether to enable generation of validation files, default true.
+	// KVs is the user provided kv map extracted from a json file.
+	// User's custom template files can read this kvs.
+	KVs  map[string]interface{}
+	Envs map[string]string
 
 	// gomod option
 	GoMod         string // go.mod specified in the current project.

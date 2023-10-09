@@ -66,13 +66,13 @@ func TestTar_Install(t *testing.T) {
 	require.Nil(t, err)
 
 	// compare file list
-	srcFileSet := map[string]struct{}{}
+	srcFileSet := make(map[string]struct{})
 	filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		path = strings.TrimPrefix(path, src)
 		srcFileSet[path] = struct{}{}
 		return nil
 	})
-	dstFileSet := map[string]struct{}{}
+	dstFileSet := make(map[string]struct{})
 	filepath.Walk(dst, func(path string, info os.FileInfo, err error) error {
 		path = strings.TrimPrefix(path, dst)
 		dstFileSet[path] = struct{}{}

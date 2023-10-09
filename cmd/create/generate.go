@@ -123,10 +123,14 @@ func runProtoc(fd *FD, pbOutDir string, option *params.Option) ([]string, error)
 		return nil, fmt.Errorf("run protoc --$lang_out err: %v", err)
 	}
 
-	// run protoc-gen-secv
-	opts = append(opts, pb.WithSecvEnabled(true))
-	if err := pb.Protoc(option.Protodirs, option.Protofile, option.Language, pbOutDir, opts...); err != nil {
-		return nil, fmt.Errorf("run protoc-gen-secv err: %v", err)
+	// Run protoc-gen-secv.
+	if support, ok := config.SupportValidate[option.Language]; ok && support && option.SecvEnabled {
+		if err := pb.Protoc(
+			option.Protodirs, option.Protofile, option.Language, pbOutDir,
+			append(opts, pb.WithSecvEnabled(true))...,
+		); err != nil {
+			return nil, fmt.Errorf("run protoc-gen-secv for %s err: %w", option.Protofile, err)
+		}
 	}
 	log.Debug("pbOutDir = %s", pbOutDir)
 	// collect the generated files
@@ -330,10 +334,14 @@ func (g *genDependencyRPCStubParam) genDependencyRPCStubPB() error {
 		return fmt.Errorf("GenerateFiles: %v", err)
 	}
 
-	// run protoc-gen-secv
-	opts = append(opts, pb.WithSecvEnabled(true))
-	if err = pb.Protoc(searchPath, g.fname, g.option.Language, g.outputDir, opts...); err != nil {
-		return fmt.Errorf("GenerateFiles: %v", err)
+	// Run protoc-gen-secv.
+	if support, ok := config.SupportValidate[g.option.Language]; ok && support && g.option.SecvEnabled {
+		if err := pb.Protoc(
+			searchPath, g.fname, g.option.Language, g.outputDir,
+			append(opts, pb.WithSecvEnabled(true))...,
+		); err != nil {
+			return fmt.Errorf("generate validation file for %s err: %w", g.fname, err)
+		}
 	}
 	if g.option.DescriptorSetIn != "" {
 		return nil // skip copy if descriptor_set_in is passed.

@@ -191,7 +191,7 @@ func TestCheckSECVTpl(t *testing.T) {
 	})
 
 	t.Run("case false", func(t *testing.T) {
-		ret := CheckSECVTpl(map[string]string{})
+		ret := CheckSECVTpl(make(map[string]string))
 		require.False(t, ret)
 	})
 }

@@ -22,15 +22,15 @@ import (
 )
 
 const (
-	Trpc = "trpc"
+	trpcName = "trpc"
 )
 
 func fillDependencies(fd descriptor.Desc, nfd *descriptor.FileDescriptor) error {
 	// package name, such as "trpc.group/trpcprotocol/testapp/testserver
-	pb2ValidGoPkg := map[string]string{}  // k=pb file name，v=package name processed by protoc
-	pkg2ValidGoPkg := map[string]string{} // k=pb file package directive, v=package name processed by protoc
-	pkg2ImportPath := map[string]string{} // k=pb file package directive, v=importpath in go code
-	pb2ImportPath := map[string]string{}  // k=pb file name，v=importpath in go code
+	pb2ValidGoPkg := make(map[string]string)  // k=pb file name，v=package name processed by protoc
+	pkg2ValidGoPkg := make(map[string]string) // k=pb file package directive, v=package name processed by protoc
+	pkg2ImportPath := make(map[string]string) // k=pb file package directive, v=importpath in go code
+	pb2ImportPath := make(map[string]string)  // k=pb file name，v=importpath in go code
 	pb2DepsPbs := make(map[string][]string)
 	var err error
 	func() {
@@ -107,12 +107,23 @@ func fillPackageName(fd descriptor.Desc, nfd *descriptor.FileDescriptor) error {
 	return nil
 }
 
-func fillAppServerName(fd descriptor.Desc, nfd *descriptor.FileDescriptor) error {
+func fillAppServerName(
+	fd descriptor.Desc,
+	nfd *descriptor.FileDescriptor,
+	option *options,
+) error {
 	strs := strings.Split(fd.GetPackage(), ".")
 	// Needs to meet the package format, i.e. trpc.{appName}.{ServerName}.
-	if len(strs) == 3 && strs[0] == Trpc {
+	if len(strs) == 3 && strs[0] == trpcName {
 		nfd.AppName = strs[1]
 		nfd.ServerName = strs[2]
+	}
+	// The user provided app and server name have higher priority.
+	if option.appName != "" {
+		nfd.AppName = option.appName
+	}
+	if option.serverName != "" {
+		nfd.ServerName = option.serverName
 	}
 	return nil
 }
@@ -159,10 +170,10 @@ func buildFileOptions(opts descriptor.FileOpt) (map[string]interface{}, error) {
 	return m, nil
 }
 
-func fillServices(fd descriptor.Desc, nfd *descriptor.FileDescriptor, aliasMode bool) error {
+func fillServices(fd descriptor.Desc, nfd *descriptor.FileDescriptor, aliasMode, aliasAsClientRPCName bool) error {
 	// Traverse all RPC services to fill them into "nfd".
 	for _, sd := range fd.GetServices() {
-		nsd, err := newServiceDescriptor(fd, sd, aliasMode)
+		nsd, err := newServiceDescriptor(fd, sd, aliasMode, aliasAsClientRPCName)
 		if err != nil {
 			return err
 		}
@@ -174,18 +185,22 @@ func fillServices(fd descriptor.Desc, nfd *descriptor.FileDescriptor, aliasMode 
 func newServiceDescriptor(
 	fd descriptor.Desc,
 	sd descriptor.ServiceDesc,
-	aliasMode bool,
+	aliasMode, aliasAsClientRPCName bool,
 ) (*descriptor.ServiceDescriptor, error) {
 	nsd := &descriptor.ServiceDescriptor{
-		Name: sd.GetName(),
+		Name:       sd.GetName(),
+		MethodRPC:  make(map[string]*descriptor.RPCDescriptor),
+		MethodRPCx: make(map[string][]*descriptor.RPCDescriptor),
 	}
 	for _, m := range sd.GetMethods() {
-		rpc, rpcxs, err := newRPCDescriptor(fd, sd, m, aliasMode)
+		rpc, rpcxs, err := newRPCDescriptor(fd, sd, m, aliasMode, aliasAsClientRPCName)
 		if err != nil {
 			return nil, err
 		}
 		nsd.RPC = append(nsd.RPC, rpc)
 		nsd.RPCx = append(nsd.RPCx, rpcxs...)
+		nsd.MethodRPC[m.GetName()] = rpc
+		nsd.MethodRPCx[m.GetName()] = rpcxs
 	}
 	if err := checkRESTfulAPIInfo(nsd); err != nil {
 		return nil, err
@@ -197,7 +212,7 @@ func newRPCDescriptor(
 	fd descriptor.Desc,
 	sd descriptor.ServiceDesc,
 	m descriptor.MethodDesc,
-	aliasMode bool,
+	aliasMode, aliasAsClientRPCName bool,
 ) (rpc *descriptor.RPCDescriptor, rpcxs []*descriptor.RPCDescriptor, err error) {
 	reqOpts, err := buildFileOptions(m.GetInputType().GetFile().GetFileOptions())
 	if err != nil {
@@ -230,7 +245,22 @@ func newRPCDescriptor(
 		return rpc, rpcxs, nil
 	}
 
+	rpc.SwaggerInfo = *parseSwaggerInfo(pmd.MD, rpc.LeadingComments)
+
+	// First, store the original rpc in rpcxs. Because the alias may change
+	// the FullyQualifiedCmd of the rpc, but the service descriptor still requires
+	// the original form of the rpc.
+	// At the end of this function, rpcxs will be deduplicated by rpc to avoid multiple occurrences
+	// of the same FullyQualifiedCmd name.
+	// Historical note: A better solution might be to move the logic of aliasAsClientRPCName
+	// to *.tpl files. However, there are cases where users have already made modifications
+	// to additional copies of these *.tpl files. Moving the logic could potentially cause
+	// complications in the future, leading to headaches.
+	originalRPC := *rpc
+	rpcxs = append(rpcxs, &originalRPC)
+
 	if alias, ok := parseAliasExtension(pmd.MD.GetMethodOptions()); ok {
+		setAliasClientRPCName(rpc, alias, aliasAsClientRPCName)
 		rpc := *rpc
 		rpc.FullyQualifiedCmd = alias
 		rpcxs = append(rpcxs, &rpc)
@@ -242,13 +272,12 @@ func newRPCDescriptor(
 			return nil, nil, err
 		}
 		if ok {
+			setAliasClientRPCName(rpc, alias, aliasAsClientRPCName)
 			rpc := *rpc
 			rpc.FullyQualifiedCmd = alias
 			rpcxs = append(rpcxs, &rpc)
 		}
 	}
-
-	rpc.SwaggerInfo = *parseSwaggerInfo(pmd.MD, rpc.LeadingComments)
 
 	contents, err := parseRestAPIContents(pmd.MD)
 	if err != nil {
@@ -256,7 +285,26 @@ func newRPCDescriptor(
 	}
 	rpc.RESTfulAPIInfo.ContentList = append(rpc.RESTfulAPIInfo.ContentList, contents...)
 
-	return rpc, rpcxs, nil
+	return rpc, deduplicate(rpcxs, rpc), nil
+}
+
+func setAliasClientRPCName(rpc *descriptor.RPCDescriptor, alias string, aliasAsClientRPCName bool) {
+	if aliasAsClientRPCName {
+		rpc.FullyQualifiedCmd = alias
+	}
+}
+
+func deduplicate(rpcxs []*descriptor.RPCDescriptor, rpc *descriptor.RPCDescriptor) []*descriptor.RPCDescriptor {
+	result := make([]*descriptor.RPCDescriptor, 0, len(rpcxs))
+	exist := make(map[string]struct{}, len(rpcxs))
+	exist[rpc.FullyQualifiedCmd] = struct{}{}
+	for _, rpcx := range rpcxs {
+		if _, ok := exist[rpcx.FullyQualifiedCmd]; !ok {
+			exist[rpcx.FullyQualifiedCmd] = struct{}{}
+			result = append(result, rpcx)
+		}
+	}
+	return result
 }
 
 func parseSwaggerInfo(md *desc.MethodDescriptor, leadingComments string) *descriptor.SwaggerDescriptor {
@@ -477,7 +525,7 @@ func parseAliasComment(leading, trailing string) (string, bool, error) {
 // mapping relationships between RPC request/response type names and their corresponding Protobuf definitions
 // need to be established.
 func fillRPCMessageTypes(fd descriptor.Desc, nfd *descriptor.FileDescriptor) error {
-	def := map[string]string{}
+	def := make(map[string]string)
 
 	for _, sd := range fd.GetServices() {
 		for _, m := range sd.GetMethods() {
@@ -520,7 +568,8 @@ func findMessageDefLocation(typ string, fd descriptor.Desc) (string, error) {
 		return s, nil
 	}
 
-	return "", errors.New("not found")
+	return "", fmt.Errorf("definition of message %s is not found in %s and its dependencies",
+		typ, fd.GetFullyQualifiedName())
 }
 
 func findMessageDefLocationFromMessageType(typ string, fd descriptor.Desc) (string, bool) {
@@ -548,8 +597,8 @@ func getImports(fd descriptor.Desc, nfd *descriptor.FileDescriptor) ([]string, [
 	// Avoid importing the same package multiple times.
 	// Goimports can solve the issue of "import but unused",
 	// but it cannot solve problems like "redeclared as imported package name".
-	existed := map[string]struct{}{}
-	importName2Path := map[string]string{}
+	existed := make(map[string]struct{})
+	importName2Path := make(map[string]string)
 
 	// Use placeholders to avoid special cases:
 	// if the suffix of the "go_package" field defined in the proto file is "proto",
@@ -564,7 +613,7 @@ func getImports(fd descriptor.Desc, nfd *descriptor.FileDescriptor) ([]string, [
 	existed[path] = struct{}{}
 	// The "trpc" name has already been occupied by the trpc-go main library,
 	// so it also needs to be skipped.
-	importName2Path[Trpc] = ""
+	importName2Path[trpcName] = ""
 	for _, dep := range fd.GetDependencies() {
 		pb := dep.GetName()
 		pbImport, ok := nfd.Pb2ImportPath[pb]
@@ -591,7 +640,7 @@ func getImports(fd descriptor.Desc, nfd *descriptor.FileDescriptor) ([]string, [
 		// If there is a duplication and the importpath is different, automatic numbering is required.
 		// `importName == "proto" && v == ""` indicates the placeholder proto set above.
 		var seqno int
-		if !((importName == "proto" || importName == Trpc) && v == "") {
+		if !((importName == "proto" || importName == trpcName) && v == "") {
 			importName2Path[importName+"1"] = v
 			delete(importName2Path, importName)
 			seqno = 2
@@ -609,7 +658,7 @@ func getImports(fd descriptor.Desc, nfd *descriptor.FileDescriptor) ([]string, [
 
 	importsX := []descriptor.ImportDesc{}
 	for k, v := range importName2Path {
-		if (k == "proto" || k == Trpc) && v == "" {
+		if (k == "proto" || k == trpcName) && v == "" {
 			continue
 		}
 		desc := descriptor.ImportDesc{

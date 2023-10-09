@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -25,6 +26,7 @@ func Execute() {
 	%+v
 Please run "trpc -h" or "trpc create -h" (or "trpc {some-other-subcommand} -h") for help messages.
 `, err)
+		os.Exit(1) // Exist with non-zero errcode to indicate failure.
 	}
 }
 
@@ -75,7 +77,7 @@ func initConfig() error {
 
 	d, err := config.Init()
 	if err != nil {
-		return err
+		return fmt.Errorf("config init err: %w", err)
 	}
 
 	if cfgFile == defaultConfigFile {
@@ -91,7 +93,7 @@ func initConfig() error {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
-		return err
+		return fmt.Errorf("viper read in config: %w", err)
 	}
 
 	return nil

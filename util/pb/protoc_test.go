@@ -135,7 +135,7 @@ func Test_genRelPathFromWd(t *testing.T) {
 			},
 			want:    "",
 			wantErr: true,
-			absRsp:  map[string]string{},
+			absRsp:  make(map[string]string),
 			absErr: map[string]error{
 				"wd": fmt.Errorf("error"),
 			},
@@ -148,7 +148,7 @@ func Test_genRelPathFromWd(t *testing.T) {
 			},
 			want:    "",
 			wantErr: true,
-			absRsp:  map[string]string{},
+			absRsp:  make(map[string]string),
 			absErr: map[string]error{
 				"protofile": fmt.Errorf("error"),
 			},
@@ -165,7 +165,7 @@ func Test_genRelPathFromWd(t *testing.T) {
 				"wd":        "/wd",
 				"protofile": "a/protofile",
 			},
-			absErr: map[string]error{},
+			absErr: make(map[string]error),
 		},
 		{
 			name: "gen ref path succ",
@@ -179,7 +179,7 @@ func Test_genRelPathFromWd(t *testing.T) {
 				"wd":        "/wd",
 				"protofile": "/wd/a/protofile",
 			},
-			absErr: map[string]error{},
+			absErr: make(map[string]error),
 		},
 	}
 	for _, tt := range tests {

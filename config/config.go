@@ -61,7 +61,7 @@ func Init(opts ...Option) (string, error) {
 	// List of candidate template paths.
 	paths, err := candidatedInstallPath()
 	if err != nil {
-		return "", fmt.Errorf("get Template search path error: %w", err)
+		return "", fmt.Errorf("get template search path error: %w", err)
 	}
 
 	// Check if the candidate template path exists.
@@ -69,7 +69,7 @@ func Init(opts ...Option) (string, error) {
 	installPath, err := templateInstallPath(paths)
 	if err != nil {
 		if err != errTemplateNotFound {
-			return "", fmt.Errorf("get Template installed path error: %w", err)
+			return "", fmt.Errorf("get template instal path from %+v error: %w", paths, err)
 		}
 		reinstall = true
 		installPath = paths[0]
@@ -82,8 +82,9 @@ func Init(opts ...Option) (string, error) {
 	}
 	// Install the template as needed.
 	if o.force || reinstall {
+		log.Debug("reinstall template to %s", installPath)
 		if err := installTemplate(installPath); err != nil {
-			return "", fmt.Errorf("initialize config error: %w", err)
+			return "", fmt.Errorf("install template to %s error: %w", installPath, err)
 		}
 	}
 	return installPath, nil

@@ -23,7 +23,7 @@ func LoadDependencies(languages ...string) ([]*Dependency, error) {
 	}
 
 	var deps []*Dependency
-	depsSet := map[string]*Dependency{}
+	depsSet := make(map[string]*Dependency)
 
 	deps = append(deps, cfg.IDL[IDLTypeProtobuf.String()])
 	deps = append(deps, cfg.IDL[IDLTypeFlatBuffers.String()])

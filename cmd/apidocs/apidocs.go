@@ -50,6 +50,9 @@ The field information of input and output also includes the leading and trailing
 
 	// Flag for alias.
 	apidocsCmd.Flags().Bool("alias", false, "Use alias mode for rpcname")
+	// Preserve original rpcname.
+	apidocsCmd.Flags().BoolP("keep-orig-rpcname", "k", true,
+		"Preserve the original rpcname (if --alias=true), set it to false if you only want alias names.")
 
 	// The rules of documents order.
 	apidocsCmd.Flags().Bool("order-by-pbname", false,
@@ -120,7 +123,10 @@ func loadAPIDocsOptions(flagSet *pflag.FlagSet) (*params.Option, error) {
 		return nil, err
 	}
 	option.Protodirs, _ = flagSet.GetStringArray("protodir")
+	// Always append the current working directory.
+	option.Protodirs = append(option.Protodirs, ".")
 	option.AliasOn, _ = flagSet.GetBool("alias")
+	option.KeepOrigRPCName, _ = flagSet.GetBool("keep-orig-rpcname")
 
 	// Check if the pb file is valid.
 	if len(option.Protofile) == 0 {

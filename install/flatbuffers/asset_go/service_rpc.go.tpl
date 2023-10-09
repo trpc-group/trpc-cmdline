@@ -75,7 +75,9 @@ type {{$svrName}}Impl struct {}
 
 {{ with .LeadingComments }}// {{$rpcName}} {{.}}{{ end }}
 {{- if and $method.ClientStreaming $method.ServerStreaming }}
-func (s *{{$svrName}}Impl) {{$rpcName}}(stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server) error {
+func (s *{{$svrName}}Impl) {{$rpcName}}(
+	stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server,
+) error {
 	// Bidirectional streaming scenario processing logic (for reference only, please modify as needed).
 	for {
 		req, err := stream.Recv()
@@ -103,7 +105,9 @@ func (s *{{$svrName}}Impl) {{$rpcName}}(stream {{index (splitList "." $rpcReqTyp
 	}
 }
 {{- else if $method.ClientStreaming }}
-func (s *{{$svrName}}Impl) {{$rpcName}}(stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server) error {
+func (s *{{$svrName}}Impl) {{$rpcName}}(
+	stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server,
+) error {
 	// Client streaming scenario processing logic (for reference only, please modify as needed).
 	// all := []string{}
 	for {
@@ -128,7 +132,10 @@ func (s *{{$svrName}}Impl) {{$rpcName}}(stream {{index (splitList "." $rpcReqTyp
 	}
 }
 {{- else if $method.ServerStreaming }}
-func (s *{{$svrName}}Impl) {{$rpcName}}(req *{{$rpcReqType}}, stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server) error {
+func (s *{{$svrName}}Impl) {{$rpcName}}(
+	req *{{$rpcReqType}}, 
+	stream {{index (splitList "." $rpcReqType) 0}}.{{$svrNameCamelCase}}_{{$rpcName}}Server,
+) error {
 	// Server streaming scenario processing logic (for reference only, please modify as needed).
 	log.Debugf("StreamClient server receive %v", req)
 	for i := 0; i < 5; i++ {
@@ -147,7 +154,10 @@ func (s *{{$svrName}}Impl) {{$rpcName}}(req *{{$rpcReqType}}, stream {{index (sp
 	return nil
 }
 {{- else }}
-func (s *{{$svrName}}Impl) {{$rpcName}}(ctx context.Context, req *{{$rpcReqType}}) (*flatbuffers.Builder, error) {
+func (s *{{$svrName}}Impl) {{$rpcName}}(
+	ctx context.Context, 
+	req *{{$rpcReqType}},
+) (*flatbuffers.Builder, error) {
 	// Unary call: flatbuffers processing logic (for reference only, please modify as needed).
 	log.Debugf("Simple server receive %v", req)
 	// Replace 'Message' with the field name you want to operate on.

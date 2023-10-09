@@ -7,6 +7,9 @@ option java_package = "com.trpc.examples.helloworld";
 // HelloReq is hello request.
 message HelloReq{
   string msg = 1;
+  message Nested {
+    string msg = 2;
+  }
 }
 
 // HelloRsp is hello response.
@@ -20,6 +23,7 @@ service HelloWorldService {
   rpc Hello1(HelloReq) returns(HelloRsp);
   // Hello2 says hello.
   rpc Hello2(HelloReq) returns(HelloRsp); // @alias=myhello2
+  rpc HelloNested(HelloReq.Nested) returns(HelloRsp);
 }
 
 // HelloWorldServerStreamService handles hello request and echo message.

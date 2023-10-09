@@ -51,9 +51,23 @@ func CMD() *cobra.Command {
 // New initializes a create command.
 func New(preRunHook func() error) *Create {
 	return &Create{
-		options:    &params.Option{},
+		options: &params.Option{
+			Envs: getEnvMap(),
+		},
 		preRunHook: preRunHook,
 	}
+}
+
+func getEnvMap() map[string]string {
+	envs := os.Environ()
+	m := make(map[string]string, len(envs))
+	for _, kv := range envs {
+		vals := strings.Split(kv, "=")
+		if len(vals) == 2 {
+			m[vals[0]] = vals[1]
+		}
+	}
+	return m
 }
 
 // PreRunE provides *cobra.Command.PreRunE.
@@ -72,6 +86,9 @@ func (c *Create) PreRunE(cmd *cobra.Command, args []string) error {
 	var err error
 	opts := []parser.Option{
 		parser.WithAliasOn(c.options.AliasOn),
+		parser.WithAPPName(c.options.CustomAPPName),
+		parser.WithServerName(c.options.CustomServerName),
+		parser.WithAliasAsClientRPCName(c.options.AliasAsClientRPCName),
 		parser.WithLanguage(c.options.Language),
 		parser.WithRPCOnly(c.options.RPCOnly),
 		parser.WithMultiVersion(c.options.MultiVersion),

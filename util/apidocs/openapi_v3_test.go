@@ -22,8 +22,9 @@ func TestNewOpenAPIJSON(t *testing.T) {
 			"../../install/submodules/trpc-protocol",
 			"../../install/protos",
 		}, paths.ExpandTRPCSearch("../../install")...),
-		Protofile:    "testcase/hello.proto",
-		ProtofileAbs: "testcase/hello.proto",
+		Protofile:       "testcase/hello.proto",
+		ProtofileAbs:    "testcase/hello.proto",
+		KeepOrigRPCName: true,
 	}
 
 	fd, err := parser.ParseProtoFile(
@@ -61,6 +62,7 @@ func TestNewOpenAPIJSON_OptJSONParam(t *testing.T) {
 		Protofile:           "testcase/hello.proto",
 		ProtofileAbs:        "testcase/hello.proto",
 		SwaggerOptJSONParam: true,
+		KeepOrigRPCName:     true,
 	}
 
 	fd, err := parser.ParseProtoFile(
@@ -99,6 +101,7 @@ func TestNewOpenAPIJSON_OrderByPBName(t *testing.T) {
 		ProtofileAbs:        "testcase/hello.proto",
 		OrderByPBName:       true,
 		SwaggerOptJSONParam: true,
+		KeepOrigRPCName:     true,
 	}
 
 	fd, err := parser.ParseProtoFile(
@@ -138,6 +141,7 @@ func TestNewOpenAPIJSON_Unmarshal(t *testing.T) {
 		ProtofileAbs:        "testcase/hello.proto",
 		OrderByPBName:       true,
 		SwaggerOptJSONParam: true,
+		KeepOrigRPCName:     true,
 	}
 
 	fd, err := parser.ParseProtoFile(

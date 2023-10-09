@@ -82,7 +82,7 @@ type FbsAttrs struct {
 func NewFbsAttrs(attrs []string) *FbsAttrs {
 	f := &FbsAttrs{
 		Attrs: attrs,
-		KV:    map[string]string{},
+		KV:    make(map[string]string),
 	}
 	for _, kv := range attrs {
 		strs := strings.Split(kv, "=")

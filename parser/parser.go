@@ -135,9 +135,9 @@ func convertFileDescriptor(
 	// Set imports
 	mustNilError(fillImports(fd, fileDescriptor))
 	// Set service
-	mustNilError(fillServices(fd, fileDescriptor, option.aliasOn))
+	mustNilError(fillServices(fd, fileDescriptor, option.aliasOn, option.aliasAsClientRPCName))
 	// Set app server
-	mustNilError(fillAppServerName(fd, fileDescriptor))
+	mustNilError(fillAppServerName(fd, fileDescriptor, option))
 	// SetMessageTypes sets the definitions of the request and response types of the RPC
 	mustNilError(fillRPCMessageTypes(fd, fileDescriptor))
 

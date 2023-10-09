@@ -107,7 +107,7 @@ func NewProperties(option *params.Option, msg *desc.MessageDescriptor, defs *Def
 
 	// Get message's field information and fill in properties.
 	propertiesMap := &Properties{
-		Elements: map[string]PropertyStruct{},
+		Elements: make(map[string]PropertyStruct),
 	}
 
 	if option.OrderByPBName {
@@ -234,7 +234,7 @@ func (p PropertyStruct) GetQueryParameter(name string) *ParametersStruct {
 		Required:    false, // Set to non-required field by default.
 		Name:        name,
 		In:          "query",
-		Schema:      nil,
+		Schema:      nil, // Query parameter should not have schema.
 		Type:        p.Type,
 		Format:      p.Format,
 		Description: p.Description,

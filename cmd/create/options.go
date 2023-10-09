@@ -1,7 +1,9 @@
 package create
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
@@ -140,7 +142,7 @@ func (c *Create) fixProtoDirs() error {
 
 	p, err := paths.Locate(pb.ProtoTRPC)
 	if err != nil {
-		return fmt.Errorf("paths local trpc failed err: %w", err)
+		return fmt.Errorf("paths locate %s failed err: %w", pb.ProtoTRPC, err)
 	}
 
 	c.options.Protodirs = fs.UniqFilePath(append(append(c.options.Protodirs, p),
@@ -251,6 +253,10 @@ func (c *Create) parseInputOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags parse alias bool err: %w", err)
 	}
+	c.options.AliasAsClientRPCName, err = flags.GetBool("alias-as-client-rpcname")
+	if err != nil {
+		return fmt.Errorf("flags parse alias-as-client-rpcname bool err: %w", err)
+	}
 	c.options.GoMod, err = flags.GetString("mod")
 	if err != nil {
 		return fmt.Errorf("flags parse mod string err: %w", err)
@@ -262,6 +268,14 @@ func (c *Create) parseInputOptions(flags *pflag.FlagSet) error {
 	c.options.TRPCGoVersion, err = flags.GetString("trpcgoversion")
 	if err != nil {
 		return fmt.Errorf("flags parse trpcgoversion string err: %w", err)
+	}
+	c.options.CustomAPPName, err = flags.GetString("app")
+	if err != nil {
+		return fmt.Errorf("flags parse app string err: %w", err)
+	}
+	c.options.CustomServerName, err = flags.GetString("server")
+	if err != nil {
+		return fmt.Errorf("flags parse server string err: %w", err)
 	}
 	c.options.DescriptorSetIn, err = flags.GetString("descriptor_set_in")
 	if err != nil {
@@ -291,6 +305,32 @@ func (c *Create) parseOutputOptions(flags *pflag.FlagSet) error {
 		return fmt.Errorf("flags parse nogomod bool err: %w", err)
 	}
 	c.options.KeepOrigRPCName = true // Always true.
+	c.options.SecvEnabled, err = flags.GetBool("secvenabled")
+	if err != nil {
+		return fmt.Errorf("flags parse secvenabled bool err: %w", err)
+	}
+	kvFile, err := flags.GetString("kvfile")
+	if err != nil {
+		return fmt.Errorf("flags parse kvfile string err: %w", err)
+	}
+	if kvFile != "" {
+		bs, err := os.ReadFile(kvFile)
+		if err != nil {
+			return fmt.Errorf("read kv file %s err: %w", kvFile, err)
+		}
+		if err := json.Unmarshal(bs, &c.options.KVs); err != nil {
+			return fmt.Errorf("json unmarshal kv file %s into %T err: %w", kvFile, c.options.KVs, err)
+		}
+	}
+	kvRawJSON, err := flags.GetString("kvrawjson")
+	if err != nil {
+		return fmt.Errorf("flags parse kvrawjson string err: %w", err)
+	}
+	if kvRawJSON != "" {
+		if err := json.Unmarshal([]byte(kvRawJSON), &c.options.KVs); err != nil {
+			return fmt.Errorf("json unmarshal kv raw json %s into %T err: %w", kvRawJSON, c.options.KVs, err)
+		}
+	}
 	c.options.Force, err = flags.GetBool("force")
 	if err != nil {
 		return fmt.Errorf("flags parse force bool err: %w", err)
@@ -359,7 +399,8 @@ func (c *Create) parsePBIDLOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags get protodir string array failed err: %w", err)
 	}
-	c.options.Protodirs = fs.UniqFilePath(dirs)
+	// Always append the current working directory.
+	c.options.Protodirs = fs.UniqFilePath(append(dirs, "."))
 	c.options.Protofile, err = flags.GetString("protofile")
 	if err != nil {
 		return fmt.Errorf("flags get protofile string failed err: %w", err)
@@ -379,7 +420,8 @@ func (c *Create) parseFBIDLOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags get fbsdir string array failed err: %w", err)
 	}
-	c.options.Protodirs = fs.UniqFilePath(dirs)
+	// Always append the current working directory.
+	c.options.Protodirs = fs.UniqFilePath(append(dirs, "."))
 	c.options.Protofile, err = flags.GetString("fbs")
 	if err != nil {
 		return fmt.Errorf("flags get fbs string failed err: %w", err)

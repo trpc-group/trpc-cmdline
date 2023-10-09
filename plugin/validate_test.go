@@ -20,7 +20,9 @@ func TestPlugin_Validate(t *testing.T) {
 	require.Equal(t, "validate", u.Name())
 
 	t.Run("!go", func(t *testing.T) {
-		require.False(t, u.Check(nil, &params.Option{}))
+		require.False(t, u.Check(nil, &params.Option{
+			SecvEnabled: true,
+		}))
 	})
 
 	// rpconly test
@@ -35,11 +37,12 @@ func TestPlugin_Validate(t *testing.T) {
 
 		// setup, generate a pb.go file for the above pb files.
 		opt := &params.Option{
-			Protofile: "helloworld.proto",
-			Protodirs: []string{filepath.Clean(filepath.Join(wd, "../install")), filepath.Dir(pbf)},
-			Language:  "go",
-			RPCOnly:   true,
-			OutputDir: output,
+			Protofile:   "helloworld.proto",
+			Protodirs:   []string{filepath.Clean(filepath.Join(wd, "../install")), filepath.Dir(pbf)},
+			Language:    "go",
+			RPCOnly:     true,
+			OutputDir:   output,
+			SecvEnabled: true,
 		}
 		require.True(t, u.Check(fd, opt))
 
@@ -64,11 +67,12 @@ func TestPlugin_Validate(t *testing.T) {
 		defer os.Chdir(wd)
 
 		opt := &params.Option{
-			Protofile: "helloworld.proto",
-			Protodirs: []string{filepath.Clean(filepath.Join(wd, "../install")), filepath.Dir(pbf)},
-			Language:  "go",
-			RPCOnly:   false,
-			OutputDir: output,
+			Protofile:   "helloworld.proto",
+			Protodirs:   []string{filepath.Clean(filepath.Join(wd, "../install")), filepath.Dir(pbf)},
+			Language:    "go",
+			RPCOnly:     false,
+			OutputDir:   output,
+			SecvEnabled: true,
 		}
 
 		p := gomonkey.ApplyFunc(pb.Protoc, func([]string, string, string, string, ...pb.Option) error {

@@ -30,6 +30,16 @@ func AddCreateFlags(createCmd *cobra.Command) {
 		"Whether to generate stub code for dependencies, only effective when --rpconly=true, defaults to false")
 	createCmd.Flags().Bool("nogomod", false,
 		"Do not generate go.mod file in the stub code, only effective when --rpconly=true, defaults to false")
+	createCmd.Flags().Bool("secvenabled", true,
+		"Enable generation of validate.go file using protoc-gen-secv, defaults to true")
+	createCmd.Flags().String("kvfile", "",
+		"Provide a json file path to unmarshal into key-value pairs (KVs) for usage in template files")
+	createCmd.Flags().String("kvrawjson", "",
+		"Provide raw json content to unmarshal into key-value pairs (KVs) for usage in template files")
+	createCmd.Flags().String("app", "",
+		"Provide custom app name to use in stub code")
+	createCmd.Flags().String("server", "",
+		"Provide custom server name to use in stub code")
 
 	// Add functionality similar to "protoc --go_out=. testdesc.proto --descriptor_set_in=testdesc.pb".
 	createCmd.Flags().StringP("descriptor_set_in", "", "",
@@ -70,6 +80,7 @@ func addOutputFlags(createCmd *cobra.Command) {
 
 	// Enable rpcname aliases.
 	createCmd.Flags().Bool("alias", false, "Use rpcname aliases")
+	createCmd.Flags().Bool("alias-as-client-rpcname", true, "Use alias name as client rpcname in stub code")
 
 	// Customize pb message struct tag.
 	createCmd.Flags().Bool("gotag", true, "Generate custom pb struct tag")

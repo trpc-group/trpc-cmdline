@@ -74,7 +74,7 @@ func (m MethodStruct) refs() []string {
 			refs = append(refs, GetNameByRef(parameter.Schema.Ref))
 		}
 		if parameter.Items != nil {
-			refs = append(refs, parameter.Items.refs(map[string]bool{})...)
+			refs = append(refs, parameter.Items.refs(make(map[string]bool))...)
 		}
 	}
 	return refs
@@ -85,7 +85,7 @@ func (m MethodStruct) GetMethodX() *MethodStructX {
 	methodX := &MethodStructX{
 		Summary:     m.Summary,
 		OperationID: m.OperationID,
-		Responses:   map[string]BodyContentStruct{},
+		Responses:   make(map[string]BodyContentStruct),
 		RequestBody: nil,
 		Tags:        m.Tags,
 		Description: m.Description,
@@ -137,7 +137,7 @@ func (m MethodStruct) GetMethodX() *MethodStructX {
 
 // GetMethodsX converts MethodStruct to OpenAPI v3 interface.
 func (methods Methods) GetMethodsX() MethodsX {
-	methodsX := MethodsX{Elements: map[string]*MethodStructX{}}
+	methodsX := MethodsX{Elements: make(map[string]*MethodStructX)}
 	methodsX.Rank = methods.Rank
 	methods.orderedEach(func(name string, method *MethodStruct) {
 		methodsX.Elements[name] = method.GetMethodX()

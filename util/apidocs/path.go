@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/hashicorp/go-multierror"
 	"trpc.group/trpc-go/trpc-cmdline/descriptor"
 	"trpc.group/trpc-go/trpc-cmdline/params"
 )
@@ -39,17 +40,38 @@ func (paths Paths) MarshalJSON() ([]byte, error) {
 }
 
 // NewPaths inits Path.
-func NewPaths(fd *descriptor.FileDescriptor, option *params.Option, defs *Definitions) Paths {
+func NewPaths(fd *descriptor.FileDescriptor, option *params.Option, defs *Definitions) (Paths, error) {
 	paths := Paths{
-		Elements: map[string]Methods{},
+		Elements: make(map[string]Methods),
 	}
 
 	if option.OrderByPBName {
-		paths.Rank = map[string]int{}
+		paths.Rank = make(map[string]int)
 	}
 
+	var err error
 	for _, service := range fd.Services {
-		for _, rpc := range append(service.RPC, service.RPCx...) {
+		// service.RPC contains the original RPC method and its restful bindings.
+		for _, rpc := range service.RPC {
+			args := methodArgs{
+				RPC:  rpc,
+				Defs: defs,
+				Opt:  option,
+			}
+			if !option.AliasOn || option.KeepOrigRPCName ||
+				// If alias is set to true and keep-orig-rpcname is set to false, but the RPC method
+				// does not have an alias, the original RPC information should still be displayed.
+				len(service.MethodRPCx[rpc.Name]) == 0 {
+				args.Tags = []string{strings.ToLower(service.Name) + "." + "trpc"}
+				paths.addRPCMethod(args)
+			}
+			args.Tags = []string{strings.ToLower(service.Name) + "." + "restful"}
+			if e := paths.addRestfulMethod(args); e != nil {
+				err = multierror.Append(err, e).ErrorOrNil()
+			}
+		}
+		// service.RPCx only contains the alias RPC method which excludes any restful bindings.
+		for _, rpc := range service.RPCx {
 			args := methodArgs{
 				RPC:  rpc,
 				Defs: defs,
@@ -57,14 +79,11 @@ func NewPaths(fd *descriptor.FileDescriptor, option *params.Option, defs *Defini
 			}
 			args.Tags = []string{strings.ToLower(service.Name) + "." + "trpc"}
 			paths.addRPCMethod(args)
-
-			args.Tags = []string{strings.ToLower(service.Name) + "." + "restful"}
-			paths.addRestfulMethod(args)
 		}
 	}
 
 	paths.cleanOperationID()
-	return paths
+	return paths, err
 }
 
 // methodArgs adds a method to Paths with the given method arguments.
@@ -105,7 +124,7 @@ func (args methodArgs) rpcParams() []*ParametersStruct {
 	return queryParams
 }
 
-func (args methodArgs) restfulParams(api descriptor.RESTfulAPIContent) []*ParametersStruct {
+func (args methodArgs) restfulParams(api descriptor.RESTfulAPIContent) ([]*ParametersStruct, error) {
 	pathParams := newPathParams(api.PathTmpl)
 
 	names := pathParams.getNames()
@@ -128,12 +147,16 @@ func (args methodArgs) restfulParams(api descriptor.RESTfulAPIContent) []*Parame
 	}
 
 	if api.RequestBody != "" && api.RequestBody != "*" {
-		params = append(params, args.Defs.getBodyParameter(reqType, api.RequestBody))
+		param, err := args.Defs.getBodyParameter(reqType, api.RequestBody)
+		if err != nil {
+			return nil, fmt.Errorf("generate restful parameter error: %w", err)
+		}
+		params = append(params, param)
 	}
 
 	args.fillDescriptorToParams(params)
 
-	return params
+	return params, nil
 }
 
 func (args methodArgs) fillDescriptorToParams(params []*ParametersStruct) {
@@ -150,7 +173,7 @@ func (args methodArgs) fillDescriptorToParams(params []*ParametersStruct) {
 
 // GetPathsX converts to  openapi v3 structure.
 func (paths Paths) GetPathsX() PathsX {
-	pathsX := PathsX{Elements: map[string]MethodsX{}}
+	pathsX := PathsX{Elements: make(map[string]MethodsX)}
 	pathsX.Rank = paths.Rank
 	paths.orderedEach(func(path string, methods Methods) {
 		pathsX.Elements[path] = methods.GetMethodsX()
@@ -162,15 +185,16 @@ func (paths Paths) addRPCMethod(args methodArgs) {
 	method := args.method()
 	method.Parameters = args.rpcParams()
 
-	mx := Methods{Elements: map[string]*MethodStruct{}}
+	mx := Methods{Elements: make(map[string]*MethodStruct)}
 	if paths.Rank != nil {
-		mx.Rank = map[string]int{}
+		mx.Rank = make(map[string]int)
 	}
 	mx.Put(args.RPC.SwaggerInfo.Method, method)
 	paths.Put(args.RPC.FullyQualifiedCmd, mx)
 }
 
-func (paths Paths) addRestfulMethod(args methodArgs) {
+func (paths Paths) addRestfulMethod(args methodArgs) error {
+	var err error
 	for _, api := range args.RPC.RESTfulAPIInfo.ContentList {
 		// Filter out the existing paths
 		path := api.PathTmpl
@@ -181,22 +205,27 @@ func (paths Paths) addRestfulMethod(args methodArgs) {
 			}
 		}
 
+		params, e := args.restfulParams(*api)
+		if e != nil {
+			err = multierror.Append(err, e).ErrorOrNil()
+		}
 		method := args.method()
-		method.Parameters = args.restfulParams(*api)
+		method.Parameters = params
 
 		mx, ok := paths.Elements[path]
 		if !ok {
 			mx = Methods{
-				Elements: map[string]*MethodStruct{},
+				Elements: make(map[string]*MethodStruct),
 			}
 			if paths.Rank != nil {
-				mx.Rank = map[string]int{}
+				mx.Rank = make(map[string]int)
 			}
 		}
 
 		mx.Put(strings.ToLower(api.Method), method)
 		paths.Put(path, mx)
 	}
+	return err
 }
 
 // orderedEach sort each element
