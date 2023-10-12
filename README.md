@@ -5,7 +5,7 @@
 [![LICENSE](https://img.shields.io/github/license/trpc.group/trpc-cmdline.svg?style=flat-square)](https://github.com/trpc.group/trpc-cmdline/blob/main/LICENSE)
 [![Releases](https://img.shields.io/github/release/trpc.group/trpc-cmdline.svg?style=flat-square)](https://github.com/trpc.group/trpc-cmdline/releases)
 [![Docs](https://img.shields.io/badge/docs-latest-green)](http://test.trpc.group.woa.com/docs/)
-[![Tests](https://github.com/trpc.group/trpc-cmdline/actions/workflows/prc.yaml/badge.svg)](https://github.com/trpc.group/trpc-cmdline/actions/workflows/prc.yaml)
+[![Tests](https://github.com/trpc-group/trpc-cmdline/actions/workflows/prc.yml/badge.svg)](https://github.com/trpc-group/trpc-cmdline/actions/workflows/prc.yml)
 [![Coverage](https://codecov.io/gh/trpc.group/trpc-cmdline/branch/main/graph/badge.svg)](https://app.codecov.io/gh/trpc.group/trpc-cmdline/tree/main)
 
 trpc-cmdline is the command line tool for [trpc-cpp](https://github.com/trpc-group/trpc-cpp) and [trpc-go](https://github.com/trpc-group/trpc-go).
