@@ -1,4 +1,4 @@
-English | [中文](README.zh_CN.md)
+[English](README.md) | 中文
 
 # trpc-cmdline
 
@@ -10,24 +10,24 @@ English | [中文](README.zh_CN.md)
 [![Tests](https://github.com/trpc.group/trpc-cmdline/actions/workflows/prc.yaml/badge.svg)](https://github.com/trpc.group/trpc-cmdline/actions/workflows/prc.yaml)
 [![Coverage](https://codecov.io/gh/trpc.group/trpc-cmdline/branch/main/graph/badge.svg)](https://app.codecov.io/gh/trpc.group/trpc-cmdline/tree/main)
 
-trpc-cmdline is the command line tool for [trpc-cpp](https://github.com/trpc-group/trpc-cpp) and [trpc-go](https://github.com/trpc-group/trpc-go).
+trpc-cmdline 是 [trpc-cpp](https://github.com/trpc-group/trpc-cpp) 和 [trpc-go](https://github.com/trpc-group/trpc-go) 的命令行工具。
 
-It supports the latest three major releases of [Go](https://go.dev/doc/devel/release).
+本项目支持 [Go](https://go.dev/doc/devel/release) 最新发布的三个版本。
 
-## Installation
+## 安装
 
-### Install trpc-cmdline
+### 安装 trpc-cmdline
 
-#### Install using go command
+#### 使用 go 命令进行安装
 
-First, add the following into your `~/.gitconfig`:
+首先将以下内容添加到你的 `~/.gitconfig` 中:
 
 ```bash
 [url "ssh://git@github.com/"]
     insteadOf = https://github.com/
 ```
 
-Then run the following to install `trpc-cmdline`:
+然后执行以下命令以安装 `trpc-cmdline`:
 
 ```bash
 go install trpc.group/trpc-go/trpc-cmdline/trpc@latest
@@ -43,7 +43,7 @@ $ mkdir -p ~/go/bin && chmod +x trpc && mv trpc ~/go/bin
 $ export PATH=~/go/bin:$PATH # Add this to your `~/.bashrc`.
 </pre></details> -->
 
-### Dependencies
+### 安装依赖
 
  <!-- by using one of the following methods.
 
@@ -87,11 +87,11 @@ $ go install go.uber.org/mock/mockgen@latest
 </pre></details>
 
 
-## Quick Start
+## 快速上手
 
-### Generation of Full Project
+### 生成完整项目
 
-* Copy and paste the following to `helloworld.proto`, you can get it from [./docs/helloworld/helloworld.proto](./docs/helloworld/helloworld.proto):
+* 将以下内容复制到 `helloworld.proto`, 原始文件为 [./docs/helloworld/helloworld.proto](./docs/helloworld/helloworld.proto):
 
 ```protobuf
 syntax = "proto3";
@@ -116,15 +116,15 @@ service HelloWorldService {
 }
 ```
 
-* Using trpc-cmdline to generate a full project:
+* 使用 trpc-cmdline 来生成完整项目:
 ```go
 $ trpc create -p helloworld.proto -o out
 ```
 
-Note: `-p` specifies proto file, `-o` specifies the output directory, 
-for more information please run `trpc -h` and `trpc create -h`
+注意: `-p` 用于指定 proto 文件, `-o` 用于指定输出目录, 
+更多 flag 信息可以运行 `trpc -h` 以及 `trpc create -h` 来进行查看。
 
-* Enter the output directory and start the server:
+* 进入输出目录，运行服务端:
 ```bash
 $ cd out
 $ go run .
@@ -133,17 +133,17 @@ $ go run .
 ...
 ```
 
-* Open the output directory in another terminal and start the client:
+* 在另一个终端中进入输出目录，运行客户端:
 ```bash
 $ go run cmd/client/main.go 
 ... simple  rpc   receive: 
 ```
 
-Note: Since the implementation of server service is an empty operation and the client sends empty data, therefore the log shows that the simple rpc receives an empty string.
+注意: 由于生成的代码默认都是空操作，因此日志中显示的收到的数据内容也为空。
 
-* Now you may try to modify the service implementation located in `hello_world_service.go` and the client implementation located in `cmd/client/main.go` to create an echo server. You can refer to [https://github.com/trpc-group/trpc-go/tree/main/examples/helloworld](https://github.com/trpc-group/trpc-go/tree/main/examples/helloworld) for inspiration.
+* 现在你可以尝试修改 `hello_world_service.go` 中的服务端代码以及 `cmd/client/main.go` 中的客户端代码来创建一个 echo 服务器。你可以参考 [https://github.com/trpc-group/trpc-go/tree/main/examples/helloworld](https://github.com/trpc-group/trpc-go/tree/main/examples/helloworld) 以获取灵感
 
-* The generated files are explained below:
+* 生成文件的详细解释如下:
 
 ```bash
 $ tree
@@ -169,9 +169,9 @@ $ tree
 `-- trpc_go.yaml  # Configuration file for trpc-go.
 ```
 
-### Generation of RPC Stub
+### 仅生成桩代码
 
-* Simply add `--rpconly` flag to generate rpc stub instead of a full project:
+* 只需要添加 `--rpconly` 选项就可以只生成桩代码:
 ```go
 $ trpc create -p helloworld.proto -o out --rpconly
 $ tree out
@@ -183,21 +183,21 @@ out
 `-- helloworld_mock.go
 ```
 
-### Frequently Used Flags
+### 常用的指令
 
-The following lists some frequently used flags.
+下面列举了一些常用的命令行选项：
 
-* `-f`: Force overwrite the existing code.
-* `-d some-dir`: Search paths for pb files (including dependent pb files), can be specified multiple times.
-* `--mock=false`: Disable generation of mock stub code.
-* `--nogomod=true`: Do not generate go.mod file in the stub code, only effective when --rpconly=true, defaults to false.
+* `-f`: 用于强制覆盖输出目录中的内容
+* `-d some-dir`: 添加 proto 文件的查找路径（包括依赖的 proto 文件），可以指定多次
+* `--mock=false`: 禁止生成 mock 代码
+* `--nogomod=true`: 在生成桩代码时不生成 `go.mod` 文件，只在 `--rpconly=true` 的时候生效, 默认为 `false`
 
-For additional flags please run `trpc -h` and `trpc [subcmd] -h`.
+更多命令行选项可以执行 `trpc -h` 以及 `trpc [subcmd] -h` 来进行查看。
 
-### Functionalities
+### 更多功能
 
-Please check [Documentation](./docs/)
+请查看 [文档](./docs/)
 
-## Contributing
+## 贡献
 
-This project is open-source and accepts contributions. See the [contribution guide](CONTRIBUTING.md) for more information.
+本开源项目欢迎任何贡献，请阅读 [贡献指南](CONTRIBUTING.md) 以获取更多信息。
