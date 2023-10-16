@@ -1,3 +1,5 @@
+English | [中文](README.zh_CN.md)
+
 # trpc-cmdline
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/trpc.group/trpc-cmdline.svg)](https://pkg.go.dev/github.com/trpc.group/trpc-cmdline)
@@ -43,9 +45,6 @@ $ export PATH=~/go/bin:$PATH # Add this to your `~/.bashrc`.
 
 ### Dependencies
 
-Install Go: [https://go.dev/doc/install](https://go.dev/doc/install)
-
-Install other dependencies:
  <!-- by using one of the following methods.
 
 #### Using trpc setup
