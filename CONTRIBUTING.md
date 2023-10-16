@@ -1,126 +1,121 @@
+English | [中文](CONTRIBUTING.zh_CN.md)
+
 # How to Contribute
 
 Thank you for your interest and support in tRPC!
 
-We welcome and appreciate any form of contribution, including but not limited to submitting issues, providing improvement suggestions, improving documentation, fixing bugs, and adding features. 
-
+We welcome and appreciate any form of contribution, including but not limited to submitting issues, providing improvement suggestions, improving documentation, fixing bugs, and adding features.
 This document aims to provide you with a detailed contribution guide to help you better participate in the project.
-
 Please read this guide carefully before contributing and make sure to follow the rules here.
-
 We look forward to working with you to make this project better together!
 
-## Before submitting an issue
+## Before contributing code
 
-Please make sure that you have reviewed the project's documentation, FAQ, and existing issues.
+The project welcomes code patches, but to make sure things are well coordinated you should discuss any significant change before starting the work.
+It's recommended that you signal your intention to contribute in the issue tracker, either by claiming an [existing one](https://github.com/trpc-group/trpc-go/issues) or by [opening a new issue](https://github.com/trpc-group/trpc-go/issues/new).
 
-This can avoid submitting known issues repeatedly and save your and the project maintainer's time. 
+### Checking the issue tracker
 
-When you decide to submit an issue, please follow these rules:
-- Select appropriate labels for the issue. This helps us to quickly locate the problem and solve it as soon as possible.
-- Ensure that the issue title is concise and accurately summarizes the problem. Avoid using vague words such as "problem" or "error".
+Whether you already know what contribution to make, or you are searching for an idea, the [issue tracker](https://github.com/trpc-group/trpc-go/issues) is always the first place to go.
+Issues are triaged to categorize them and manage the workflow.
 
-In the issue description, please provide a detailed description of the problem you encountered.
+Most issues will be marked with one of the following workflow labels:
+- **NeedsInvestigation**: The issue is not fully understood and requires analysis to understand the root cause.
+- **NeedsDecision**: The issue is relatively well understood, but the tRPC-Go team hasn't yet decided the best way to address it.
+  It would be better to wait for a decision before writing code.
+  If you are interested in working on an issue in this state, feel free to "ping" maintainers in the issue's comments if some time has passed without a decision.
+- **NeedsFix**: The issue is fully understood and code can be written to fix it.
 
-This includes but is not limited to the following:
-- Problem description: briefly describe the symptoms and impact of the problem.
-- Reproduction steps: describe in detail how to reproduce the problem, so that we can locate and solve the problem more quickly.
-- Environment information: relevant information including operating system, browser, project version, etc.
-- Error log: if there are relevant error logs, please provide them.
-- Expected results: describe what the correct result should be.
-- Screenshots or screen recordings: if possible, provide screenshots or screen recordings of the problem.
+### Opening an issue for any new problem
 
-Please be polite and friendly. 
+Excluding very trivial changes, all contributions should be connected to an existing issue.
+Feel free to open one and discuss your plans.
+This process gives everyone a chance to validate the design, helps prevent duplication of effort, and ensures that the idea fits inside the goals for the language and tools.
+It also checks that the design is sound before code is written; the code review tool is not the place for high-level discussions.
 
-We attach great importance to the environment of the project and hope that everyone can grow together in a friendly and inclusive environment.
+When opening an issue, make sure to answer these five questions:
+1. What version of tRPC-Go are you using ?
+2. What operating system and processor architecture are you using(`go env`)?
+3. What did you do?
+4. What did you expect to see?
+5. What did you see instead?
 
-## Rules for submitting PRs
+For change proposals, see Proposing Changes To [tRPC-Go-Proposals](https://github.com/trpc-group/trpc/tree/main/proposal).
 
-We welcome you to submit code for the project. 
+## Contributing code
 
-Before submitting a PR, please make sure that you have read this contribution guide. 
+Follow the [GitHub flow](https://docs.github.com/en/get-started/quickstart/github-flow) to [create a GitHub pull request](https://docs.github.com/en/get-started/quickstart/github-flow#create-a-pull-request).
+If this is your first time submitting a PR to the tRPC-Go project, you will be reminded in the "Conversation" tab of the PR to sign and submit the [Contributor License Agreement](https://github.com/trpc-group/cla-database/blob/main/Tencent-Contributor-License-Agreement.md).
+Only when you have signed the Contributor License Agreement, your submitted PR has the possibility of being accepted.
 
-Here are some suggestions and rules regarding submitting PRs.
+Some things to keep in mind:
+- Ensure that your code conforms to the project's code specifications.
+  This includes but is not limited to code style, comment specifications, etc. This helps us to maintain the cleanliness and consistency of the project.
+- Before submitting a PR, please make sure that you have tested your code locally(`go test ./...`).
+  Ensure that the code has no obvious errors and can run normally.
+- To update the pull request with new code, just push it to the branch;
+  you can either add more commits, or rebase and force-push (both styles are accepted).
+- If the request is accepted, all commits will be squashed, and the final commit description will be composed by concatenating the pull request's title and description.
+  The individual commits' descriptions will be discarded.
+  See following "Write good commit messages" for some suggestions.
 
-Please read them carefully before submitting:
-- Ensure that your code conforms to the project's code specifications. This includes but is not limited to code style, comment specifications, etc. This helps us to maintain the cleanliness and consistency of the project.
-- Before submitting a PR, please make sure that you have tested your code locally. Ensure that the code has no obvious errors and can run normally.
-- Please select appropriate labels for your PR. This helps us to process your PR more quickly.
-- Ensure that your PR title is concise and accurately summarizes your changes. Avoid using vague words such as "update" or "modify".
-- In the PR description, please provide a detailed description of your changes. This includes but is not limited to the following:
-  - Reason for modification: briefly explain why this modification is necessary.
-  - Modification content: describe in detail what you have modified and how you have implemented it.
-  - Scope of impact: describe the functions or modules that may be affected by the modification.
-  - Testing: describe the testing you have done locally and the results.
-- If your PR resolves a certain issue, please associate the corresponding issue in the PR description. For example: Fixes #123.
+### Writing good commit messages
 
-## Communication and Consultation
+Commit messages in tRPC-Go follow a specific set of conventions, which we discuss in this section.
 
-We welcome you to participate in the project's communication and consultation.
+Here is an example of a good one:
 
-You can interact with us through the following channels:
-- Submit your questions or suggestions in the project's discussions.
-- Join our technical communication group.
 
----
+> math: improve Sin, Cos and Tan precision for very large arguments
+>
+> The existing implementation has poor numerical properties for
+> large arguments, so use the McGillicutty algorithm to improve
+> accuracy above 1e10.
+>
+> The algorithm is described at https://wikipedia.org/wiki/McGillicutty_Algorithm
+>
+> Fixes #159
 
-# 如何作出贡献
 
-首先，感谢您对本开源项目的关注和支持！
+#### First line
 
-我们非常欢迎和感谢任何形式的贡献，包括但不限于提交问题、提出改进意见、完善文档、修复缺陷以及新增功能。
+The first line of the change description is conventionally a short one-line summary of the change, prefixed by the primary affected package.
 
-本文档旨在为您提供一份详尽的贡献指南，以便您更好地参与到项目中。
+A rule of thumb is that it should be written so to complete the sentence "This change modifies tRPC-Go to _____."
+That means it does not start with a capital letter, is not a complete sentence, and actually summarizes the result of the change.
 
-请在参与贡献之前仔细阅读本指南，并确保遵循其中的规则和建议。
+Follow the first line by a blank line.
 
-我们期待与您一起打造一个更加完善的开源项目！
+#### Main content
 
-## 提交 issue 的规则
+The rest of the description elaborates and should provide context for the change and explain what it does.
+Write in complete sentences with correct punctuation, just like for your comments in tRPC-Go.
+Don't use HTML, Markdown, or any other markup language.
+Add any relevant information, such as benchmark data if the change affects performance.
+The [benchstat](https://godoc.org/golang.org/x/perf/cmd/benchstat) tool is conventionally used to format benchmark data for change descriptions.
 
-在提交 issue 之前，请先确保您已经查看了项目的文档、常见问题解答以及已有的 issue。
+#### Referencing issues
 
-这样可以避免重复提交已知问题，节省您和项目维护者的时间。
+The special notation "Fixes #12345" associates the change with issue 12345 in the tRPC-Go issue tracker.
+When this change is eventually applied, the issue tracker will automatically mark the issue as fixed.
 
-当您确定需要提交一个 issue 时，请遵循以下规则：
-- 为 issue 选择合适的标签。这有助于我们更快地找到问题所在，以便尽快解决。
-- 请确保您的 issue 标题简洁明了，能够准确概括问题所在。避免使用模糊的词语，如“问题”、“错误”等。
 
-在 issue 描述中，请详细说明您遇到的问题。
+## Miscellaneous topics
 
-包括但不限于以下内容：
-- 问题描述：简要说明问题的现象和影响。
-- 复现步骤：详细描述如何复现问题，让我们能够更快地定位和解决问题。
-- 环境信息：包括操作系统、浏览器、项目版本等相关信息。
-- 错误日志：如果有相关错误日志，请一并提供。
-- 期望结果：描述您期望的正确结果是什么。
-- 截图或录屏：如果可能，请提供问题现象的截图或录屏。
+### Copyright headers
 
-请保持礼貌和友好。我们非常重视项目的氛围，希望每个人都能够在友好、包容的环境中共同成长。
+Files in the tRPC-Go repository don't list author names, both to avoid clutter and to avoid having to keep the lists up to date.
+Instead, your name will appear in the change log.
 
-## 提交 PR 的规则
+New files that you contribute should use the standard copyright header:
 
-我们非常欢迎您为项目提交代码。
+```go
+// Tencent is pleased to support the open source community by making tRPC available.
+// Copyright (C) 2023 THL A29 Limited, a Tencent company. All rights reserved.
+// If you have downloaded a copy of the tRPC source code from Tencent,
+// please note that tRPC-Go source code is licensed under the Apache 2.0 License,
+// A copy of the Apache 2.0 License can be found in the LICENSE file.
+```
 
-在提交 PR 之前，请确保您已经阅读了项目的文档以及本贡献指南。
-
-以下是关于提交 PR 的一些建议和规则，请在提交前仔细阅读：
-
-- 请确保您的代码符合项目的代码规范。这包括但不限于代码风格、注释规范等。这有助于我们保持项目的整洁和一致性。
-- 在提交 PR 之前，请确保您已经在本地测试过您的代码。确保代码没有明显的错误，并能够正常运行。
-- 请为您的 PR 选择合适的标签。这有助于我们更快地处理您的 PR。
-- 请确保您的 PR 标题简洁明了，能够准确概括您的修改。避免使用模糊的词语，如“更新”、“修改”等。
-- 在 PR 描述中，请详细说明您的修改内容。包括但不限于以下内容：
-  - 修改原因：简要说明为什么要进行这次修改。
-  - 修改内容：详细描述您修改了哪些内容，以及修改的具体实现。
-  - 影响范围：说明修改可能影响到的功能或模块。
-  - 测试情况：描述您在本地测试的情况，以及测试结果。
-- 如果您的 PR 解决了某个 issue，请在 PR 描述中关联对应的 issue。例如：Fixes #123。
-
-## 技术交流与问题咨询
-
-我们非常欢迎您参与到项目的技术交流和问题咨询中来。
-
-您可以通过以下途径与我们互动：
-- 在项目的 discussions 中提交您的问题或建议
-- 加入我们的技术交流群
+Files in the repository are copyrighted the year they are added.
+Do not update the copyright year on files that you change.
