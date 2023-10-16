@@ -1,6 +1,7 @@
 name: Pull Request Check
 on:
   pull_request:
+  pull:
   workflow_dispatch:
 permissions:
   contents: read
