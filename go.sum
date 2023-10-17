@@ -654,7 +654,7 @@ honnef.co/go/tools v0.0.1-2020.1.4/go.mod h1:X/FiERA/W4tHapMX5mGpAtMSVEeEUOyHaw9
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=
-trpc.group/trpc-go/fbs v0.0.0-20230817040915-edc204322f88 h1:d4F12SJF/PsKfih4yn1S+vhnxvfx53J6m+bHnPgPRhE=
-trpc.group/trpc-go/fbs v0.0.0-20230817040915-edc204322f88/go.mod h1:qfMELiRmCtn1dru1Sl6+slWkEEhSUncvZEafV1cwchc=
-trpc.group/trpc/trpc-protocol/pb/go/trpc v0.0.0-20230803031059-de4168eb5952 h1:AhjP72IKa1YKnSIayk1X5xSzKrem0EanjZ7oMc2HYOw=
-trpc.group/trpc/trpc-protocol/pb/go/trpc v0.0.0-20230803031059-de4168eb5952/go.mod h1:K+a1K/Gnlcg9BFHWx30vLBIEDhxODhl25gi1JjA54CQ=
+trpc.group/trpc-go/fbs v1.0.0 h1:3siBhq7JSM39D5KbwMA5/t9P3hyeq9H+yQGBf8UnYHM=
+trpc.group/trpc-go/fbs v1.0.0/go.mod h1:qfMELiRmCtn1dru1Sl6+slWkEEhSUncvZEafV1cwchc=
+trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.0 h1:rMtHYzI0ElMJRxHtT5cD99SigFE6XzKK4PFtjcwokI0=
+trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.0/go.mod h1:K+a1K/Gnlcg9BFHWx30vLBIEDhxODhl25gi1JjA54CQ=

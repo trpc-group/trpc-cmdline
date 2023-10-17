@@ -19,8 +19,8 @@ require (
 	go.uber.org/multierr v1.6.0
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v2 v2.4.0
-	trpc.group/trpc-go/fbs v0.0.0-20230817040915-edc204322f88
-	trpc.group/trpc/trpc-protocol/pb/go/trpc v0.0.0-20230803031059-de4168eb5952
+	trpc.group/trpc-go/fbs v1.0.0
+	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.0
 )
 
 require (
