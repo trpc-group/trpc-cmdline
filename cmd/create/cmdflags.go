@@ -32,7 +32,7 @@ func AddCreateFlags(createCmd *cobra.Command) {
 	// Select code template.
 	createCmd.Flags().String("assetdir", "", "Specify the custom template path, e.g., ~/.trpc-cmdline-assets/protobuf/asset_go")
 	createCmd.Flags().StringP("lang", "l", "go",
-		"Specify the programming language to use, supported languages: go")
+		"Specify the programming language to use, supported languages: go, cpp")
 	createCmd.Flags().Bool("rpconly", false,
 		"Only generate stub code (recommended to execute under the stub directory), can be used with -o")
 	createCmd.Flags().Bool("dependencystub", false,

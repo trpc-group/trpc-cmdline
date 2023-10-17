@@ -196,7 +196,7 @@ For additional flags please run `trpc -h` and `trpc [subcmd] -h`.
 
 ### Functionalities
 
-Please check [Documentation](./docs/)
+Please check [Documentation](./docs/README.md)
 
 ## Contributing
 
