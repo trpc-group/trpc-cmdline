@@ -41,7 +41,7 @@ jobs:
     - name: install mockgen
       run: go install go.uber.org/mock/mockgen@latest
     - run: echo $PATH
-    - run: export PATH=$HOME/.local/bin:$HOME/go/bin:$PATH && echo $PATH && go run ./trpc setup -f && ls -la /home/ubuntu/go/bin && file $HOME/go/bin/flatc && file $HOME/go/bin/protoc
+    - run: export PATH=$HOME/.local/bin:$HOME/go/bin:$PATH && echo $PATH && go run ./trpc setup -f && ls -la $HOME/go/bin && file $HOME/go/bin/flatc && file $HOME/go/bin/protoc
     - name: Test
       run: export PATH=$HOME/.local/bin:$HOME/go/bin:$PATH && echo $PATH && go test -v -coverprofile=coverage.out ./...
     - name: Upload coverage reports to Codecov
