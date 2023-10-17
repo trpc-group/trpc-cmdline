@@ -91,7 +91,7 @@ $ go install go.uber.org/mock/mockgen@latest
 
 ### Generation of Full Project
 
-* Copy and paste the following to `helloworld.proto`, you can get it from [./docs/helloworld/helloworld.proto](./docs/helloworld/helloworld.proto):
+* Copy and paste the following to `helloworld.proto`, you can get it from [docs/helloworld/helloworld.proto](docs/helloworld/helloworld.proto):
 
 ```protobuf
 syntax = "proto3";
@@ -196,7 +196,7 @@ For additional flags please run `trpc -h` and `trpc [subcmd] -h`.
 
 ### Functionalities
 
-Please check [Documentation](./docs/README.md)
+Please check [Documentation](docs/README.md)
 
 ## Contributing
 

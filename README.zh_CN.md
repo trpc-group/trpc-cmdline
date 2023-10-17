@@ -91,7 +91,7 @@ $ go install go.uber.org/mock/mockgen@latest
 
 ### 生成完整项目
 
-* 将以下内容复制到 `helloworld.proto`, 原始文件为 [./docs/helloworld/helloworld.proto](./docs/helloworld/helloworld.proto):
+* 将以下内容复制到 `helloworld.proto`, 原始文件为 [docs/helloworld/helloworld.proto](docs/helloworld/helloworld.proto):
 
 ```protobuf
 syntax = "proto3";
@@ -196,7 +196,7 @@ out
 
 ### 更多功能
 
-请查看 [文档](./docs/README.zh_CN.md)
+请查看 [文档](docs/README.zh_CN.md)
 
 ## 贡献
 
