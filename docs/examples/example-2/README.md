@@ -1,136 +1,102 @@
-README
-==============================================================================
+English | [中文](README.zh_CN.md)
 
-为了支持更多的应用场景，trpc 也在`trpc-go/trpc`自定义了一些 pb 扩展，用来支持：
+# Extended Features
 
-# 1. 支持接口别名 trpc.alias
+## Custom Interface Aliases
 
-## pb 的写法
+In most cases, the trpc interface's rpc name is in the form of `/trpc.app.server.service/Method`. When using the HTTP RPC feature, it is highly likely that you would want the interface name to conform to a given specification, such as `/v2/api/service`. In this case, you need to use the interface alias customization feature.
 
-- 在 `rpc` 的 `body` 中定义 `option`，形如
+There are two ways to use it:
 
-```protobuf
-service helloworld_svr {
-    rpc Hello(HelloReq) returns(HelloRsp) { option(trpc.alias) = "/api/v1/helloworld"; };
-}
-```
-
-这种方式适用于需要对接口进行重命名的操作，比如一个 trpc 接口的 rpcName 通常是
-/package.service/method 这种形式的，如果想提供一个 http 接口的话可能根据 api 网关配
-置要求需要配置成符合指定样式的，如/api/service/method。
-
-pb 大致就按照方式进行编写，如果是因为存量协议问题，如 ilive 协议中只有数值型大写、小写命令字：
-
-```
-service helloworld_svr {
-    rpc Hello(HelloReq) returns(HelloRsp) { option (trpc.alias) = "0x100_0x200";};
-}
-```
-
-再或者，为了兼容存量协议，有些协议头设计是没有字符串形式的 cmd 或者 method 字段的，
-可能只有一个数值型的 cmd 字段，这种就需要将字符串形式的 rpcName 转换成对应数值的字
-符串形式，以方便后续编码时将其转换成数值设置到协议头。
-   
-对应协议的 Encode 函数会将其 split 为大小写命令字并分别设置到协议头字段中去。
- 
-- `trpc.alias` 重命名 `rpc` 的方法名 
+1. Use `trpc.alias`, in which case you need to `import "trpc/proto/trpc_options.proto";` as follows:
 
 ```protobuf
-service helloworld_svr {
-    //@alias= "/api/helloworld"
-    rpc Hello(HelloReq) returns(HelloRsp);
-}
-```
-
-## 使用方法
-
-1. pb 中加入 `option` 定义，或者使用 @alias 注解，推荐使用前者，注解的方式后续会移除。
-2. 运行命令的时候：
-
-```bash
-# option 的方式
-trpc create -p=./cmd/testcase.option/helloworld.proto
-
-# 注解的方式
-trpc create -p=./cmd/testcase.option/helloworld.proto --alias
-```
-
-引用这里的扩展选项，需要引入 trpc.proto，在 trpc 安装阶段该 pb 文件会自动安装到 ~/.trpc-cmdline-assets/ 下面，
-
-上述 ~/.trpc-cmdline-assets 搜索路径会自动设置到 pb 的搜索路径中，以保证能够正确解析。
-
-执行命令 `trpc create -p hello.proto` 来完成工程的创建，如果您是使用的//@alias
-来指定别名，则需要显示指定--alias 选项。
-
-ps: 
-
-建议使用 option 的方式，因为下面你会看到 swagger、gotag 都是 option 方式，希望保持一致的操作风格。
-后续也不排除会 drop --alias 这个选项以及//@alias 注解的方式。
-
-# 2. 支持自定义 struct tag trpc.go_tag
-
-## pb 的写法
-
-```pb
 import "trpc/proto/trpc_options.proto";
-
-message Req{
-    string msg = 1 [ (trpc.go_tag)='gorm:"any_msg"' ];
+service HelloWorldService {
+  rpc Hello(HelloReq) returns(HelloRsp) { option(trpc.alias) = "/api/v1/helloworld"; };
 }
 ```
 
-## 使用方法
+Note that the "trpc/proto/trpc_options.proto" file does not require the user to specify `-d` to import it. Instead, it naturally exists in the `~/.trpc-cmdline-assets/submodules/trpc-protocol` path and is automatically added to the search path. Users can directly import it. If users want to resolve protobuf files in the editor, they only need to find the editor's settings and add `~/.trpc-cmdline-assets/submodules/trpc-protocol` to the editor's protobuf plugin search path.
 
-运行命令：
-
-```bash
-trpc create -p=./cmd/testcase.option/helloworld.swagger.proto --go_tag
-```
-
-# 3. 支持 swagger api 文档，比较多，略
-
-## pb 的写法
-
-- 在 `rpc` 的 `body` 中定义 option，形如
+2. Use the `//@alias=` annotation, in which case no `import` is required, but you need to append the `--alias` option when executing the `trpc create` command, as follows:
 
 ```protobuf
-service helloworld_svr {
+service HelloWorldService {
+  //@alias="/api/helloworld"
+  rpc Hello(HelloReq) returns(HelloRsp);
+}
+```
+
+```shell
+trpc create -p helloworld.proto -o out --alias
+```
+
+## Custom Field Tags
+
+By default, the data structure definitions in the generated `pb.go` file contain `protobuf` and `json` tags, so these fields can be serialized using these tag names as identifiers, such as:
+
+```go
+type HelloRequest struct {
+    // ...
+    Msg string `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+```
+
+In some cases, users may want to customize more go tags. You can use `trpc.go_tag` to specify them and `import "trpc/proto/trpc_options.proto";`, as follows:
+
+```protobuf
+import "trpc/proto/trpc_options.proto";
+message Req{
+  string msg = 1 [ (trpc.go_tag)='gorm:"any_msg"' ];
+}
+```
+
+And when executing `trpc create`, you need to specify the `--gotag` option:
+
+```shell
+trpc create -p helloworld.proto -o out --gotag
+```
+
+## Generating swagger/openapi Documentation
+
+The trpc-cmdline tool provides the `trpc apidocs` subcommand to generate documentation. Users can execute `trpc apidocs -h` to view all supported command options.
+
+Use `trpc.swagger` in the `proto` file and `import "trpc/swagger/swagger.proto";`, as follows:
+
+```protobuf
+service HelloWorldService {
     rpc Hello(HelloReq) returns(HelloRsp) {
         option(trpc.swagger) = {
-            title : "你好世界"
+            title : "helloworld"
             method: "get"
-            description:
-                "入参：msg\n"
-                "作用：用于演示 helloword\n"
+            description: "some description"
             params: {
                 name: "msg"
                 required: true
                 default: "hello"
-            }
-            params: {
-                name: "cnt"
-                required: true
-                default: "1"
             }
         };
     };
 }
 ```
 
-- `trpc.swagger` 的 `title` 为该 `rpc` 的方法名，`method` 为 `http` 的请求方法（如果该接口用于 `http`，
-  由于 `swagger-ui` 会识别一个 `method`，如果该字段不填，默认为 `post`），`description` 用于描述此接口。
-- `params` 则用于指定 `request` 各字段的一些属性，比如是否为必要字段 (`required`), 默认值 (`default`), `params` 可以写多次从而描述多个字段。
-- 假如期望生成的 swagger 描述的 "parameters" 显示为 `"in": "body"`, 需要额外指定 `--swagger-json-param` 标志 (`--swagger` 标志仍需要提供）。
+You can execute the output file name with `--swagger-out=file.json`, such as:
 
-## 使用方法
-
-运行命令：
-
-```bash
-trpc create -p=./cmd/testcase.option/helloworld.swagger.proto --swagger --alias
+```shell
+trpc apidocs -p helloworld.proto --swagger --swagger-out=output.swagger.json
 ```
 
-- 在当前目录下会生成 `apidocs.swagger.json`
-- 下载 `swagger-ui` (https://github.com/swagger-api/swagger-ui)
-- 进入到仓库下的 `dist` 目录，将 `apidocs.swagger.json` 拷贝至此，并修改 `index.html` 文件中的 `url` 为 `apidocs.swagger.json`。
-- `npm install -g http-server`，直接运行 `http-server` 后可以通过 bash 显示的 url 对 swagger 页面进行访问。
+The commands related to openapi are similar, such as:
+
+```shell
+trpc apidocs -p helloworld.proto --openapi --openapi-out=output.openapi.json
+```
+
+Some additional options:
+
+* `--swagger-json-param`: Can make the generated "parameters" description display as `"in": "body"`
+* `--order-by-pbname`: In the generated document, the definition of data structure and service interface is displayed in the order of the original `proto` file, instead of being sorted by the first letter (default is `false`, that is, sorted by the first letter)
+* `-d`: Specifies the search path for `proto` file dependencies, the same as `-d` in the `trpc create` command
+* `--alias`: Display the interface name with alias in the document
+* `--keep-orig-rpcname`: When `--alias=true`, by default, both the original rpc name and the name after alias will be displayed. Users can specify `--keep-orig-rpcname=false` to make the document only display the name after alias, and not display the original rpc name
