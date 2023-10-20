@@ -1,5 +1,9 @@
 # Change Log
 
+# v1.0.2 2023-10-20
+
+- docs: add changelog (#15)
+
 # v1.0.1 2023-10-20
 
 - config: replace os (#13)
