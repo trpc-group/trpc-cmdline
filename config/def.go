@@ -97,6 +97,7 @@ type Dependency struct {
 
 // TryInstallTo tries to install the dependency to the given path.
 func (d *Dependency) TryInstallTo(path string) error {
+	d.ArtifactURL = strings.ReplaceAll(d.ArtifactURL, "${os}", runtime.GOOS)
 	rsp, err := http.Get(d.ArtifactURL)
 	if err != nil {
 		return fmt.Errorf("install %s from %s err: %w", d.Executable, d.ArtifactURL, err)
