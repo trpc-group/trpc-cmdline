@@ -193,6 +193,7 @@ The following lists some frequently used flags.
 * `-d some-dir`: Search paths for pb files (including dependent pb files), can be specified multiple times.
 * `--mock=false`: Disable generation of mock stub code.
 * `--nogomod=true`: Do not generate go.mod file in the stub code, only effective when --rpconly=true, defaults to false.
+* `--validate=true`: Enables data validation. For detailed usage, see [/docs/examples/example-2/README.md](/docs/examples/example-2/README.md)
 
 For additional flags please run `trpc -h` and `trpc [subcmd] -h`.
 
