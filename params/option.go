@@ -43,9 +43,10 @@ type Option struct {
 	IDLType  config.IDLType // IDL file type, such as protobuf, flatbuffers, etc.
 	RPCOnly  bool           // Generate only RPC-related code, rather than a complete project.
 	// Whether to generate dependent stub code, defaults to false. Only effective when RPCOnly is true.
-	DependencyStub bool
-	NoGoMod        bool // Do not generate go.mod in the stub code, defaults to false.
-	SecvEnabled    bool // SecvEnabled decides whether to enable generation of validation files, default true.
+	DependencyStub  bool
+	NoGoMod         bool // Do not generate go.mod in the stub code, defaults to false.
+	SecvEnabled     bool // SecvEnabled decides whether to enable generation of validation files using protoc-gen-secv, default false.
+	ValidateEnabled bool // ValidateEnabled decides whether to enable generation of validation files using protoc-gen-validate, default false.
 	// KVs is the user provided kv map extracted from a json file.
 	// User's custom template files can read this kvs.
 	KVs  map[string]interface{}

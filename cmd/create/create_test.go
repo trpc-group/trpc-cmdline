@@ -54,6 +54,7 @@ type testcase struct {
 	alias         bool
 	lang          string
 	wantErr       bool
+	opts          []string
 }
 
 func Test_CreateCmd(t *testing.T) {
@@ -130,6 +131,11 @@ func Test_CreateCmd(t *testing.T) {
 			pbdir:   "9-restful",
 			pbfile:  "helloworld.proto",
 			rpconly: true,
+		}, {
+			name:   "10-validate-pgv",
+			pbdir:  "10-validate-pgv",
+			pbfile: "helloworld.proto",
+			opts:   []string{"--validate"},
 		},
 	}
 
@@ -161,7 +167,7 @@ func Test_CreateCmd(t *testing.T) {
 				panic("walk testcase error")
 			}
 
-			opts := []string{}
+			opts := tt.opts
 			for _, d := range dirs {
 				opts = append(opts, "--protodir", d)
 			}

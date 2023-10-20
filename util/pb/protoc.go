@@ -26,9 +26,10 @@ import (
 
 // Constants definition.
 const (
-	ProtoTRPC     = "trpc/proto/trpc_options.proto"
-	ProtoValidate = "trpc/validate/validate.proto"
-	ProtoSwagger  = "trpc/swagger/swagger.proto"
+	ProtoTRPC              = "trpc/proto/trpc_options.proto"
+	ProtoValidate          = "trpc/validate/validate.proto"
+	ProtoProtocGenValidate = "validate/validate.proto" // https://github.com/bufbuild/protoc-gen-validate
+	ProtoSwagger           = "trpc/swagger/swagger.proto"
 
 	ProtoDir         = "protobuf"
 	TrpcImportPrefix = "trpc/"
@@ -39,6 +40,7 @@ func IsInternalProto(fname string) bool {
 	if strings.HasPrefix(fname, "google/protobuf") ||
 		fname == ProtoTRPC ||
 		fname == ProtoValidate ||
+		fname == ProtoProtocGenValidate ||
 		fname == ProtoSwagger ||
 		strings.HasPrefix(fname, TrpcImportPrefix) {
 		return true
@@ -324,7 +326,12 @@ func makeProtocOut(pb2ImportPath map[string]string, language, outputdir string, 
 	pbpkg := genPbpkg(pb2ImportPath)
 	argsGoOut := makeProtocOutByLanguage(language, pbpkg, outputdir)
 
-	if options.secvEnabled {
+	if options.validationEnabled {
+		_, ok := options.pkg2ImportPath["validate"]
+		if ok {
+			argsGoOut = fixProtocOut("validate", argsGoOut, language)
+		}
+	} else if options.secvEnabled {
 		_, ok := options.pkg2ImportPath["validate"]
 		secvOut := "secv"
 		if !ok {

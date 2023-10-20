@@ -29,6 +29,20 @@ tools:
       md5: ""
       repository: "github.com/golang/protobuf/protoc-gen-go"
       fallback: ""
+    - executable: protoc-gen-validate
+      version_min: ""
+      version_cmd: ""
+      artifact_url: "https://github.com/trpc-group/trpc-cmdline/releases/download/v0.0.1-${os}/protoc-gen-validate"
+      md5: ""
+      repository: "https://github.com/bufbuild/protoc-gen-validate/releases"
+      fallback: ""
+    - executable: protoc-gen-validate-go
+      version_min: ""
+      version_cmd: ""
+      artifact_url: "https://github.com/trpc-group/trpc-cmdline/releases/download/v0.0.1-${os}/protoc-gen-validate-go"
+      md5: ""
+      repository: "https://github.com/bufbuild/protoc-gen-validate/releases"
+      fallback: ""
     - executable: goimports
       version_min: ""
       version_cmd: ""

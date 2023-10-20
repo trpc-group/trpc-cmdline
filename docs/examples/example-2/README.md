@@ -58,6 +58,49 @@ And when executing `trpc create`, you need to specify the `--gotag` option:
 trpc create -p helloworld.proto -o out --gotag
 ```
 
+## Generating validate.pb.go File
+
+For a complete example, see [/testcase/create/10-validate-pgv/helloworld.proto](/testcase/create/10-validate-pgv/helloworld.proto).
+
+This feature requires the installation of [protoc-gen-validate](https://github.com/bufbuild/protoc-gen-validate). Typically, `trpc setup` can automatically install these dependencies.
+
+Here is an example of a proto file:
+
+```proto
+syntax = "proto3";
+package helloworld;
+
+option go_package="trpc.group/some-example/helloworld";
+
+import "validate/validate.proto";
+
+service HelloSvr {
+    rpc Hello(HelloRequest) returns(HelloResponse);
+}
+
+message HelloRequest {
+    string msg = 1 [(validate.rules).string.email=true];
+}
+
+message HelloResponse {
+    int32 err_code = 1; 
+    string err_msg = 2; 
+}
+```
+
+Points to note:
+
+* The reference is `import "validate/validate.proto";`. You can download this file from the [protoc-gen-validate repository](https://github.com/bufbuild/protoc-gen-validate/blob/main/validate/validate.proto) and specify the path (download this file to `somedir/validate/validate.proto` and specify `-d somedir`). The trpc-cmdline tool has a built-in copy of this file.
+* The syntax for the validation rule `[(validate.rules).string.email=true]` can be found in the [protoc-gen-validate documentation](https://github.com/bufbuild/protoc-gen-validate/blob/v1.0.2/README.md).
+* When generating code, you need to add `--validate=true`, like this:
+  ```shell
+  trpc create -p helloworld.proto -o out --validate
+  ```
+* The generated stub code will include the `xxx.validate.pb.go` file.
+* In the generated project code, the following two locations will automatically add validate-related plugin information:
+  * All `main.go` will add an anonymous reference `import _ "trpc.group/trpc-filter/validation"`
+  * In `trpc_go.yaml`, the client/server filter configuration will include `- validation`
+
 ## Generating swagger/openapi Documentation
 
 The trpc-cmdline tool provides the `trpc apidocs` subcommand to generate documentation. Users can execute `trpc apidocs -h` to view all supported command options.

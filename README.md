@@ -44,13 +44,13 @@ $ export PATH=~/go/bin:$PATH # Add this to your `~/.bashrc`.
 
 ### Dependencies
 
- <!-- by using one of the following methods.
+Use one of the following methods to download:
 
 #### Using trpc setup
 
 After installation of trpc-cmdline, simply running `trpc setup` will automatically install all the dependencies. 
 
-#### Install separately -->
+#### Install separately
 
 <details><summary>Install protoc </summary><br><pre>
 $ # Reference: https://grpc.io/docs/protoc-installation/
@@ -85,6 +85,9 @@ $ # Reference: https://github.com/uber-go/mock
 $ go install go.uber.org/mock/mockgen@latest
 </pre></details>
 
+<details><summary>Install protoc-gen-validate</summary><br><pre>
+$ Please download the binaries in https://github.com/bufbuild/protoc-gen-validate/releases
+</pre></details>
 
 ## Quick Start
 
@@ -190,6 +193,7 @@ The following lists some frequently used flags.
 * `-d some-dir`: Search paths for pb files (including dependent pb files), can be specified multiple times.
 * `--mock=false`: Disable generation of mock stub code.
 * `--nogomod=true`: Do not generate go.mod file in the stub code, only effective when --rpconly=true, defaults to false.
+* `--validate=true`: Enables data validation. For detailed usage, see [/docs/examples/example-2/README.md](/docs/examples/example-2/README.md)
 
 For additional flags please run `trpc -h` and `trpc [subcmd] -h`.
 

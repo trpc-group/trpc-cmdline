@@ -49,5 +49,6 @@ trpc create -p hello.proto --assetdir=~/.trpc-cmdline-assets/protobuf/asset_go
 * [example2](examples/example-2/README.zh_CN.md) 展示了如何使用 pb option 扩展功能，例如
   * 如何为服务名添加别名
   * 如何为字段添加自定义 tag
+  * 如何生成 validate.pb.go 文件
   * 如何生成 swagger/openapi 文档
   * ...

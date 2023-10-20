@@ -16,6 +16,9 @@ import (
 	"{{$domainName}}/{{$groupName}}/trpc-go{{$versionSuffix}}/client"
 	"{{$domainName}}/{{$groupName}}/trpc-go{{$versionSuffix}}/log"
 	_ "{{ $domainName }}/{{ $groupName }}/trpc-filter/debuglog{{ $versionSuffix }}"
+	{{- if (or .ValidateEnabled .SecvEnabled)  }}
+	_ "{{ $domainName }}/{{ $groupName }}/trpc-filter/validation{{ $versionSuffix }}"
+	{{- end }}
 	pb "{{ trimright ";" $goPkgName }}"
 	{{ range $.ImportsX }}
 		{{.Name}} "{{.Path}}"
