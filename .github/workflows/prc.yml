@@ -1,7 +1,7 @@
 name: Pull Request Check
 on:
   pull_request:
-  pull:
+  push:
   workflow_dispatch:
 permissions:
   contents: read
@@ -33,7 +33,7 @@ jobs:
     - name: Install protoc
       run: PB_REL="https://github.com/protocolbuffers/protobuf/releases" && curl -LO $PB_REL/download/v3.15.8/protoc-3.15.8-linux-x86_64.zip && unzip -o protoc-3.15.8-linux-x86_64.zip -d $HOME/.local && ~/.local/bin/protoc --version
     - name: Install flatc
-      run: wget https://github.com/google/flatbuffers/releases/download/v23.5.26/Linux.flatc.binary.g++-10.zip && unzip Linux.flatc.binary.g++-10.zip && mv flatc ~/go/bin/ && ~/go/bin/flatc --version
+      run: wget https://github.com/google/flatbuffers/releases/download/v23.5.26/Linux.flatc.binary.g++-10.zip && unzip Linux.flatc.binary.g++-10.zip && mkdir -p ~/go/bin && mv flatc ~/go/bin/ && ~/go/bin/flatc --version
     - name: Install protoc-gen-go
       run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
     - name: Install goimports
@@ -41,7 +41,7 @@ jobs:
     - name: install mockgen
       run: go install go.uber.org/mock/mockgen@latest
     - run: echo $PATH
-    - run: export PATH=$HOME/.local/bin:$HOME/go/bin:$PATH && echo $PATH && go run ./trpc setup -f && ls -la /home/ubuntu/go/bin && file $HOME/go/bin/flatc && file $HOME/go/bin/protoc
+    - run: export PATH=$HOME/.local/bin:$HOME/go/bin:$PATH && echo $PATH && go run ./trpc setup -f && ls -la $HOME/go/bin && file $HOME/go/bin/flatc && file $HOME/go/bin/protoc
     - name: Test
       run: export PATH=$HOME/.local/bin:$HOME/go/bin:$PATH && echo $PATH && go test -v -coverprofile=coverage.out ./...
     - name: Upload coverage reports to Codecov
@@ -65,6 +65,7 @@ jobs:
           version: latest 
           only-new-issues: true
           skip-cache: true
+          args: --timeout=30m
   typos:
     name: typos
     runs-on: ubuntu-latest
