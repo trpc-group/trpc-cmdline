@@ -169,6 +169,7 @@ func Test_CreateCmd(t *testing.T) {
 			opts = append(opts, "--protofile", tt.pbfile)
 			opts = append(opts, "-o", out)
 			opts = append(opts, "--check-update", "true")
+			opts = append(opts, "-v")
 
 			if tt.rpconly {
 				opts = append(opts, "--rpconly")
