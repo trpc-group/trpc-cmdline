@@ -1,5 +1,9 @@
 # Change Log
 
+# v1.0.4 2023-10-20
+
+- create: change the default value of `noservicesuffix` to false to align with the internal version (!19)
+
 # v1.0.3 2023-10-20
 
 - version: update version (#17)

@@ -67,7 +67,7 @@ func AddCreateFlags(createCmd *cobra.Command) {
 	createCmd.Flags().Bool("multi-version", false,
 		"Multi-version protocol support, true: supported; false: not supported, "+
 			"defaults to not support importing multiple version protocols")
-	createCmd.Flags().Bool("noservicesuffix", true,
+	createCmd.Flags().Bool("noservicesuffix", false,
 		"Whether the Service Descriptor naming in the generated Go stub code includes the Service suffix, "+
 			"defaults to false")
 	addOutputFlags(createCmd)
