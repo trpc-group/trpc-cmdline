@@ -35,6 +35,7 @@ replace {{$rpcdir}} => ./stub/{{$rpcdir}}
           (not (hasprefix "trpc.group/trpc/trpc-protocol" $v))
           (not (hasprefix "trpc.group/wineguo/trpc-protocol" $v))
           (not (hasprefix "github.com/golang/protobuf" $v)) 
+          (not (hasprefix "github.com/envoyproxy/protoc-gen-validate" $v)) 
           (ne $v "trpc.group/devsec/protoc-gen-secv/v2/validate")
           (ne $v "trpc.group/devsec/protoc-gen-secv/validate")
           (not (hasprefix "google/protobuf/" $k)) }}
