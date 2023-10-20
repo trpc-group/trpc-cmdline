@@ -1,5 +1,9 @@
 # Change Log
 
+# v1.0.3 2023-10-20
+
+- version: update version (#17)
+
 # v1.0.2 2023-10-20
 
 - docs: add changelog (#15)
