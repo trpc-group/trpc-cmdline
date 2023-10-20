@@ -168,6 +168,8 @@ func (c *Create) fixProtoDirs() error {
 		c.options.Protofile = filepath.Base(target)
 	} else if filepath.IsAbs(c.options.Protofile) {
 		c.options.Protofile = strings.TrimPrefix(c.options.Protofile, "/")
+	} else {
+		c.options.Protofile = strings.TrimPrefix(c.options.Protofile, "./")
 	}
 
 	c.options.ProtofileAbs = target
@@ -417,7 +419,6 @@ func (c *Create) parsePBIDLOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags get protofile string failed err: %w", err)
 	}
-	c.options.Protofile = filepath.Clean(c.options.Protofile)
 	c.options.Gotag, err = flags.GetBool("gotag")
 	if err != nil {
 		return fmt.Errorf("flags get gotag bool failed err: %w", err)
