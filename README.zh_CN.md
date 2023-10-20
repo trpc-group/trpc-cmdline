@@ -44,13 +44,13 @@ $ export PATH=~/go/bin:$PATH # Add this to your `~/.bashrc`.
 
 ### 安装依赖
 
- <!-- by using one of the following methods.
+ by using one of the following methods.
 
-#### Using trpc setup
+#### 使用 trpc setup 一键安装所有依赖
 
-After installation of trpc-cmdline, simply running `trpc setup` will automatically install all the dependencies. 
+只需要运行 `trpc setup` 便可安装所有依赖。假如有些依赖安装不成功，可以参考下一节进行手动安装。
 
-#### Install separately -->
+#### 手动安装各种依赖
 
 <details><summary>Install protoc </summary><br><pre>
 $ # Reference: https://grpc.io/docs/protoc-installation/
@@ -85,6 +85,9 @@ $ # Reference: https://github.com/uber-go/mock
 $ go install go.uber.org/mock/mockgen@latest
 </pre></details>
 
+<details><summary>Install protoc-gen-validate</summary><br><pre>
+$ Please download the binaries in https://github.com/bufbuild/protoc-gen-validate/releases
+</pre></details>
 
 ## 快速上手
 
@@ -190,6 +193,7 @@ out
 * `-d some-dir`: 添加 proto 文件的查找路径（包括依赖的 proto 文件），可以指定多次
 * `--mock=false`: 禁止生成 mock 代码
 * `--nogomod=true`: 在生成桩代码时不生成 `go.mod` 文件，只在 `--rpconly=true` 的时候生效, 默认为 `false`
+* `--validate=true`: 开启数据校验，详细用法见 [/docs/examples/example-2/README.zh_CN.md](/docs/examples/example-2/README.zh_CN.md)
 
 更多命令行选项可以执行 `trpc -h` 以及 `trpc [subcmd] -h` 来进行查看。
 

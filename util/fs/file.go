@@ -47,7 +47,6 @@ func LocateFile(protofile string, protodirs []string) (string, error) {
 
 	// If we can find the protofile under the current directory,
 	// directly return to prevent possible conflicts resulting from the relative path in protofile.
-	// Reference: https://mk.woa.com/q/286784
 	fp := filepath.Join(abs, protofile)
 	if info, err := os.Lstat(fp); err == nil && !info.IsDir() {
 		return fp, nil
@@ -61,7 +60,7 @@ func LocateFile(protofile string, protodirs []string) (string, error) {
 	log.Debug("protodirs: %s", protodirs)
 	fpaths, err := getPbFilePathList(protofile, protodirs)
 	if err != nil {
-		return "", fmt.Errorf("get pb file path listerr: %w", err)
+		return "", fmt.Errorf("get pb file path list err: %w", err)
 	}
 
 	// `-protofile=abc/d.proto`, works like `-protodir=abc -protofile=d.proto`

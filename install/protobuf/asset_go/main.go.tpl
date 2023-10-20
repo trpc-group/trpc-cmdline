@@ -19,6 +19,9 @@ import (
 	{{- end }}
 	_ "{{$domainName}}/{{$groupName}}/trpc-filter/debuglog{{$versionSuffix}}"
 	_ "{{$domainName}}/{{$groupName}}/trpc-filter/recovery{{$versionSuffix}}"
+	{{- if (or .ValidateEnabled .SecvEnabled)  }}
+	_ "{{ $domainName }}/{{ $groupName }}/trpc-filter/validation{{ $versionSuffix }}"
+	{{- end }}
 	trpc "{{$domainName}}/{{$groupName}}/trpc-go{{$versionSuffix}}"
 	"{{$domainName}}/{{$groupName}}/trpc-go{{$versionSuffix}}/log"
     {{ if ne $goPkgOption "" -}}

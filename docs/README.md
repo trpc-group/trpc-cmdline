@@ -49,4 +49,5 @@ The same applies to other languages such as C++, you need to specify `--lang=cpp
 * [example2](examples/example-2/README.md) shows how to use pb option extension features, such as
   * How to add aliases for service names
   * How to add custom tags for fields
+  * How to generate validate.pb.go file
   * How to generate swagger/openapi documentation

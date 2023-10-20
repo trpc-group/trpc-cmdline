@@ -58,6 +58,49 @@ message Req{
 trpc create -p helloworld.proto -o out --gotag
 ```
 
+## 生成 validate.pb.go 文件
+
+完整示例见 [/testcase/create/10-validate-pgv/helloworld.proto](/testcase/create/10-validate-pgv/helloworld.proto)。
+
+本功能需要安装 [protoc-gen-validate](https://github.com/bufbuild/protoc-gen-validate)，通常来说 `trpc setup` 即可使这些依赖被自动安装完毕。
+
+示例 proto 文件如下：
+
+```proto
+syntax = "proto3";
+package helloworld;
+
+option go_package="trpc.group/some-example/helloworld";
+
+import "validate/validate.proto";
+
+service HelloSvr {
+    rpc Hello(HelloRequest) returns(HelloResponse);
+}
+
+message HelloRequest {
+    string msg = 1 [(validate.rules).string.email=true];
+}
+
+message HelloResponse {
+    int32 err_code = 1; 
+    string err_msg = 2; 
+}
+```
+
+注意事项：
+
+* 引用为 `import "validate/validate.proto";`，这个文件可以自行从 [protoc-gen-validate 仓库](https://github.com/bufbuild/protoc-gen-validate/blob/main/validate/validate.proto) 进行下载并指定路径（将这个文件下载到 `somedir/validate/validate.proto` 然后指定 `-d somedir`），trpc-cmdline 工具内置了一份该文件。
+* 校验规则 ` [(validate.rules).string.email=true]` 的写法可以参考 [protoc-gen-validate 文档](https://github.com/bufbuild/protoc-gen-validate/blob/v1.0.2/README.md)。
+* 在生成代码时需要加上 `--validate=true`，如
+  ```shell
+  trpc create -p helloworld.proto -o out --validate
+  ```
+* 此时生成的桩代码会包含 `xxx.validate.pb.go` 文件
+* 在生成的项目代码中，有以下两个位置会自动添加 validate 相关的插件信息
+  * 所有的 `main.go` 中会添加匿名引用 `import _ "trpc.group/trpc-filter/validation"`
+  * 在 `trpc_go.yaml` 的 client/server 的 filter 配置项会存在 `- validation` 一项
+
 ## 生成 swagger/openapi 文档
 
 trpc-cmdline 工具提供了 `trpc apidocs` 子命令以生成文档，用户可以执行 `trpc apidocs -h` 以查看所有支持的命令选项。
