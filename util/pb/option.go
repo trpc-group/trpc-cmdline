@@ -34,7 +34,7 @@ func WithSecvEnabled(enabled bool) Option {
 // https://github.com/bufbuild/protoc-gen-validate/tree/v1.0.2
 func WithValidateEnabled(enabled bool) Option {
 	return func(o *options) {
-		o.secvEnabled = enabled
+		o.validationEnabled = enabled
 	}
 }
 

@@ -42,7 +42,7 @@ func AddCreateFlags(createCmd *cobra.Command) {
 	createCmd.Flags().Bool("secvenabled", false,
 		"Enable generation of validate.go file using protoc-gen-secv, defaults to false")
 	createCmd.Flags().Bool("validate", false,
-		"Enable generation of validate.go file using protoc-gen-validate, defaults to false")
+		"Enable generation of validate.pb.go file using protoc-gen-validate, defaults to false")
 	createCmd.Flags().String("kvfile", "",
 		"Provide a json file path to unmarshal into key-value pairs (KVs) for usage in template files")
 	createCmd.Flags().String("kvrawjson", "",

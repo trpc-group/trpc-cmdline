@@ -358,7 +358,7 @@ func (g *genDependencyRPCStubParam) genDependencyRPCStubPB() error {
 			searchPath, g.fname, g.option.Language, g.outputDir,
 			append(opts, pb.WithSecvEnabled(true))...,
 		); err != nil {
-			return fmt.Errorf("generate validation file for %s err: %w", g.fname, err)
+			return fmt.Errorf("generate secv file for %s err: %w", g.fname, err)
 		}
 	}
 	// Run protoc-gen-validate.
