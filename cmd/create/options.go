@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
@@ -165,6 +166,10 @@ func (c *Create) fixProtoDirs() error {
 
 	if c.options.UseBaseName {
 		c.options.Protofile = filepath.Base(target)
+	} else if filepath.IsAbs(c.options.Protofile) {
+		c.options.Protofile = strings.TrimPrefix(c.options.Protofile, "/")
+	} else {
+		c.options.Protofile = strings.TrimPrefix(c.options.Protofile, "./")
 	}
 
 	c.options.ProtofileAbs = target
@@ -412,8 +417,8 @@ func (c *Create) parsePBIDLOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags get protodir string array failed err: %w", err)
 	}
-	// Always append the current working directory.
-	c.options.Protodirs = fs.UniqFilePath(append(dirs, "."))
+	// Always append the current working directory and root directory.
+	c.options.Protodirs = fs.UniqFilePath(append(dirs, ".", "/"))
 	c.options.Protofile, err = flags.GetString("protofile")
 	if err != nil {
 		return fmt.Errorf("flags get protofile string failed err: %w", err)
