@@ -318,6 +318,10 @@ func (c *Create) parseOutputOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags parse secvenabled bool err: %w", err)
 	}
+	c.options.ValidateEnabled, err = flags.GetBool("validate")
+	if err != nil {
+		return fmt.Errorf("flags parse validate bool err: %w", err)
+	}
 	kvFile, err := flags.GetString("kvfile")
 	if err != nil {
 		return fmt.Errorf("flags parse kvfile string err: %w", err)

@@ -10,17 +10,29 @@
 package pb
 
 type options struct {
-	secvEnabled     bool
-	pb2ImportPath   map[string]string
-	pkg2ImportPath  map[string]string
-	descriptorSetIn string
+	secvEnabled       bool
+	validationEnabled bool
+	pb2ImportPath     map[string]string
+	pkg2ImportPath    map[string]string
+	descriptorSetIn   string
 }
 
 // Option is used to store the content of the relevant options.
 type Option func(*options)
 
 // WithSecvEnabled enables validation and generates stub code using protoc-gen-secv.
+// Note: protoc-gen-secv is a modified version of protoc-gen-validate.
+// protoc-gen-secv is still not opensourced.
+// Please use WithValidationEnabled instead.
 func WithSecvEnabled(enabled bool) Option {
+	return func(o *options) {
+		o.secvEnabled = enabled
+	}
+}
+
+// WithValidateEnabled enables validation and generates stub code using protoc-gen-validate.
+// https://github.com/bufbuild/protoc-gen-validate/tree/v1.0.2
+func WithValidateEnabled(enabled bool) Option {
 	return func(o *options) {
 		o.secvEnabled = enabled
 	}

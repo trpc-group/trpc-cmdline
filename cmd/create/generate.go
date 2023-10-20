@@ -141,6 +141,15 @@ func runProtoc(fd *FD, pbOutDir string, option *params.Option) ([]string, error)
 			return nil, fmt.Errorf("run protoc-gen-secv for %s err: %w", option.Protofile, err)
 		}
 	}
+	// Run protoc-gen-validate.
+	if support, ok := config.SupportValidate[option.Language]; ok && support && option.ValidateEnabled {
+		if err := pb.Protoc(
+			option.Protodirs, option.Protofile, option.Language, pbOutDir,
+			append(opts, pb.WithValidateEnabled(true))...,
+		); err != nil {
+			return nil, fmt.Errorf("run protoc-gen-validate for %s err: %w", option.Protofile, err)
+		}
+	}
 	log.Debug("pbOutDir = %s", pbOutDir)
 	// collect the generated files
 	matches, err := filepath.Glob(pbOutDir)
@@ -348,6 +357,15 @@ func (g *genDependencyRPCStubParam) genDependencyRPCStubPB() error {
 		if err := pb.Protoc(
 			searchPath, g.fname, g.option.Language, g.outputDir,
 			append(opts, pb.WithSecvEnabled(true))...,
+		); err != nil {
+			return fmt.Errorf("generate validation file for %s err: %w", g.fname, err)
+		}
+	}
+	// Run protoc-gen-validate.
+	if support, ok := config.SupportValidate[g.option.Language]; ok && support && g.option.ValidateEnabled {
+		if err := pb.Protoc(
+			searchPath, g.fname, g.option.Language, g.outputDir,
+			append(opts, pb.WithValidateEnabled(true))...,
 		); err != nil {
 			return fmt.Errorf("generate validation file for %s err: %w", g.fname, err)
 		}

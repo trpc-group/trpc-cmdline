@@ -20,6 +20,9 @@ server:  # Server configuration.
   filter:  # List of interceptors for all service handler functions.
     - simpledebuglog
     - recovery  # Intercept panics from business processing goroutines created by the framework.
+	  {{- if (or .ValidateEnabled .SecvEnabled)  }}
+    - validation
+	  {{- end }}
   service:  # Services provided by the business, can have multiple.
     {{range $index, $service := .Services}}
     {{- $serviceName := $service.Name -}}
@@ -41,6 +44,9 @@ client:  # Backend configuration for client calls.
   namespace: Development  # Environment for all backends.
   filter:  # List of interceptors for all backend function calls.
     - simpledebuglog
+	  {{- if (or .ValidateEnabled .SecvEnabled)  }}
+    - validation
+	  {{- end }}
   service:  # Configuration for individual backends.
     {{range $index, $service := .Services}}
     {{- $serviceName := $service.Name -}}
