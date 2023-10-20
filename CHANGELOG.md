@@ -1,5 +1,12 @@
 # Change Log
 
+# v1.0.4 2023-10-20
+
+- create: change the default value of `noservicesuffix` to false to align with the internal version (!19)
+- cmdline: support protoc-gen-validate (#12) 
+- github: add release workflow (#20)
+- create: support './' and abs for protofile path (#19) 
+
 # v1.0.3 2023-10-20
 
 - version: update version (#17)
