@@ -44,7 +44,7 @@ $ export PATH=~/go/bin:$PATH # Add this to your `~/.bashrc`.
 
 ### 安装依赖
 
- by using one of the following methods.
+通过以下两种方式之一可以安装所有的依赖。
 
 #### 使用 trpc setup 一键安装所有依赖
 
