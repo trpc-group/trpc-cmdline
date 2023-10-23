@@ -98,7 +98,7 @@ message HelloResponse {
   ```
 * 此时生成的桩代码会包含 `xxx.validate.pb.go` 文件
 * 在生成的项目代码中，有以下两个位置会自动添加 validate 相关的插件信息
-  * 所有的 `main.go` 中会添加匿名引用 `import _ "trpc.group/trpc-filter/validation"`
+  * 所有的 `main.go` 中会添加匿名引用 `import _ "trpc.group/trpc-go/trpc-filter/validation"`
   * 在 `trpc_go.yaml` 的 client/server 的 filter 配置项会存在 `- validation` 一项
 
 ## 生成 swagger/openapi 文档

@@ -98,7 +98,7 @@ Points to note:
   ```
 * The generated stub code will include the `xxx.validate.pb.go` file.
 * In the generated project code, the following two locations will automatically add validate-related plugin information:
-  * All `main.go` will add an anonymous reference `import _ "trpc.group/trpc-filter/validation"`
+  * All `main.go` will add an anonymous reference `import _ "trpc.group/trpc-go/trpc-filter/validation"`
   * In `trpc_go.yaml`, the client/server filter configuration will include `- validation`
 
 ## Generating swagger/openapi Documentation
