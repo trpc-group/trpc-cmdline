@@ -194,6 +194,7 @@ The following lists some frequently used flags.
 * `--mock=false`: Disable generation of mock stub code.
 * `--nogomod=true`: Do not generate go.mod file in the stub code, only effective when --rpconly=true, defaults to false.
 * `--validate=true`: Enables data validation. For detailed usage, see [/docs/examples/example-2/README.md](/docs/examples/example-2/README.md)
+* `-l cpp`：Generate stub code for cpp.
 
 For additional flags please run `trpc -h` and `trpc [subcmd] -h`.
 

@@ -194,6 +194,7 @@ out
 * `--mock=false`: 禁止生成 mock 代码
 * `--nogomod=true`: 在生成桩代码时不生成 `go.mod` 文件，只在 `--rpconly=true` 的时候生效, 默认为 `false`
 * `--validate=true`: 开启数据校验，详细用法见 [/docs/examples/example-2/README.zh_CN.md](/docs/examples/example-2/README.zh_CN.md)
+* `-l cpp`：生成 cpp 桩代码
 
 更多命令行选项可以执行 `trpc -h` 以及 `trpc [subcmd] -h` 来进行查看。
 
