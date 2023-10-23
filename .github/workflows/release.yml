@@ -7,9 +7,19 @@ permissions:
     packages: write
 
 jobs:
-  release-linux-darwin-windows-amd64:
-    name: release linux/amd64
+  release-linux-darwin-windows:
+    name: release linux-darwin-windows
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # build and publish in parallel: linux/386, linux/amd64, linux/arm64, windows/386, windows/amd64, darwin/amd64, darwin/arm64
+        goos: [linux, windows, darwin]
+        goarch: ["386", amd64, arm64]
+        exclude:
+          - goarch: "386"
+            goos: darwin
+          - goarch: arm64
+            goos: windows
     steps:
     - uses: actions/checkout@v3
     - name: Checkout submodules using a PAT
@@ -22,21 +32,8 @@ jobs:
     - uses: wangyoucao577/go-release-action@v1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: linux
-        goarch: amd64
-        project_path: ./trpc
-        binary_name: trpc_linux
-    - uses: wangyoucao577/go-release-action@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: darwin
-        goarch: amd64
-        project_path: ./trpc
-        binary_name: trpc_darwin
-    - uses: wangyoucao577/go-release-action@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: windows
-        goarch: amd64
-        project_path: ./trpc
-        binary_name: trpc_windows.exe
+        goos: ${{ matrix.goos }}
+        goarch: ${{ matrix.goarch }}
+        project_path: "./trpc"
+        binary_name: "trpc"
+        extra_files: LICENSE README.md README.zh_CN.md
