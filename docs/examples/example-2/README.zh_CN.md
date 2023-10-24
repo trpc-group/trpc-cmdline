@@ -105,9 +105,10 @@ message HelloResponse {
 
 trpc-cmdline 工具提供了 `trpc apidocs` 子命令以生成文档，用户可以执行 `trpc apidocs -h` 以查看所有支持的命令选项。
 
-在 `proto`` 文件中使用 `trpc.swagger`，并 `import "trpc/swagger/swagger.proto";`，如：
+在 `proto` 文件中使用 `trpc.swagger`，并 `import "trpc/swagger/swagger.proto";`，如：
 
 ```protobuf
+import "trpc/swagger/swagger.proto";
 service HelloWorldService {
     rpc Hello(HelloReq) returns(HelloRsp) {
         option(trpc.swagger) = {

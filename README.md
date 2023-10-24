@@ -193,8 +193,17 @@ The following lists some frequently used flags.
 * `-d some-dir`: Search paths for pb files (including dependent pb files), can be specified multiple times.
 * `--mock=false`: Disable generation of mock stub code.
 * `--nogomod=true`: Do not generate go.mod file in the stub code, only effective when --rpconly=true, defaults to false.
-* `--validate=true`: Enables data validation. For detailed usage, see [/docs/examples/example-2/README.md](/docs/examples/example-2/README.md)
 * `-l cpp`：Generate stub code for cpp.
+* `--validate=true`: Enables data validation. For detailed usage, see [/docs/examples/example-2/README.md](/docs/examples/example-2/README.md).
+
+**Note:** The proto import paths for options like `alias/gotag/validate/swagger` usually vary:
+
+* `trpc.alias`: `import "trpc/proto/trpc_options.proto";`
+* `trpc.go_tag`: `import "trpc/proto/trpc_options.proto";`
+* `validate.rules`: `import "validate/validate.proto";`
+* `trpc.swagger`: `import "trpc/swagger/swagger.proto";`
+
+For detailed usage, please refer to [/docs/examples/example-2/README.zh_CN.md](/docs/examples/example-2/README.zh_CN.md)
 
 For additional flags please run `trpc -h` and `trpc [subcmd] -h`.
 
