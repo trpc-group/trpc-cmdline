@@ -144,3 +144,53 @@ trpc apidocs -p helloworld.proto --openapi --openapi-out=output.openapi.json
 * `-d`：指定 `proto` 文件依赖的搜索路径，和 `trpc create` 命令中的 `-d` 含义相同
 * `--alias`：在文档中显示带有 alias 的接口名
 * `--keep-orig-rpcname`：在 `--alias=true` 的时候，默认情况下原始的 rpc name 以及 alias 之后的名称都会显示，用户可以指定 `--keep-orig-rpcname=false` 以使文档只显示 alias 之后的名称，不显示原始的 rpc name
+
+## 生成 RESTful 服务
+
+可以参考 [trpc-group/trpc-go/restful](https://github.com/trpc-group/trpc-go/blob/main/restful/README.zh_CN.md)。
+
+简单的例子如下：
+
+```protobuf
+syntax = "proto3";
+package helloworld;
+
+option go_package="trpc.group/examples/helloworld";
+
+import "trpc/api/annotations.proto";
+
+// HelloReq request.
+message HelloReq{
+    string name = 1;
+    uint64 id = 2;
+}
+
+// HelloRsp response.
+message HelloRsp{
+    int32 errcode = 1;
+}
+
+// HelloWorldServer handle hello request and echo message.
+service HelloWorldServer {
+    // Hello say hello
+    rpc Say(HelloReq) returns(HelloRsp) {
+        option (trpc.api.http) = {
+            post: "/say/{id}"
+              additional_bindings: {
+                    post: "/say/body"
+                    body: "*"
+              };
+              additional_bindings: {
+                    post: "/say/name"
+                    body: "name"
+              };
+        };
+    };
+}
+```
+
+执行以下命令进行生成：
+
+```shell
+trpc create -p helloworld.proto --protocol=restful -o out 
+```

@@ -143,3 +143,53 @@ Some additional options:
 * `-d`: Specifies the search path for `proto` file dependencies, the same as `-d` in the `trpc create` command
 * `--alias`: Display the interface name with alias in the document
 * `--keep-orig-rpcname`: When `--alias=true`, by default, both the original rpc name and the name after alias will be displayed. Users can specify `--keep-orig-rpcname=false` to make the document only display the name after alias, and not display the original rpc name
+
+## Generating RESTful Services
+
+You can refer to [trpc-group/trpc-go/restful](https://github.com/trpc-group/trpc-go/blob/main/restful/README.md) for more information.
+
+A simple example is as follows:
+
+```protobuf
+syntax = "proto3";
+package helloworld;
+
+option go_package="trpc.group/examples/helloworld";
+
+import "trpc/api/annotations.proto";
+
+// HelloReq request.
+message HelloReq{
+    string name = 1;
+    uint64 id = 2;
+}
+
+// HelloRsp response.
+message HelloRsp{
+    int32 errcode = 1;
+}
+
+// HelloWorldServer handles hello request and echoes message.
+service HelloWorldServer {
+    // Hello say hello
+    rpc Say(HelloReq) returns(HelloRsp) {
+        option (trpc.api.http) = {
+            post: "/say/{id}"
+              additional_bindings: {
+                    post: "/say/body"
+                    body: "*"
+              };
+              additional_bindings: {
+                    post: "/say/name"
+                    body: "name"
+              };
+        };
+    };
+}
+```
+
+Execute the following command to generate:
+
+```shell
+trpc create -p helloworld.proto --protocol=restful -o out 
+```
