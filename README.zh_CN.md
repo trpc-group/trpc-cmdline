@@ -32,6 +32,26 @@ trpc-cmdline 是 [trpc-cpp](https://github.com/trpc-group/trpc-cpp) 和 [trpc-go
 go install trpc.group/trpc-go/trpc-cmdline/trpc@latest
 ```
 
+如果在大陆报错EOF，需配置代理:
+
+Mac/Linux
+
+```bash
+# 设置你的 bash 环境变量
+echo "export GOPROXY=https://proxy.golang.com.cn,direct" >> ~/.profile && source ~/.profile
+
+# 如果你的终端是 zsh，使用以下命令
+echo "export GOPROXY=https://proxy.golang.com.cn,direct" >> ~/.zshrc && source ~/.zshrc
+```
+
+Windows
+
+1. 右键 我的电脑 -> 属性 -> 高级系统设置 -> 环境变量
+2. 在 “[你的用户名]的用户变量” 中点击 ”新建“ 按钮
+3. 在 “变量名” 输入框并新增 “GOPROXY”
+4. 在对应的 “变量值” 输入框中新增 “https://proxy.golang.com.cn,direct”
+5. 最后点击 “确定” 按钮保存设置
+
 <!-- #### Install from release
 
 <details><summary>Click to show the bash script</summary><br><pre>
