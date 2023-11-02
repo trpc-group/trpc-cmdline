@@ -32,7 +32,7 @@ trpc-cmdline 是 [trpc-cpp](https://github.com/trpc-group/trpc-cpp) 和 [trpc-go
 go install trpc.group/trpc-go/trpc-cmdline/trpc@latest
 ```
 
-如果在大陆报错EOF，需配置代理，具体步骤请查看: https://goproxy.cn/
+如果在大陆报错 EOF，需配置代理，具体步骤请查看: https://goproxy.cn/
 
 <!-- #### Install from release
 
