@@ -1,4 +1,8 @@
 VERSION := $(shell cat install/VERSION)
+DOCKER_IMAGE := trpc-group/trpc-cmdline
+GOPROXY := https://goproxy.cn
+GOSUMDB := sum.golang.org
+
 PHONY: fmt bindata_release release submodules image
 
 
@@ -32,6 +36,7 @@ submodules:
 	# -rm -rf install/submodules/* && git submodule update --remote
 
 image:
-	@mkdir -p bin
-	@GOOS=linux go build -o bin/ trpc/trpc.go
-	@docker build -t trpc-cmdline:${VERSION} .
+	@docker build \
+	--build-arg GOPROXY=${GOPROXY} \
+	--build-arg GOSUMDB=${GOSUMDB} \
+	-t ${DOCKER_IMAGE}:${VERSION} .
