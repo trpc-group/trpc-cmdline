@@ -1,4 +1,5 @@
 VERSION := $(shell cat install/VERSION)
+DOCKER_IMAGE := trpc-group/trpc-cmdline
 PHONY: fmt bindata_release release submodules image
 
 
@@ -32,6 +33,7 @@ submodules:
 	# -rm -rf install/submodules/* && git submodule update --remote
 
 image:
-	@mkdir -p bin
-	@GOOS=linux go build -o bin/ trpc/trpc.go
-	@docker build -t trpc-cmdline:${VERSION} .
+	@docker build \
+	--build-arg GOPROXY="https://goproxy.cn" \
+	--build-arg GOSUMDB="sum.golang.org" \
+	-t ${DOCKER_IMAGE}:${VERSION} .
