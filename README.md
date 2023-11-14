@@ -85,8 +85,11 @@ $ # Reference: https://github.com/uber-go/mock
 $ go install go.uber.org/mock/mockgen@latest
 </pre></details>
 
-<details><summary>Install protoc-gen-validate</summary><br><pre>
-$ Please download the binaries in https://github.com/bufbuild/protoc-gen-validate/releases
+<details><summary>Install protoc-gen-validate and protoc-gen-validate-go</summary><br><pre>
+$ # Please download the binaries in https://github.com/bufbuild/protoc-gen-validate/releases
+$ # Or:
+$ go install github.com/envoyproxy/protoc-gen-validate@latest
+$ go install github.com/envoyproxy/protoc-gen-validate/cmd/protoc-gen-validate-go@latest
 </pre></details>
 
 ## Quick Start
