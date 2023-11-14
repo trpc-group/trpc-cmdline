@@ -1,5 +1,8 @@
 VERSION := $(shell cat install/VERSION)
 DOCKER_IMAGE := trpc-group/trpc-cmdline
+GOPROXY := https://goproxy.cn
+GOSUMDB := sum.golang.org
+
 PHONY: fmt bindata_release release submodules image
 
 
@@ -34,6 +37,6 @@ submodules:
 
 image:
 	@docker build \
-	--build-arg GOPROXY="https://goproxy.cn" \
-	--build-arg GOSUMDB="sum.golang.org" \
+	--build-arg GOPROXY=${GOPROXY} \
+	--build-arg GOSUMDB=${GOSUMDB} \
 	-t ${DOCKER_IMAGE}:${VERSION} .
