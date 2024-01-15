@@ -110,7 +110,18 @@ func (args methodArgs) summary() string {
 	if len(args.RPC.SwaggerInfo.Title) != 0 {
 		summary = args.RPC.SwaggerInfo.Title
 	}
-	return summary
+	return trimExtraneous(summary)
+}
+
+func trimExtraneous(input string) string {
+	const marker = "@alias="
+	s := strings.Split(input, marker)
+	// Remove the alias if had any.
+	output := s[0]
+	// Remove comment slashes.
+	output = strings.ReplaceAll(output, "\n//", " ")
+	output = strings.ReplaceAll(output, "//", " ")
+	return strings.Trim(output, " \"'")
 }
 
 func (args methodArgs) method() *MethodStruct {
