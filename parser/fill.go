@@ -765,7 +765,7 @@ func isCommentDiff(leadingComment string, leadingErr error, trailingComment stri
 	return (leadingErr == nil && trailingErr == nil) && (leadingComment != trailingComment)
 }
 
-func parseAlias(comment string) (string, error) {
+func parseAlias(comment string) (alias string, err error) {
 	const marker = "@alias="
 	if !strings.Contains(comment, marker) {
 		return "", fmt.Errorf("annotation alias %s not found in raw comment %s", marker, comment)
@@ -784,7 +784,10 @@ func parseAlias(comment string) (string, error) {
 		return "", fmt.Errorf("candidate alias %s is double commented", s[0])
 	}
 
-	alias := strings.TrimSpace(s[1])
+	defer func() {
+		alias = strings.Trim(alias, " \"'")
+	}()
+	alias = strings.TrimSpace(s[1])
 	if len(alias) == 0 {
 		return "", fmt.Errorf("invalid alias after trim space: %s", comment)
 	}
