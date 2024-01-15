@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.0.6 2024-01-15
+
+- parser: further trim extra spaces and quotes for alias (#33)
+- apidocs: trim extraneous for summary (#34)
+
 # v1.0.5 2023-10-23
 
 - install: invite back proto files to improve ease of use (#21)
