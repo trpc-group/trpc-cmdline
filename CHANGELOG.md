@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.0.7 2024-04-02
+
+- test: replace gomock to go.uber.org/mock/gomock (#37)
+
 ## v1.0.6 2024-01-15
 
 - parser: further trim extra spaces and quotes for alias (#33)

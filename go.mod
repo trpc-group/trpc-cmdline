@@ -6,7 +6,6 @@ require (
 	github.com/agiledragon/gomonkey v2.0.2+incompatible
 	github.com/go-git/go-billy/v5 v5.4.1
 	github.com/go-git/go-git/v5 v5.8.1
-	github.com/golang/mock v1.6.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/iancoleman/strcase v0.2.0
 	github.com/jhump/protoreflect v1.9.0
@@ -16,6 +15,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.12.0
 	github.com/stretchr/testify v1.8.0
+	go.uber.org/mock v0.4.0
 	go.uber.org/multierr v1.6.0
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v2 v2.4.0

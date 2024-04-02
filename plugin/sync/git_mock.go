@@ -23,7 +23,7 @@ import (
 	object "github.com/go-git/go-git/v5/plumbing/object"
 	storer "github.com/go-git/go-git/v5/plumbing/storer"
 	ssh "github.com/go-git/go-git/v5/plumbing/transport/ssh"
-	gomock "github.com/golang/mock/gomock"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockGitManager is a mock of GitManager interface.

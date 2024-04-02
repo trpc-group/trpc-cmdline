@@ -33,7 +33,7 @@ import (
 
 	trpc "{{ $domainName }}/{{ $groupName }}/trpc-go{{ $versionSuffix }}"
 	_ "{{ $domainName }}/{{ $groupName }}/trpc-go{{ $versionSuffix }}/http"
-    "github.com/golang/mock/gomock"
+    "go.uber.org/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	pb "{{ trimright ";" $goPkgName }}"
     {{ range .ImportsX }}
