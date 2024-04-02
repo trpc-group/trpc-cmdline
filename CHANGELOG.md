@@ -2,7 +2,7 @@
 
 ## v1.0.7 2024-04-02
 
-- test: replace gomock to go.uber.org/mock/gomock (#36)
+- test: replace gomock to go.uber.org/mock/gomock (#37)
 
 ## v1.0.6 2024-01-15
 
