@@ -27,8 +27,8 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/transport"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 	"github.com/go-git/go-git/v5/storage/memory"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	"trpc.group/trpc-go/trpc-cmdline/descriptor"
 	"trpc.group/trpc-go/trpc-cmdline/params"

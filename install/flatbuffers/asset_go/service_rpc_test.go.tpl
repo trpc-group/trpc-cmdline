@@ -28,7 +28,7 @@ import (
 	trpc "{{ $domainName }}/trpc-go/trpc-go"
 	_ "{{ $domainName }}/trpc-go/trpc-go/http"
 
-    "github.com/golang/mock/gomock"
+    "go.uber.org/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
 	flatbuffers "github.com/google/flatbuffers/go" 
