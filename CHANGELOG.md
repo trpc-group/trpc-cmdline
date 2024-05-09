@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.0.8 2024-05-09
+
+- fix: url reference error when generating trpc-cpp project (#38)
+
 ## v1.0.7 2024-04-02
 
 - test: replace gomock to go.uber.org/mock/gomock (#37)
