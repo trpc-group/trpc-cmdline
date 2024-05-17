@@ -17,6 +17,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/go-multierror"
+
 	"trpc.group/trpc-go/trpc-cmdline/descriptor"
 	"trpc.group/trpc-go/trpc-cmdline/params"
 )

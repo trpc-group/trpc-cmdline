@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.0.9 2024-05-09
+
+- setup: add search for current gopath and return detailed error (#41)
+
 ## v1.0.8 2024-05-09
 
 - fix: url reference error when generating trpc-cpp project (#38)

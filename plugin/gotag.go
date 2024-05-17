@@ -24,6 +24,7 @@ import (
 	"github.com/jhump/protoreflect/desc"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/descriptorpb"
+
 	trpc "trpc.group/trpc/trpc-protocol/pb/go/trpc/proto"
 
 	"trpc.group/trpc-go/trpc-cmdline/descriptor"

@@ -11,10 +11,13 @@ package config
 
 import (
 	"fmt"
+	"go/build"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
+	"strings"
 
 	"trpc.group/trpc-go/trpc-cmdline/util/log"
 )
@@ -69,11 +72,10 @@ func LoadDependencies(languages ...string) ([]*Dependency, error) {
 
 // SetupDependencies configures dependency installation.
 func SetupDependencies(deps []*Dependency) error {
-	userHome, err := os.UserHomeDir()
+	path, err := getCandidate()
 	if err != nil {
-		return fmt.Errorf("get user home dir err for installation: %w", err)
+		return err
 	}
-	path := filepath.Join(userHome, "go", "bin")
 	for _, dep := range deps {
 		// Check whether installed, if no, try to install it.
 		if dep.Installed() {
@@ -107,4 +109,46 @@ func SetupDependencies(deps []*Dependency) error {
 		}
 	}
 	return nil
+}
+
+func getCandidate() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("install dependency error: %w", err)
+	}
+	cmd := exec.Command("go", "env", "GOPATH")
+	output, _ := cmd.Output()
+	gopath := strings.TrimSpace(string(output))
+	candidates := []string{
+		filepath.Join(gopath, "bin"),
+		filepath.Join(build.Default.GOPATH, "bin"),
+		filepath.Join(home, "go", "bin"),
+		filepath.Join(home, "bin"),
+	}
+	dest := candidates[0]
+	path := os.ExpandEnv(os.Getenv("PATH"))
+	var found bool
+	for _, p := range candidates {
+		// Must be a directory to avoid interference from files with the same name.
+		fin, err := os.Lstat(p)
+		if err != nil {
+			continue
+		}
+		if !fin.IsDir() {
+			continue
+		}
+
+		// Should be searchable in `PATH`.
+		if !strings.Contains(path, p) {
+			continue
+		}
+		dest = p
+		found = true
+		break
+	}
+	if !found {
+		return "", fmt.Errorf("get install path error: %s does not exist or cannot be found under $PATH, "+
+			"consider creating it manually and adding to $PATH", dest)
+	}
+	return dest, nil
 }
