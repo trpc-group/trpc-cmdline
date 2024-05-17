@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
 	"trpc.group/trpc-go/trpc-cmdline/descriptor"
 	"trpc.group/trpc-go/trpc-cmdline/params"
 	"trpc.group/trpc-go/trpc-cmdline/plugin"

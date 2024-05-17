@@ -25,7 +25,7 @@ func CMD() *cobra.Command {
 		// Load dependencies according to languages specified.
 		deps, err := config.LoadDependencies(languages...)
 		if err != nil {
-			return err
+			return fmt.Errorf("load dependencies failed: %w", err)
 		}
 		// Setup dependencies.
 		return config.SetupDependencies(deps)
@@ -52,7 +52,7 @@ func CMD() *cobra.Command {
 			}
 			// Do setup according to language.
 			if err := setup(lang); err != nil {
-				return fmt.Errorf("setup failed: %v", err)
+				return fmt.Errorf("setup failed: %w", err)
 			}
 			log.Info("Setup completed")
 			return nil

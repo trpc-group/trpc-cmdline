@@ -10,4 +10,4 @@
 package config
 
 // TRPCCliVersion is the version of trpc-cmdline tool.
-var TRPCCliVersion = "v1.0.8"
+var TRPCCliVersion = "v1.0.9"
