@@ -219,7 +219,3 @@ out
 ## 贡献
 
 本开源项目欢迎任何贡献，请阅读 [贡献指南](CONTRIBUTING.zh_CN.md) 以获取更多信息。
-
-## 版权声明
-
-The copyright notice pertaining to the Tencent code in this repo was previously in the name of “THL A29 Limited.”  That entity has now been de-registered.  You should treat all previously distributed copies of the code as if the copyright notice was in the name of “Tencent.”
