@@ -14,5 +14,6 @@ package config
 // 1. The language appears as a key in this map.
 // 2. The corresponding value is true.
 var SupportValidate = map[string]bool{
-	"go": true,
+	"go":     true,
+	"python": false,
 }

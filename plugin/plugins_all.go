@@ -31,4 +31,7 @@ var PluginsExt = map[string][]Plugin{
 		&GoMock{},    // gomock
 		&GoTag{},     // custom go tag by proto field options
 	},
+	"python": {
+		&PythonMove{}, // Adjust the directory structure.
+	},
 }

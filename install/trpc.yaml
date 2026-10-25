@@ -67,6 +67,11 @@ plugins:
     - gofmt
     - mockgen
     - gotag
+  python:
+    - swagger
+    - openapi
+    - validate
+    - move
   cpp:
     - cpp_move
 
@@ -81,6 +86,16 @@ templates:
       rpc_server_test_stub: service_rpc_test.go.tpl
       rpc_client_stub:
         - rpc/trpc.go.tpl
+    python:
+      asset_dir: protobuf/asset_python
+      lang_file_ext: py
+      rpc_server_stub: service_rpc.py.tpl
+      rpc_client_stub:
+        - rpc/rpc.py.tpl
+        - rpc/pb.py.tpl
+        - rpc/rpc_stream.py.tpl
+        - rpc/setup.py.tpl
+        - rpc/__init__.py
     cpp:
       asset_dir: protobuf/asset_cpp
       keep_orig_name: true

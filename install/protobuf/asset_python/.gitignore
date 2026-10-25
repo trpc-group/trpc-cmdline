@@ -1,0 +1,43 @@
+# ide settings
+.idea
+.vscode
+
+# mac temp file
+.DS_Store
+
+# env
+venv
+.venv
+.noxenv
+
+# build
+*.py[cod]
+*.egg-info
+*.egg
+.eggs
+eggs
+build
+dist
+__pycache__
+
+# runtime
+*.lock
+.polaris_cache
+
+# logs
+logs
+*.log
+*.log*
+*.out
+nohup*
+
+# pytest
+.pytest_cache
+# pytest report
+htmlcov
+
+# coverage
+*.coverage
+*.coverage.*
+pytest.cov.tmp
+
