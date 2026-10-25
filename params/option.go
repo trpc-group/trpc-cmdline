@@ -77,6 +77,8 @@ type Option struct {
 	Domain string
 	// Group name for the generated code address.
 	GroupName string
+	// tRPC Python SDK used by the generated Python code: trpc_sdk or trpc.
+	PythonSDK string
 	// Version suffix for the generated code address (effective for both the main library and dependencies).
 	VersionSuffix string
 

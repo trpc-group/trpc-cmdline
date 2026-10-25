@@ -713,6 +713,8 @@ func GetPackage(fd *descriptor.FileDescriptor, language string) (string, error) 
 	switch fileOption {
 	case "go_package":
 		pbPackage = lang.TrimRight(";", pbPackage)
+	case "python_package":
+		pbPackage = strings.Replace(pbPackage, ".", "_", -1)
 	case "cpp_package":
 		pbPackage = lang.TrimRight(";", pbPackage)
 	default:

@@ -34,4 +34,7 @@ var PluginsExt = map[string][]Plugin{
 	"cpp": {
 		&CppMove{}, // Move the PB files to proto directory.
 	},
+	"python": {
+		&PythonMove{}, // Adjust the directory structure.
+	},
 }

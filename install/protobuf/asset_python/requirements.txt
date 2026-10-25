@@ -1,0 +1,29 @@
+# Install package need
+
+wheel
+setproctitle
+
+# add the requirements for trpc project
+protobuf>=3.19.5
+PyYAML>=5.4.1
+aiohttp>=3.10.11
+netifaces>=0.10.9
+Cython>=0.29.21
+six==1.15.0
+pytest>=7.4.0
+# python-snappy
+uvloop>=0.10.2
+python-gflags>=3.1.2
+
+# trpc framework
+{{if eq .PythonSDK "trpc"}}trpc>=0.10.0{{else}}trpc-python{{end}}
+
+## report
+trpc-metrics-runtime
+
+# add for your project
+# Add the stub package like this:
+#
+# git+https://github.com/your-org/stub-package.git#egg=stub-package
+# 
+#

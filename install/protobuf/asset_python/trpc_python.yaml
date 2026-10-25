@@ -1,0 +1,87 @@
+{{- $pkgName := .PackageName -}}
+{{- $svrName := (index .Services 0).Name -}}
+{{- $svrProtocol := .Protocol -}}
+{{- $app := .AppName -}}
+{{- $serverName := .ServerName -}}
+{{- $legacy := eq .PythonSDK "trpc" -}}
+global:                             #全局配置
+  namespace: Development            #环境类型，分正式 production 和非正式 development 两种类型
+  env_name: test                    #环境名称，非正式环境下多环境的名称
+  container_name:                   #容器名
+  local_ip:                         #宿主机 IP
+{{- if not $legacy }}
+  processmodel:                     #进程/线程模型；不配 mode 时为单进程单事件循环
+    mode: single_process            #single_process 单进程 | multi_process 多进程
+    io_handle_type: merge           #merge 表示 IO 和 handle 合并，separate 表示 IO 和 handle 分离
+    io_num: 1                       #I/O 线程数；merge 下须与 handle_num 一致，不一致时打 warning 并取 handle_num
+    handle_num: 1                   #handle 线程数
+    task_num: 1                     #没有自己设置 task_num 的 task 默认起几个 task 进程；0 或不写表示 1
+
+    # 多进程示例：
+    # mode: multi_process
+    # io_handle_type: separate      #separate：1 个 I/O 进程 + handle_num 个 rpc task 进程；merge(peer)：handle_num 个对等进程
+    # io_num: 1                     #separate 下只支持 1，其他值会打 warning 并按 1 处理；merge(peer) 下不生效
+    # handle_num: 0                 #rpc task 进程数或对等进程数；0 表示 CPU 核数
+    # task_num: 1
+{{- end }}
+
+server:                                            #服务端配置
+  app: {{if $app}}{{$app}}{{else}}yourAppName{{end}}                                        #业务的应用名
+  server: {{ if $serverName -}}
+    {{- $serverName -}}
+  {{- else -}}
+    {{- $svrName -}}
+  {{- end}}                                   #进程服务名
+  bin_path: /usr/local/trpc/bin/                   #二进制可执行文件和框架配置文件所在路径
+  conf_path: /usr/local/trpc/conf/                 #业务配置文件所在路径
+  data_path: /usr/local/trpc/data/                 #业务数据文件所在路径
+{{- if not $legacy }}
+  tcp_reuse_port: false                            #TCP 监听 socket 是否开启 SO_REUSEPORT
+  check_timeout: false                             #服务端超时检查，超时直接返回错误码
+{{- end }}
+  service:                                         #业务服务提供的 service，可以有多个
+    {{range $index, $service := .Services}}
+    {{- $serviceName := $service.Name -}}
+    - name: {{if and $app $serverName -}}
+        trpc.{{$app}}.{{$serverName}}.{{$serviceName -}}
+      {{- else -}}
+        {{- $pkgName}}.{{$serviceName -}}
+      {{- end}}      #service 的路由名称
+      ip: 127.0.0.1                                #服务监听 ip 地址 可使用占位符 ${ip},ip 和 nic 二选一，优先 ip
+      port: {{add 8000 $index}}                #服务监听端口 可使用占位符 ${port}
+      network: tcp                                 #网络监听类型  tcp udp
+      protocol: {{$svrProtocol}}                   #应用层协议 trpc http
+      timeout: 1000                                #请求最长处理时间 单位 毫秒
+    {{end}}
+
+client:                                            #客户端调用的后端配置
+  timeout: 1000                                    #针对所有后端的请求最长处理时间
+  namespace: Development                           #针对所有后端的环境
+  service:                                         #针对单个后端的配置
+    {{range $index, $service := .Services}}
+    {{- $serviceName := $service.Name -}}
+    - name: {{if and $app $serverName -}}
+        trpc.{{$app}}.{{$serverName}}.{{$serviceName -}}
+      {{- else -}}
+        {{- $pkgName}}.{{$serviceName -}}
+      {{- end}}      #后端服务的 service name
+      network: tcp                                 #后端服务的网络类型 tcp udp 配置优先
+      timeout: 1000                                 #请求最长处理时间
+      protocol: {{$svrProtocol}}               #应用层协议 trpc http
+    {{end}}
+
+
+plugins:                                          #插件配置
+  log:                                            #日志配置
+    default:                                      #默认日志的配置，可支持多输出
+      - writer: console                           #控制台标准输出 默认
+        level: debug                              #标准输出日志的级别
+      - writer: file                              #本地文件日志
+        level: info                               #本地文件滚动日志的级别
+        formatter: json                           #标准输出日志的格式
+        writer_config:
+          filename: ./trpc.log                      #本地文件滚动日志存放的路径
+          max_size: 10                              #本地文件滚动日志的大小 单位 MB
+          max_backups: 10                           #最大日志文件数
+          max_age: 7                                #最大日志保留天数
+          compress:  false                          #日志文件是否压缩

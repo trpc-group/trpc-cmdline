@@ -369,6 +369,13 @@ func (c *Create) parseOutputOptions(flags *pflag.FlagSet) error {
 	if err != nil {
 		return fmt.Errorf("flags parse groupname string err: %w", err)
 	}
+	c.options.PythonSDK, err = flags.GetString("python-sdk")
+	if err != nil {
+		return fmt.Errorf("flags parse python-sdk string err: %w", err)
+	}
+	if c.options.PythonSDK != "trpc_sdk" && c.options.PythonSDK != "trpc" {
+		return fmt.Errorf("invalid python-sdk %q, supported values: trpc_sdk, trpc", c.options.PythonSDK)
+	}
 	c.options.VersionSuffix, err = flags.GetString("versionsuffix")
 	if err != nil {
 		return fmt.Errorf("flags parse versionsuffix string err: %w", err)

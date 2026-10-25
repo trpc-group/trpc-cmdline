@@ -1,0 +1,5 @@
+# add for the pytest framework
+pytest
+pytest-asyncio
+pytest-cov
+pytest-mock

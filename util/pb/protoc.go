@@ -347,7 +347,8 @@ func makeProtocOut(pb2ImportPath map[string]string, language, outputdir string, 
 
 func makeProtocOutByLanguage(language string, pbpkg string, outputdir string) string {
 	languageToOut := map[string]string{
-		"go": fmt.Sprintf("--%s_out=paths=source_relative%s:%s", language, pbpkg, outputdir),
+		"go":     fmt.Sprintf("--%s_out=paths=source_relative%s:%s", language, pbpkg, outputdir),
+		"python": fmt.Sprintf("--%s_out=%s", language, outputdir),
 	}
 
 	out := languageToOut[language]
@@ -400,6 +401,8 @@ func fixProtocOut(secvOut, protocOut, lang string) string {
 	switch lang {
 	case "go":
 		return new + "," + params
+	case "python":
+		return new + ":" + params
 	default:
 		return protocOut
 	}

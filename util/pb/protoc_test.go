@@ -108,6 +108,24 @@ func Test_makeProtocOutByLanguage(t *testing.T) {
 			},
 			want: "--other_out=pbpkg:outputdir",
 		},
+		{
+			name: "case_go",
+			args: args{
+				language:  "go",
+				pbpkg:     ",Ma.proto=a",
+				outputdir: "outputdir",
+			},
+			want: "--go_out=paths=source_relative,Ma.proto=a:outputdir",
+		},
+		{
+			name: "case_python",
+			args: args{
+				language:  "python",
+				pbpkg:     ",Ma.proto=a",
+				outputdir: "outputdir",
+			},
+			want: "--python_out=outputdir",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -118,6 +136,45 @@ func Test_makeProtocOutByLanguage(t *testing.T) {
 
 			if got := makeProtocOutByLanguage(tt.args.language, tt.args.pbpkg, tt.args.outputdir); got != tt.want {
 				t.Errorf("makeProtocOutByLanguage() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_fixProtocOut(t *testing.T) {
+	tests := []struct {
+		name      string
+		secvOut   string
+		protocOut string
+		lang      string
+		want      string
+	}{
+		{
+			name:      "go",
+			secvOut:   "validate",
+			protocOut: "--go_out=paths=source_relative:outputdir",
+			lang:      "go",
+			want:      "--validate_out=lang=go,paths=source_relative:outputdir",
+		},
+		{
+			name:      "python",
+			secvOut:   "secv",
+			protocOut: "--python_out=outputdir",
+			lang:      "python",
+			want:      "--secv_out=lang=python:outputdir",
+		},
+		{
+			name:      "other",
+			secvOut:   "secv",
+			protocOut: "--other_out=outputdir",
+			lang:      "other",
+			want:      "--other_out=outputdir",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := fixProtocOut(tt.secvOut, tt.protocOut, tt.lang); got != tt.want {
+				t.Errorf("fixProtocOut() = %v, want %v", got, tt.want)
 			}
 		})
 	}

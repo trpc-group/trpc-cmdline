@@ -32,7 +32,7 @@ func AddCreateFlags(createCmd *cobra.Command) {
 	// Select code template.
 	createCmd.Flags().String("assetdir", "", "Specify the custom template path, e.g., ~/.trpc-cmdline-assets/protobuf/asset_go")
 	createCmd.Flags().StringP("lang", "l", "go",
-		"Specify the programming language to use, supported languages: go, cpp")
+		"Specify the programming language to use, supported languages: go, cpp, python")
 	createCmd.Flags().Bool("rpconly", false,
 		"Only generate stub code (recommended to execute under the stub directory), can be used with -o")
 	createCmd.Flags().Bool("dependencystub", false,
@@ -63,6 +63,8 @@ func AddCreateFlags(createCmd *cobra.Command) {
 		"Specify the code address domain to generate, defaults to the value specified in ~/.trpc-cmdline-assets/trpc.yaml")
 	createCmd.Flags().String("groupname", "trpc-go",
 		"Specify the code address group name to generate, defaults to trpc-go")
+	createCmd.Flags().String("python-sdk", "trpc_sdk",
+		"Specify the tRPC Python SDK used by generated code: trpc_sdk (default) or trpc")
 	createCmd.Flags().String("versionsuffix", "",
 		"Specify the version suffix in the code address, "+
 			"defaults to empty, can be set to v2, v3, etc. (effective for both the main library and dependencies)")
